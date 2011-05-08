@@ -169,6 +169,9 @@
     <entry name="expireHistory" type="Int">
         <default>1</default>
     </entry>
+    <entry name="useWallet" type="Bool">
+        <default>true</default>
+    </entry>
 </group>
 
 
