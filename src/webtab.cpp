@@ -136,6 +136,15 @@ void WebTab::createWalletBar(const QString &key, const QUrl &url)
         return;
 
     KWebWallet *wallet = page()->wallet();
+
+    // check if use of KDE wallet is turned off
+    bool useWallet = ReKonfig::useWallet();
+    if (useWallet == false)
+    {
+        wallet->rejectSaveFormDataRequest(key);
+        return;
+    }
+
     if (m_walletBar.isNull())
     {
         m_walletBar = new WalletBar(this);
