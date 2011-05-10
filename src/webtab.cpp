@@ -137,7 +137,7 @@ void WebTab::createWalletBar(const QString &key, const QUrl &url)
 
     KWebWallet *wallet = page()->wallet();
 
-    // check if use of KDE wallet is turned off
+    // check if use of 'store passwords' option is turned off
     bool useWallet = ReKonfig::storeLoginInfo();
     if (useWallet == false)
     {

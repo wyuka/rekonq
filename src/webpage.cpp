@@ -549,7 +549,7 @@ void WebPage::loadFinished(bool ok)
     // KWallet Integration
     QStringList list = ReKonfig::walletBlackList();
     if (wallet()
-            && !list.contains(mainFrame()->url().toString())
+            && ReKonfig::storeLoginInfo() && !list.contains(mainFrame()->url().toString())
        )
     {
         wallet()->fillFormData(mainFrame());
