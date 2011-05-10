@@ -199,7 +199,7 @@
       <item>
        <widget class="QCheckBox" name="kcfg_storeLoginInfo">
         <property name="text">
-         <string>Store passwords and login information</string>
+         <string>Offer to store passwords and login information</string>
         </property>
        </widget>
       </item>
