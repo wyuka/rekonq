@@ -70,7 +70,6 @@ signals:
     void reloadTab(int index);
     void reloadAllTabs();
     void detachTab(int index);
-    void tabsChanged();
 
 protected:
     /**
