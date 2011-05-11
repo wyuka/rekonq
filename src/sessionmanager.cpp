@@ -65,22 +65,42 @@ void SessionManager::saveSession()
         kDebug() << "Unable to open session file" << sessionFile.fileName();
         return;
     }
+    QFile mysessionFile("/home/tirtha/rekonq/sessionFile");
+    if (!mysessionFile.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        kDebug() << "Unable to open session file" << mysessionFile.fileName();
+        return;
+    }
     QTextStream out(&sessionFile);
     MainWindowList wl = rApp->mainWindowList();
+    QDomDocument document("session");
+    QDomElement session = document.createElement("session");
+    document.appendChild(session);
+
     Q_FOREACH(const QWeakPointer<MainWindow> &w, wl)
     {
         out << "window\n";
+        QDomElement window = document.createElement("window");
         MainView *mv = w.data()->mainView();
         for (int i = 0 ; i < mv->count() ; i++)
         {
             out << mv->webTab(i)->url().toEncoded() << "\n";
+            QDomElement tab = document.createElement("tab");
+            tab.setAttribute("title", mv->webTab(i)->view()->title());
+            tab.setAttribute("url", mv->webTab(i)->view()->url().toString());
+            window.appendChild(tab);
         }
 
         // Current Tab for window
         out << "currenttab\n";
         out << mv->tabBar()->currentIndex() << "\n";
+        window.setAttribute("currentTab",mv->tabBar()->currentIndex());
+        session.appendChild(window);
     }
+    QTextStream myout(&mysessionFile);
+    document.save(myout,2);
     sessionFile.close();
+    mysessionFile.close();
     m_safe = true;
     return;
 }
@@ -96,11 +116,58 @@ bool SessionManager::restoreSession()
         kDebug() << "Unable to open session file" << sessionFile.fileName();
         return false;
     }
+    
+    QFile mysessionFile("/home/tirtha/rekonq/sessionFile");
+    if (!mysessionFile.exists())
+        return false;
+    if (!mysessionFile.open(QFile::ReadOnly))
+    {
+        kDebug() << "Unable to open session file" << mysessionFile.fileName();
+        return false;
+    }
 
     QTextStream in(&sessionFile);
     QString line;
+    MainWindowList mywl;
     bool windowAlreadyOpen = rApp->mainWindowList().count();
-    do
+    QDomDocument document("session");
+    if (!document.setContent(&mysessionFile, false))
+    {
+        kDebug() << "Unable to parse session file" << mysessionFile.fileName();
+        return false;
+    }
+
+    QDomElement session = document.elementsByTagName("session").at(0).toElement();
+    for (uint winNo = 0; winNo < session.elementsByTagName("window").length(); winNo++ )
+    {
+        QDomElement window = session.elementsByTagName("window").at(winNo).toElement();
+        int currentTab = window.attribute("currentTab").toInt();
+        
+        if (windowAlreadyOpen)
+        {
+            windowAlreadyOpen = false;
+        }
+        else
+        {
+            rApp->newMainWindow(false);
+        }
+
+        mywl = rApp->mainWindowList();
+        if (mywl.count() > 0)
+        {
+            MainView *mv = mywl[0].data()->mainView();
+            
+            for (uint tabNo = 0; tabNo < window.elementsByTagName("tab").length(); tabNo++)
+            {
+                QDomElement tab = window.elementsByTagName("tab").at(tabNo).toElement();
+                rApp->loadUrl(KUrl(tab.attribute("url")), Rekonq::NewFocusedTab);
+            }
+            mv->setCurrentIndex(currentTab);
+        }
+
+        
+    }
+    /*do
     {
         line = in.readLine();
         if (line == QL1S("window"))
@@ -140,7 +207,7 @@ bool SessionManager::restoreSession()
             }
         }
     }
-    while (!line.isEmpty());
+    while (!line.isEmpty());*/
 
     return true;
 }
