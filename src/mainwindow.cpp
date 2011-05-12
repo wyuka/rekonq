@@ -44,6 +44,7 @@
 #include "historypanel.h"
 #include "iconmanager.h"
 #include "mainview.h"
+#include "sessionmanager.h"
 #include "settingsdialog.h"
 #include "stackedurlbar.h"
 #include "tabbar.h"
@@ -94,7 +95,6 @@
 #include <QtWebKit/QWebHistory>
 
 #include <QSignalMapper>
-#include "sessionmanager.h"
 
 
 MainWindow::MainWindow()
