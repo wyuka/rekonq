@@ -94,6 +94,7 @@
 #include <QtWebKit/QWebHistory>
 
 #include <QSignalMapper>
+#include "sessionmanager.h"
 
 
 MainWindow::MainWindow()
@@ -315,6 +316,8 @@ void MainWindow::postLaunch()
     connect(m_view, SIGNAL(currentChanged(int)), m_zoomBar, SLOT(updateSlider(int)));
     // Ctrl + wheel handling
     connect(this->currentTab()->view(), SIGNAL(zoomChanged(int)), m_zoomBar, SLOT(setValue(int)));
+    
+    connect(this, SIGNAL(lastWindowClosed()), rApp->sessionManager(), SLOT(saveSession()));
 
     // setting up toolbars to NOT have context menu enabled
     setContextMenuPolicy(Qt::DefaultContextMenu);
@@ -1515,6 +1518,7 @@ bool MainWindow::queryClose()
             return false;
         }
     }
+    emit lastWindowClosed();
     return true;
 }
 
