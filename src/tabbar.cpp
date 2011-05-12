@@ -57,7 +57,6 @@
 #include <QtGui/QToolButton>
 #include <QPropertyAnimation>
 #include <QStyleOptionFrameV3>
-#include <QtGui/QVBoxLayout>
 
 
 static inline QByteArray highlightPropertyName(int index)
@@ -226,6 +225,7 @@ void TabBar::showTabPreview()
 
     int tabBarWidth = mv->size().width();
     int leftIndex = tabRect(m_currentTabPreviewIndex).x() + (tabRect(m_currentTabPreviewIndex).width() - w)/2;
+
     if (leftIndex < 0)
     {
         leftIndex = 0;
@@ -234,6 +234,7 @@ void TabBar::showTabPreview()
     {
         leftIndex = tabBarWidth - w;
     }
+
     QPoint pos(leftIndex, tabRect(m_currentTabPreviewIndex).y() + tabRect(m_currentTabPreviewIndex).height());
     m_previewPopup.data()->show(mapToGlobal(pos));
 }

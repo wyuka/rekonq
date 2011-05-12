@@ -103,7 +103,7 @@ private:
     //constants
     static const int baseWidthDivisor = 4;
     static const int minWidthDivisor = 8;
-    
+
     void setupHistoryActions();
     friend class MainView;
 
