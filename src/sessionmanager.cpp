@@ -67,13 +67,13 @@ void SessionManager::saveSession()
     }
 
     MainWindowList wl = rApp->mainWindowList();
-    QDomDocument document("session");
-    QDomElement session = document.createElement("session");
+    QDomDocument document("sessionFile");
+    QDomElement session = document.createElement("sessionFile");
     document.appendChild(session);
 
     Q_FOREACH(const QWeakPointer<MainWindow> &w, wl)
     {
-        QDomElement window = document.createElement("window");
+        QDomElement window = document.createElement("session");
         MainView *mv = w.data()->mainView();
         for (int i = 0 ; i < mv->count() ; i++)
         {
@@ -104,19 +104,19 @@ bool SessionManager::restoreSession()
         return false;
     }
 
-    MainWindowList mywl;
+    MainWindowList wl;
     bool windowAlreadyOpen = rApp->mainWindowList().count();
-    QDomDocument document("session");
+    QDomDocument document("sessionFile");
     if (!document.setContent(&sessionFile, false))
     {
         kDebug() << "Unable to parse session file" << sessionFile.fileName();
         return false;
     }
 
-    QDomElement session = document.elementsByTagName("session").at(0).toElement();
-    for (uint winNo = 0; winNo < session.elementsByTagName("window").length(); winNo++)
+    QDomElement session = document.elementsByTagName("sessionFile").at(0).toElement();
+    for (uint winNo = 0; winNo < session.elementsByTagName("session").length(); winNo++)
     {
-        QDomElement window = session.elementsByTagName("window").at(winNo).toElement();
+        QDomElement window = session.elementsByTagName("session").at(winNo).toElement();
         int currentTab = window.attribute("currentTab").toInt();
 
         QDomElement firstTab = window.elementsByTagName("tab").at(0).toElement();
@@ -130,15 +130,15 @@ bool SessionManager::restoreSession()
             rApp->loadUrl(KUrl(firstTab.attribute("url")), Rekonq::NewWindow);
         }
 
-        mywl = rApp->mainWindowList();
-        if (mywl.count() > 0)
+        wl = rApp->mainWindowList();
+        if (wl.count() > 0)
         {   
             for (uint tabNo = 1; tabNo < window.elementsByTagName("tab").length(); tabNo++)
             {
                 QDomElement tab = window.elementsByTagName("tab").at(tabNo).toElement();
                 rApp->loadUrl(KUrl(tab.attribute("url")), Rekonq::NewFocusedTab);
             }
-            MainView *mv = mywl[0].data()->mainView();
+            MainView *mv = wl[0].data()->mainView();
             mv->setCurrentIndex(currentTab);
         }   
     }
@@ -149,7 +149,7 @@ bool SessionManager::restoreSession()
 QStringList SessionManager::closedSites()
 {
     QStringList list;
-
+    
     QFile sessionFile(m_sessionFilePath);
     if (!sessionFile.exists())
         return list;
@@ -158,25 +158,18 @@ QStringList SessionManager::closedSites()
         kDebug() << "Unable to open session file" << sessionFile.fileName();
         return list;
     }
-
-    QTextStream in(&sessionFile);
-    QString line;
-    do
+    
+    QDomDocument document("sessionFile");
+    if (!document.setContent(&sessionFile, false))
     {
-        line = in.readLine();
-        if (line != QL1S("window"))
-        {
-            if (line == QL1S("currenttab"))
-            {
-                in.readLine();  // drop out the next field, containing the index of the current tab..
-            }
-            else
-            {
-                list << QString(line);
-            }
-        }
+        kDebug() << "Unable to parse session file" << sessionFile.fileName();
+        return list;
     }
-    while (!line.isEmpty());
-
+    
+    QDomNodeList l = document.elementsByTagName("tab");
+    for (int i = 0; i < l.count(); ++i)
+    {
+        list << l.at(i).toElement().attribute("url");
+    }
     return list;
 }
