@@ -99,7 +99,7 @@ public:
     static Application *instance();
 
     MainWindow *mainWindow();
-    MainWindow *newMainWindow(bool withTab = true);
+    MainWindow *newMainWindow(bool withTab = true, bool withSession = true);
     MainWindowList mainWindowList();
 
     HistoryManager *historyManager();
