@@ -112,7 +112,7 @@ bool SessionManager::restoreSessions()
 
     if (l.at(0).toElement().hasAttribute("live") && !windowAlreadyOpen)
     {
-        rApp->newMainWindow(false);
+        rApp->newMainWindow(true);
     }
     else
     {
@@ -130,7 +130,7 @@ bool SessionManager::restoreSessions()
     {
         if (l.at(i).toElement().hasAttribute("live"))
         {
-            rApp->newMainWindow(false);
+            rApp->newMainWindow(true);
         }
         else
         {

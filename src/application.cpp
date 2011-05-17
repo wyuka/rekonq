@@ -160,7 +160,7 @@ int Application::newInstance()
                                             , QMessageBox::Warning
                                             , MessageBar::Yes | MessageBar::No);
 
-        connect(msgBar, SIGNAL(accepted()), sessionManager(), SLOT(restoreSession()));
+        connect(msgBar, SIGNAL(accepted()), sessionManager(), SLOT(restoreSessions()));
         mainWindow()->currentTab()->insertBar(msgBar);
     }
 
