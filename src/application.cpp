@@ -414,16 +414,13 @@ void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type)
 }
 
 
-MainWindow *Application::newMainWindow(bool withTab, bool withSession)
+MainWindow *Application::newMainWindow(bool withTab)
 {
     MainWindow *w = new MainWindow();
     // This is used to track which window was activated most recently
     w->installEventFilter(this);
     // Create a new live session for the window
-    if (withSession)
-    {
-        sessionManager()->newSession(true, w);
-    }
+    sessionManager()->newSession(true, w);
 
     if (withTab)
         w->mainView()->newWebTab();    // remember using newWebTab and NOT newTab here!!
