@@ -44,6 +44,7 @@
 #include "historypanel.h"
 #include "iconmanager.h"
 #include "mainview.h"
+#include "session.h"
 #include "sessionmanager.h"
 #include "settingsdialog.h"
 #include "stackedurlbar.h"
@@ -1549,7 +1550,7 @@ bool MainWindow::queryClose()
         {
         case KMessageBox::Yes:
             {
-                rApp->sessionManager()->makeSessionDead(this);
+                m_session->toDead();
                 rApp->sessionManager()->saveSessions();
             }
             return true;
@@ -1562,7 +1563,7 @@ bool MainWindow::queryClose()
             return false;
         }
     }
-    //emit lastWindowClosed();
+    emit lastWindowClosed();
     return true;
 }
 

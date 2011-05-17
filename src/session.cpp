@@ -149,6 +149,10 @@ void Session::toDead()
         {
             m_sessionDom.removeAttribute("live");
         }
+        if (m_sessionDom.hasAttribute("currentSession"))
+        {
+            m_sessionDom.removeAttribute("currentSession");
+        }
     }
 }
 

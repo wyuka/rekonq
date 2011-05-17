@@ -59,7 +59,6 @@ public:
 
     QStringList closedSites();
     Session* newSession(bool live, MainWindow *w=0);
-    void makeSessionDead(MainWindow *w);
 
 public slots:
     bool restoreSessions();

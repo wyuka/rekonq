@@ -77,9 +77,11 @@ void SessionManager::saveSessions()
     }
     
     document.appendChild(sessionFileDom);
+    kDebug() << "starting write";
     QTextStream out(&sessionFile);
     document.save(out,2);
     sessionFile.close();
+    kDebug() << "write finished";
     m_safe = true;
     return;
 }
@@ -98,11 +100,14 @@ bool SessionManager::restoreSessions()
     bool windowAlreadyOpen = rApp->mainWindowList().count();
 
     QDomDocument document("sessionFile");
+    kDebug() << "starting read";
     if (!document.setContent(&sessionFile, false))
     {
         kDebug() << "Unable to parse session file" << sessionFile.fileName();
         return false;
     }
+    sessionFile.close();
+    kDebug() << "read finished";
 
     QDomNodeList l = document.elementsByTagName("session");
     if (l.count() < 1)
@@ -158,15 +163,17 @@ QStringList SessionManager::closedSites()
         kDebug() << "Unable to open session file" << sessionFile.fileName();
         return list;
     }
-    
+    kDebug() << "starting read";
     QDomDocument document("sessionFile");
     if (!document.setContent(&sessionFile, false))
     {
         kDebug() << "Unable to parse session file" << sessionFile.fileName();
         return list;
     }
-    
+    sessionFile.close();
+    kDebug() << "read finished";
     QDomNodeList l = document.elementsByTagName("tab");
+    kDebug() << l.count() << "tabs read";
     for (int i = 0; i < l.count(); ++i)
     {
         list << l.at(i).toElement().attribute("url");
@@ -182,18 +189,6 @@ Session* SessionManager::newSession(bool live, MainWindow *w)
         s->toLive(w);
     }
     m_sessionList.prepend(s);
+    kDebug() << "created new session";
     return s;
-}
-
-
-void SessionManager::makeSessionDead(MainWindow* w)
-{
-    Session* s;
-    foreach(s, m_sessionList)
-    {
-        if ( s->mainWindow() == w)
-        {
-            s->toDead();
-        }
-    }
 }
