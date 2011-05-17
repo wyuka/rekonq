@@ -128,7 +128,8 @@ public slots:
     void saveConfiguration() const;
 
     void loadUrl(const KUrl& url,
-                 const Rekonq::OpenType& type = Rekonq::CurrentTab
+                 const Rekonq::OpenType& type = Rekonq::CurrentTab,
+                 MainWindow* window = 0
                 );
 
     void newWindow();

@@ -21,8 +21,8 @@ SET( rekonq_KDEINIT_SRCS
     paneltreeview.cpp
     previewselectorbar.cpp
     protocolhandler.cpp
-    newsessionmanager.cpp
     session.cpp
+    sessionmanager.cpp
     tabbar.cpp
     tabhighlighteffect.cpp
     urlfilterproxymodel.cpp

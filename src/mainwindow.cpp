@@ -44,7 +44,7 @@
 #include "historypanel.h"
 #include "iconmanager.h"
 #include "mainview.h"
-#include "newsessionmanager.h"
+#include "sessionmanager.h"
 #include "settingsdialog.h"
 #include "stackedurlbar.h"
 #include "tabbar.h"
@@ -115,6 +115,7 @@ MainWindow::MainWindow()
         , m_hidePopupTimer(new QTimer(this))
         , m_toolsMenu(0)
         , m_developerMenu(0)
+        , m_session(rApp->sessionManager()->newSession(true, this))
 {
     // creating a centralWidget containing panel, m_view and the hidden findbar
     QWidget *centralWidget = new QWidget;
@@ -319,7 +320,7 @@ void MainWindow::postLaunch()
     // Ctrl + wheel handling
     connect(this->currentTab()->view(), SIGNAL(zoomChanged(int)), m_zoomBar, SLOT(setValue(int)));
     
-    connect(this, SIGNAL(lastWindowClosed()), rApp->sessionManager(), SLOT(saveSession()));
+    connect(this, SIGNAL(lastWindowClosed()), rApp->sessionManager(), SLOT(saveSessions()));
 
     // setting up toolbars to NOT have context menu enabled
     setContextMenuPolicy(Qt::DefaultContextMenu);
@@ -1549,7 +1550,7 @@ bool MainWindow::queryClose()
         case KMessageBox::Yes:
             {
                 rApp->sessionManager()->makeSessionDead(this);
-                rApp->sessionManager()->saveSession();
+                rApp->sessionManager()->saveSessions();
             }
             return true;
 

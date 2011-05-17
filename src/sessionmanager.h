@@ -38,7 +38,10 @@
 
 // Forward Declarations
 class QString;
+class Session;
+class MainWindow;
 
+typedef QList< Session* > SessionList;
 
 /**
   * Session Management
@@ -55,16 +58,17 @@ public:
     }
 
     QStringList closedSites();
+    Session* newSession(bool live, MainWindow *w=0);
+    void makeSessionDead(MainWindow *w);
 
 public slots:
-    bool restoreSession();
-
-private slots:
-    void saveSession();
+    bool restoreSessions();
+    void saveSessions();
 
 private:
     QString m_sessionFilePath;
     bool m_safe;
+    SessionList m_sessionList;
 };
 
 

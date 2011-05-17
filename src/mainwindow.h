@@ -45,6 +45,7 @@ class FindBar;
 class HistoryPanel;
 class MainView;
 class NetworkAnalyzerPanel;
+class Session;
 class WebInspectorPanel;
 class WebTab;
 class ZoomBar;
@@ -215,6 +216,8 @@ private:
 
     KMenu *m_toolsMenu;
     KActionMenu *m_developerMenu;
+
+    Session* m_session;
 };
 
 #endif // MAINWINDOW_H

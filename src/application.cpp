@@ -43,7 +43,7 @@
 #include "mainwindow.h"
 #include "messagebar.h"
 #include "opensearchmanager.h"
-#include "newsessionmanager.h"
+#include "sessionmanager.h"
 #include "stackedurlbar.h"
 #include "tabbar.h"
 #include "urlbar.h"
@@ -214,7 +214,7 @@ int Application::newInstance()
                 loadUrl(KUrl("about:home"), Rekonq::NewWindow);
                 break;
             case 2: // restore session
-                sessionManager()->restoreSession();
+                sessionManager()->restoreSessions();
                 kDebug() << "session restored following settings";
                 break;
             default:
@@ -355,7 +355,7 @@ IconManager *Application::iconManager()
 }
 
 
-void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type)
+void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type, MainWindow* window)
 {
     if (url.isEmpty())
         return;
@@ -369,9 +369,12 @@ void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type)
     // first, create the webview(s) to not let hangs UI..
     WebTab *tab = 0;
     MainWindow *w = 0;
+    w = (window == 0)
+        ? mainWindow()
+        : window;
     w = (type == Rekonq::NewWindow)
         ? newMainWindow()
-        : mainWindow();
+        : w;
 
     switch (type)
     {
@@ -420,7 +423,6 @@ MainWindow *Application::newMainWindow(bool withTab)
     // This is used to track which window was activated most recently
     w->installEventFilter(this);
     // Create a new live session for the window
-    sessionManager()->newSession(true, w);
 
     if (withTab)
         w->mainView()->newWebTab();    // remember using newWebTab and NOT newTab here!!
@@ -726,7 +728,7 @@ void Application::setPrivateBrowsingMode(bool b)
         _privateBrowsingAction->setChecked(false);
 
         loadUrl(KUrl("about:blank"), Rekonq::NewWindow);
-        if (!sessionManager()->restoreSession())
+        if (!sessionManager()->restoreSessions())
             loadUrl(KUrl("about:home"), Rekonq::NewWindow);
     }
 }

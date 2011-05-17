@@ -73,7 +73,7 @@ QDomElement Session::getUpdatedXml(QDomDocument& document)
             }
             sessionDom.appendChild(tab);
         }
-        if (m_window == rApp->mainWindowList()[0].data())
+        if (m_window == rApp->mainWindow())
         {
             sessionDom.setAttribute("currentSession","true");
         }
@@ -97,14 +97,14 @@ bool Session::load()
     {
         if (m_window)
         {   
-            QDomElement firstTab = m_sessionDom.elementsByTagName("tab").at(0).toElement();
-            rApp->loadUrl(KUrl(firstTab.attribute("url")), Rekonq::CurrentTab);
-            kDebug() << firstTab.attribute("url");
+            //QDomElement firstTab = m_sessionDom.elementsByTagName("tab").at(0).toElement();
+            //rApp->loadUrl(KUrl(firstTab.attribute("url")), Rekonq::CurrentTab);
+            //kDebug() << firstTab.attribute("url");
 
-            for (uint tabNo = 1; tabNo < m_sessionDom.elementsByTagName("tab").length(); ++tabNo)
+            for (uint tabNo = 0; tabNo < m_sessionDom.elementsByTagName("tab").length(); ++tabNo)
             {
                 QDomElement tab = m_sessionDom.elementsByTagName("tab").at(tabNo).toElement();
-                rApp->loadUrl(KUrl(tab.attribute("url")), Rekonq::NewFocusedTab);
+                rApp->loadUrl(KUrl(tab.attribute("url")), Rekonq::NewFocusedTab, m_window);
                 kDebug() << tab.attribute("url");
             }
             m_live = true;
