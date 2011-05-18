@@ -55,6 +55,7 @@ Session::Session(QObject* parent)
 
 QDomElement Session::getUpdatedXml(QDomDocument& document)
 {
+    kDebug() << "in here..";
     if (m_live)
     {
         QDomElement sessionDom = document.createElement("session");
@@ -79,6 +80,7 @@ QDomElement Session::getUpdatedXml(QDomDocument& document)
         }
         sessionDom.setAttribute("live","true");
         m_sessionDom = sessionDom;
+        return sessionDom;
     }
     
     return m_sessionDom;
@@ -96,7 +98,7 @@ bool Session::load()
     if (m_sessionDom.hasAttribute("live"))
     {
         if (m_window)
-        {   
+        {
             QDomElement firstTab = m_sessionDom.elementsByTagName("tab").at(0).toElement();
             rApp->loadUrl(KUrl(firstTab.attribute("url")), Rekonq::CurrentTab, m_window);
             kDebug() << firstTab.attribute("url");

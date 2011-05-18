@@ -58,29 +58,39 @@ void SessionManager::saveSessions()
         return;
     m_safe = false;
 
+    kDebug() << "in saveSessions()";
 
-    QFile sessionFile(m_sessionFilePath);
-    if (!sessionFile.open(QFile::WriteOnly | QFile::Truncate))
-    {
-        kDebug() << "Unable to open session file" << sessionFile.fileName();
-        return;
-    }
-    
     QDomDocument document("sessionFile");
     QDomElement sessionFileDom = document.createElement("sessionFile");
-    
+
     Session* s;
     foreach (s, m_sessionList)
     {
         QDomElement e = s->getUpdatedXml(document);
         sessionFileDom.appendChild(e);
     }
-    
+
     document.appendChild(sessionFileDom);
+    QFile mysessionFile("/home/tirtha/rekonq/lol");
+    if (!mysessionFile.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        kDebug() << "Unable to open session file" << mysessionFile.fileName();
+        return;
+    }
     kDebug() << "starting write";
-    QTextStream out(&sessionFile);
+
+    /*QFile sessionFile(m_sessionFilePath);
+    if (!sessionFile.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        kDebug() << "Unable to open session file" << sessionFile.fileName();
+        return;
+    }*/
+    QTextStream out(&mysessionFile);
+    kDebug() << "created textstream";
+    //out << document.toString();
     document.save(out,2);
-    sessionFile.close();
+    kDebug() << "wrote out document";
+    //sessionFile.close();
     kDebug() << "write finished";
     m_safe = true;
     return;
@@ -97,7 +107,9 @@ bool SessionManager::restoreSessions()
         return false;
     }
 
-    bool windowAlreadyOpen = rApp->mainWindowList().count();
+    Session* alreadyOpenSession = rApp->mainWindowList().count()
+                                ? m_sessionList.at(0)
+                                : 0;
 
     QDomDocument document("sessionFile");
     kDebug() << "starting read";
@@ -115,11 +127,11 @@ bool SessionManager::restoreSessions()
         return false;
     }
 
-    if (l.at(0).toElement().hasAttribute("live") && !windowAlreadyOpen)
+    /*if (l.at(0).toElement().hasAttribute("live") && !windowAlreadyOpen)
     {
         rApp->newMainWindow(true);
     }
-    else
+    else if(!windowAlreadyOpen)
     {
         newSession(false);
     }
@@ -129,19 +141,29 @@ bool SessionManager::restoreSessions()
     if (l.at(0).toElement().hasAttribute("live"))
     {
         s->load();
-    }
+    }*/
 
-    for (int i = 1; i < l.count(); ++i)
+    Session* s;
+    for (int i = 0; i < l.count(); ++i)
     {
         if (l.at(i).toElement().hasAttribute("live"))
         {
-            rApp->newMainWindow(true);
+            if (alreadyOpenSession)
+            {
+                s = alreadyOpenSession;
+                alreadyOpenSession = 0;
+            }
+            else
+            {
+                rApp->newMainWindow(true);
+                s = m_sessionList.at(0);
+            }
         }
         else
         {
             newSession(false);
+            s = m_sessionList.at(0);
         }
-        s = m_sessionList.at(0);
         s->setXml(l.at(i).toElement());
         if (l.at(i).toElement().hasAttribute("live"))
         {
