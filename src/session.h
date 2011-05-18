@@ -35,6 +35,7 @@
 
 // Qt Includes
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 #include <QtXml/QDomElement>
 
 class MainWindow;
@@ -46,7 +47,7 @@ class Session : public QObject
 
 public:
     explicit Session(QObject* parent = 0);
-    QDomElement getUpdatedXml(QDomDocument& document);
+    QDomElement getXml(QDomDocument& document);
     MainWindow* mainWindow();
     inline bool isLive() const
     {
@@ -54,13 +55,14 @@ public:
     }
     
     bool load();
+    void update();
     void setMainWindow(MainWindow *w);
     void toDead();
     void toLive(MainWindow *w);
     void setXml(QDomElement sessionDom);
 private:
     MainWindow *m_window;
-    QDomElement m_sessionDom;
+    QStringList m_urlList;
     bool m_live;
 };
 

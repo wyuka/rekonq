@@ -42,85 +42,89 @@
 
 // Qt Includes
 #include <QtCore/QFile>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 Session::Session(QObject* parent)
         : QObject(parent)
 {
     m_live = false;
     m_window = 0;
-    
-    QDomDocument d("sessionFile");
-    m_sessionDom = d.createElement("session");
 }
 
-QDomElement Session::getUpdatedXml(QDomDocument& document)
+void Session::update()
+{
+    if (!m_live)
+    {
+        return;
+    }
+    MainView *mv = m_window->mainView();
+    m_urlList.clear();
+    for (int i=0; i < mv->count(); ++i)
+    {
+        QByteArray url = mv->webTab(i)->url().toEncoded();
+        m_urlList << url;
+    }
+}
+
+
+QDomElement Session::getXml(QDomDocument& document)
 {
     kDebug() << "in here..";
+    QDomElement sessionDom = document.createElement("session");
+    QString urlString;
+    foreach(urlString, m_urlList)
+    {
+        QDomElement tab = document.createElement("tab");
+        tab.setAttribute("url",urlString);
+        sessionDom.appendChild(tab);
+    }
     if (m_live)
     {
-        QDomElement sessionDom = document.createElement("session");
-        MainView *mv = m_window->mainView();
-        for (int i=0; i < mv->count(); ++i)
-        {
-            QByteArray url = mv->webTab(i)->url().toEncoded();
-            QString title = mv->webTab(i)->view()->title();
-
-            QDomElement tab = document.createElement("tab");
-            tab.setAttribute("title",title);
-            tab.setAttribute("url",QString(url));
-            if (i == mv->currentIndex())
-            {
-                tab.setAttribute("currentTab","true");
-            }
-            sessionDom.appendChild(tab);
-        }
-        if (m_window == rApp->mainWindow())
-        {
-            sessionDom.setAttribute("currentSession","true");
-        }
         sessionDom.setAttribute("live","true");
-        m_sessionDom = sessionDom;
-        return sessionDom;
     }
-    
-    return m_sessionDom;
+    return sessionDom;
 }
 
 
 void Session::setXml(QDomElement sessionDom)
 {
-    m_sessionDom = sessionDom;
+    m_urlList.clear();
+    for (int tabNo = 0; tabNo < sessionDom.elementsByTagName("tab").count(); ++tabNo)
+    {
+        m_urlList << sessionDom.elementsByTagName("tab").at(tabNo).toElement().attribute("url");
+    }
 }
 
 
 bool Session::load()
 {
-    if (m_sessionDom.hasAttribute("live"))
+    if (m_live)
     {
         if (m_window)
         {
-            QDomElement firstTab = m_sessionDom.elementsByTagName("tab").at(0).toElement();
-            rApp->loadUrl(KUrl(firstTab.attribute("url")), Rekonq::CurrentTab, m_window);
-            kDebug() << firstTab.attribute("url");
+            rApp->loadUrl(KUrl(m_urlList.at(0)), Rekonq::CurrentTab, m_window);
 
-            for (uint tabNo = 1; tabNo < m_sessionDom.elementsByTagName("tab").length(); ++tabNo)
+            QString urlString;
+            bool firstTab = true;
+            foreach (urlString, m_urlList)
             {
-                QDomElement tab = m_sessionDom.elementsByTagName("tab").at(tabNo).toElement();
-                rApp->loadUrl(KUrl(tab.attribute("url")), Rekonq::NewFocusedTab, m_window);
-                kDebug() << tab.attribute("url");
+                if (firstTab)
+                {
+                    rApp->loadUrl(KUrl(urlString), Rekonq::NewFocusedTab, m_window);
+                    firstTab = false;
+                }
+                else
+                {
+                    rApp->loadUrl(KUrl(urlString), Rekonq::CurrentTab, m_window);
+                }
             }
-            m_live = true;
         }
         else
         {
             return false;
         }
     }
-    else
-    {
-        m_live = false;
-    }
-
     return true;
 }
 
@@ -146,15 +150,6 @@ void Session::toDead()
     {
         m_window = 0;
         m_live = false;
-
-        if (m_sessionDom.hasAttribute("live"))
-        {
-            m_sessionDom.removeAttribute("live");
-        }
-        if (m_sessionDom.hasAttribute("currentSession"))
-        {
-            m_sessionDom.removeAttribute("currentSession");
-        }
     }
 }
 
@@ -165,6 +160,5 @@ void Session::toLive(MainWindow* w)
     {
         m_window = w;
         m_live = true;
-        m_sessionDom.setAttribute("live","true");
     }
 }

@@ -66,12 +66,12 @@ void SessionManager::saveSessions()
     Session* s;
     foreach (s, m_sessionList)
     {
-        QDomElement e = s->getUpdatedXml(domDocument);
+        s->update();
+        QDomElement e = s->getXml(domDocument);
         sessionFileDom.appendChild(e);
     }
 
     domDocument.appendChild(sessionFileDom);
-    kDebug() << "starting write";
 
     QFile sessionFile(m_sessionFilePath);
     if (!sessionFile.open(QFile::WriteOnly | QFile::Truncate))
@@ -80,11 +80,8 @@ void SessionManager::saveSessions()
         return;
     }
     QTextStream out(&sessionFile);
-    kDebug() << "created textstream";
     domDocument.save(out,2);
-    kDebug() << "wrote out document";
     sessionFile.close();
-    kDebug() << "write finished";
     m_safe = true;
     return;
 }
@@ -105,36 +102,18 @@ bool SessionManager::restoreSessions()
                                 : 0;
 
     QDomDocument document("sessionFile");
-    kDebug() << "starting read";
     if (!document.setContent(&sessionFile, false))
     {
         kDebug() << "Unable to parse session file" << sessionFile.fileName();
         return false;
     }
     sessionFile.close();
-    kDebug() << "read finished";
 
     QDomNodeList l = document.elementsByTagName("session");
     if (l.count() < 1)
     {
         return false;
     }
-
-    /*if (l.at(0).toElement().hasAttribute("live") && !windowAlreadyOpen)
-    {
-        rApp->newMainWindow(true);
-    }
-    else if(!windowAlreadyOpen)
-    {
-        newSession(false);
-    }
-
-    Session *s = m_sessionList.at(0);
-    s->setXml(l.at(0).toElement());
-    if (l.at(0).toElement().hasAttribute("live"))
-    {
-        s->load();
-    }*/
 
     Session* s;
     for (int i = 0; i < l.count(); ++i)
@@ -160,11 +139,6 @@ bool SessionManager::restoreSessions()
             s = m_sessionList.at(0);
             s->setXml(l.at(i).toElement());
         }
-        //s->setXml(l.at(i).toElement());
-        //if (l.at(i).toElement().hasAttribute("live"))
-        //{
-        //    s->load();
-        //}
     }
     return true;
 }
