@@ -48,6 +48,10 @@ public:
     explicit Session(QObject* parent = 0);
     QDomElement getUpdatedXml(QDomDocument& document);
     MainWindow* mainWindow();
+    inline bool isLive() const
+    {
+        return m_live;
+    }
     
     bool load();
     void setMainWindow(MainWindow *w);

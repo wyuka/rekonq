@@ -37,9 +37,10 @@
 #include <QtCore/QObject>
 
 // Forward Declarations
+class MainWindow;
+class QDomDocument;
 class QString;
 class Session;
-class MainWindow;
 
 typedef QList< Session* > SessionList;
 

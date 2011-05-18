@@ -60,37 +60,30 @@ void SessionManager::saveSessions()
 
     kDebug() << "in saveSessions()";
 
-    QDomDocument document("sessionFile");
-    QDomElement sessionFileDom = document.createElement("sessionFile");
+    QDomDocument domDocument("sessionFile");
+    QDomElement sessionFileDom = domDocument.createElement("sessionFile");
 
     Session* s;
     foreach (s, m_sessionList)
     {
-        QDomElement e = s->getUpdatedXml(document);
+        QDomElement e = s->getUpdatedXml(domDocument);
         sessionFileDom.appendChild(e);
     }
 
-    document.appendChild(sessionFileDom);
-    QFile mysessionFile("/home/tirtha/rekonq/lol");
-    if (!mysessionFile.open(QFile::WriteOnly | QFile::Truncate))
-    {
-        kDebug() << "Unable to open session file" << mysessionFile.fileName();
-        return;
-    }
+    domDocument.appendChild(sessionFileDom);
     kDebug() << "starting write";
 
-    /*QFile sessionFile(m_sessionFilePath);
+    QFile sessionFile(m_sessionFilePath);
     if (!sessionFile.open(QFile::WriteOnly | QFile::Truncate))
     {
         kDebug() << "Unable to open session file" << sessionFile.fileName();
         return;
-    }*/
-    QTextStream out(&mysessionFile);
+    }
+    QTextStream out(&sessionFile);
     kDebug() << "created textstream";
-    //out << document.toString();
-    document.save(out,2);
+    domDocument.save(out,2);
     kDebug() << "wrote out document";
-    //sessionFile.close();
+    sessionFile.close();
     kDebug() << "write finished";
     m_safe = true;
     return;
@@ -158,17 +151,20 @@ bool SessionManager::restoreSessions()
                 rApp->newMainWindow(true);
                 s = m_sessionList.at(0);
             }
+            s->setXml(l.at(i).toElement());
+            s->load();
         }
         else
         {
             newSession(false);
             s = m_sessionList.at(0);
+            s->setXml(l.at(i).toElement());
         }
-        s->setXml(l.at(i).toElement());
-        if (l.at(i).toElement().hasAttribute("live"))
-        {
-            s->load();
-        }
+        //s->setXml(l.at(i).toElement());
+        //if (l.at(i).toElement().hasAttribute("live"))
+        //{
+        //    s->load();
+        //}
     }
     return true;
 }
@@ -214,3 +210,4 @@ Session* SessionManager::newSession(bool live, MainWindow *w)
     kDebug() << "created new session";
     return s;
 }
+

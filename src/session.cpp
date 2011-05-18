@@ -64,7 +64,7 @@ QDomElement Session::getUpdatedXml(QDomDocument& document)
         {
             QByteArray url = mv->webTab(i)->url().toEncoded();
             QString title = mv->webTab(i)->view()->title();
-            
+
             QDomElement tab = document.createElement("tab");
             tab.setAttribute("title",title);
             tab.setAttribute("url",QString(url));
