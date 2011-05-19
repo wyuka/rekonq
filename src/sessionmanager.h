@@ -61,10 +61,16 @@ public:
     QStringList closedSites();
     Session* newSession(bool live, MainWindow *w=0);
 
+signals:
+    void readyForSave();
+
 public slots:
     bool restoreSessions();
-    void saveSessions();
     void deactivateSession();
+    
+protected slots:
+    void updateSessions();
+    void saveSessions();
 
 private:
     QString m_sessionFilePath;

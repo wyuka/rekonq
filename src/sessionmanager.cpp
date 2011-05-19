@@ -49,6 +49,7 @@ SessionManager::SessionManager(QObject *parent)
         , m_safe(false)
 {
     m_sessionFilePath = KStandardDirs::locateLocal("appdata" , "session");
+    connect(this, SIGNAL(readyForSave()), this, SLOT(saveSessions()));
 }
 
 
@@ -58,15 +59,12 @@ void SessionManager::saveSessions()
         return;
     m_safe = false;
 
-    kDebug() << "in saveSessions()";
-
     QDomDocument domDocument("sessionFile");
     QDomElement sessionFileDom = domDocument.createElement("sessionFile");
 
     Session* s;
     foreach (s, m_sessionList)
     {
-        s->update();
         QDomElement e = s->getXml(domDocument);
         sessionFileDom.appendChild(e);
     }
@@ -180,7 +178,7 @@ Session* SessionManager::newSession(bool live, MainWindow *w)
     {
         s->activate(w);
     }
-    connect(s,SIGNAL(changesMade()),this,SLOT(saveSessions()));
+    connect(s,SIGNAL(changesMade()),this,SIGNAL(readyForSave()));
     m_sessionList.prepend(s);
     return s;
 }
@@ -197,4 +195,14 @@ void SessionManager::deactivateSession()
             s->deactivate();
         }
     }
+}
+
+void SessionManager::updateSessions()
+{
+    Session* s;
+    foreach (s, m_sessionList)
+    {
+        s->update();
+    }
+    emit readyForSave();
 }
