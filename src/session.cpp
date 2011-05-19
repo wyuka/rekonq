@@ -82,7 +82,7 @@ QDomElement Session::getXml(QDomDocument& document)
     }
     if (m_live)
     {
-        sessionDom.setAttribute("live","true");
+        sessionDom.setAttribute("active","true");
     }
     return sessionDom;
 }

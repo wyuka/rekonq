@@ -1548,9 +1548,7 @@ bool MainWindow::queryClose()
         switch (answer)
         {
         case KMessageBox::Yes:
-            {
-                emit windowClosed();
-            }
+            emit windowClosed();
             return true;
 
         case KMessageBox::No:

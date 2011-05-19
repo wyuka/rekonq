@@ -118,7 +118,7 @@ bool SessionManager::restoreSessions()
     Session* s;
     for (int i = 0; i < l.count(); ++i)
     {
-        if (l.at(i).toElement().hasAttribute("live"))
+        if (l.at(i).toElement().hasAttribute("active"))
         {
             if (alreadyOpenSession)
             {
