@@ -116,7 +116,6 @@ MainWindow::MainWindow()
         , m_hidePopupTimer(new QTimer(this))
         , m_toolsMenu(0)
         , m_developerMenu(0)
-        , m_session(rApp->sessionManager()->newSession(true, this))
 {
     // creating a centralWidget containing panel, m_view and the hidden findbar
     QWidget *centralWidget = new QWidget;
@@ -320,8 +319,8 @@ void MainWindow::postLaunch()
     connect(m_view, SIGNAL(currentChanged(int)), m_zoomBar, SLOT(updateSlider(int)));
     // Ctrl + wheel handling
     connect(this->currentTab()->view(), SIGNAL(zoomChanged(int)), m_zoomBar, SLOT(setValue(int)));
-    
-    connect(this, SIGNAL(lastWindowClosed()), rApp->sessionManager(), SLOT(saveSessions()));
+    // On closing window session becomes inactive
+    connect(this, SIGNAL(windowClosed()), rApp->sessionManager(), SLOT(deactivateSession()));
 
     // setting up toolbars to NOT have context menu enabled
     setContextMenuPolicy(Qt::DefaultContextMenu);
@@ -1550,8 +1549,7 @@ bool MainWindow::queryClose()
         {
         case KMessageBox::Yes:
             {
-                m_session->toDead();
-                rApp->sessionManager()->saveSessions();
+                emit windowClosed();
             }
             return true;
 
@@ -1563,7 +1561,6 @@ bool MainWindow::queryClose()
             return false;
         }
     }
-    emit lastWindowClosed();
     return true;
 }
 

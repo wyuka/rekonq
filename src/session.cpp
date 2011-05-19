@@ -65,6 +65,7 @@ void Session::update()
         QByteArray url = mv->webTab(i)->url().toEncoded();
         m_urlList << url;
     }
+    //emit changesMade();
 }
 
 
@@ -103,20 +104,19 @@ bool Session::load()
     {
         if (m_window)
         {
-            rApp->loadUrl(KUrl(m_urlList.at(0)), Rekonq::CurrentTab, m_window);
-
             QString urlString;
             bool firstTab = true;
             foreach (urlString, m_urlList)
             {
+                kDebug() << "loading url " << urlString << "while firstTab is " << firstTab;
                 if (firstTab)
                 {
-                    rApp->loadUrl(KUrl(urlString), Rekonq::NewFocusedTab, m_window);
+                    rApp->loadUrl(KUrl(urlString), Rekonq::CurrentTab, m_window);
                     firstTab = false;
                 }
                 else
                 {
-                    rApp->loadUrl(KUrl(urlString), Rekonq::CurrentTab, m_window);
+                    rApp->loadUrl(KUrl(urlString), Rekonq::NewFocusedTab, m_window);
                 }
             }
         }
@@ -144,17 +144,18 @@ MainWindow* Session::mainWindow()
 }
 
 
-void Session::toDead()
+void Session::deactivate()
 {
     if (m_live)
     {
         m_window = 0;
         m_live = false;
+        emit changesMade();
     }
 }
 
 
-void Session::toLive(MainWindow* w)
+void Session::activate(MainWindow* w)
 {
     if (!m_live)
     {

@@ -178,10 +178,23 @@ Session* SessionManager::newSession(bool live, MainWindow *w)
     Session* s = new Session(this);
     if (live == true && w != 0)
     {
-        s->toLive(w);
+        s->activate(w);
     }
+    connect(s,SIGNAL(changesMade()),this,SLOT(saveSessions()));
     m_sessionList.prepend(s);
-    kDebug() << "created new session";
     return s;
 }
 
+
+void SessionManager::deactivateSession()
+{
+    Session* s;
+    MainWindow *window = qobject_cast<MainWindow *>(sender());
+    foreach (s, m_sessionList)
+    {
+        if (s->mainWindow() == window)
+        {
+            s->deactivate();
+        }
+    }
+}

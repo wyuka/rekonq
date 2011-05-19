@@ -57,9 +57,13 @@ public:
     bool load();
     void update();
     void setMainWindow(MainWindow *w);
-    void toDead();
-    void toLive(MainWindow *w);
+    void deactivate();
+    void activate(MainWindow *w);
     void setXml(QDomElement sessionDom);
+
+signals:
+    void changesMade();
+
 private:
     MainWindow *m_window;
     QStringList m_urlList;

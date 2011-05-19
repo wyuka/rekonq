@@ -125,8 +125,8 @@ Q_SIGNALS:
 
     void triggerPartPrint();
     void triggerPartFind();
-    
-    void lastWindowClosed();
+
+    void windowClosed();
 
 protected Q_SLOTS:
     void saveNewToolbarConfig();
@@ -216,8 +216,6 @@ private:
 
     KMenu *m_toolsMenu;
     KActionMenu *m_developerMenu;
-
-    Session* m_session;
 };
 
 #endif // MAINWINDOW_H

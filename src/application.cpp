@@ -423,6 +423,7 @@ MainWindow *Application::newMainWindow(bool withTab)
     // This is used to track which window was activated most recently
     w->installEventFilter(this);
     // Create a new live session for the window
+    sessionManager()->newSession(true,w);
 
     if (withTab)
         w->mainView()->newWebTab();    // remember using newWebTab and NOT newTab here!!

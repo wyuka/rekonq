@@ -64,6 +64,7 @@ public:
 public slots:
     bool restoreSessions();
     void saveSessions();
+    void deactivateSession();
 
 private:
     QString m_sessionFilePath;
