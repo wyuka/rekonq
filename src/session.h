@@ -33,13 +33,19 @@
 // Rekonq Includes
 #include "rekonq_defines.h"
 
+//Local Includes
+#include "sessiontabdata.h"
+
 // Qt Includes
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <QtXml/QDomElement>
+#include <QtCore/QList>
 
 class MainWindow;
 class QDomDocument;
+
+typedef QList<SessionTabData> TabDataList;
 
 class Session : public QObject
 {
@@ -67,7 +73,8 @@ signals:
 private:
     MainWindow *m_window;
     QStringList m_urlList;
+    TabDataList m_tabDataList;
     bool m_live;
 };
 
-#endif
+#endif // SESSION_H

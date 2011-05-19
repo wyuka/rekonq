@@ -34,6 +34,7 @@
 #include "application.h"
 #include "mainview.h"
 #include "mainwindow.h"
+#include "sessiontabdata.h"
 #include "tabbar.h"
 #include "webtab.h"
 
@@ -52,7 +53,7 @@ Session::Session(QObject* parent)
     m_window = 0;
 }
 
-void Session::update()
+/*void Session::update()
 {
     if (!m_live)
     {
@@ -65,19 +66,40 @@ void Session::update()
         QByteArray url = mv->webTab(i)->url().toEncoded();
         m_urlList << url;
     }
-    //emit changesMade();
+}*/
+
+
+void Session::update()
+{
+    if (!m_live)
+    {
+        return;
+    }
+    MainView *mv = m_window->mainView();
+    m_tabDataList.clear();
+    for (int i=0; i < mv->count(); ++i)
+    {
+        KUrl url = mv->webTab(i)->url();
+        QString title = mv->webTab(i)->view()->title();
+        
+        SessionTabData tabData;
+        tabData.setUrl(url);
+        tabData.setTitle(title);
+        m_tabDataList << tabData;
+    }
 }
 
 
 QDomElement Session::getXml(QDomDocument& document)
 {
-    kDebug() << "in here..";
     QDomElement sessionDom = document.createElement("session");
-    QString urlString;
-    foreach(urlString, m_urlList)
+    //QString urlString;
+    SessionTabData tabData;
+    foreach(tabData, m_tabDataList)
     {
         QDomElement tab = document.createElement("tab");
-        tab.setAttribute("url",urlString);
+        tab.setAttribute("url",QString(tabData.url().toEncoded()));
+        tab.setAttribute("title",tabData.title());
         sessionDom.appendChild(tab);
     }
     if (m_live)
@@ -90,10 +112,16 @@ QDomElement Session::getXml(QDomDocument& document)
 
 void Session::setXml(QDomElement sessionDom)
 {
-    m_urlList.clear();
+    //m_urlList.clear();
+    m_tabDataList.clear();
     for (int tabNo = 0; tabNo < sessionDom.elementsByTagName("tab").count(); ++tabNo)
     {
-        m_urlList << sessionDom.elementsByTagName("tab").at(tabNo).toElement().attribute("url");
+        KUrl url(sessionDom.elementsByTagName("tab").at(tabNo).toElement().attribute("url"));
+        QString title(sessionDom.elementsByTagName("tab").at(tabNo).toElement().attribute("title"));
+        SessionTabData tabData;
+        tabData.setUrl(url);
+        tabData.setTitle(title);
+        m_tabDataList << tabData;
     }
 }
 
@@ -104,19 +132,19 @@ bool Session::load()
     {
         if (m_window)
         {
-            QString urlString;
+            //QString urlString;
             bool firstTab = true;
-            foreach (urlString, m_urlList)
+            SessionTabData tabData;
+            foreach(tabData, m_tabDataList)
             {
-                kDebug() << "loading url " << urlString << "while firstTab is " << firstTab;
                 if (firstTab)
                 {
-                    rApp->loadUrl(KUrl(urlString), Rekonq::CurrentTab, m_window);
+                    rApp->loadUrl(tabData.url(), Rekonq::CurrentTab, m_window);
                     firstTab = false;
                 }
                 else
                 {
-                    rApp->loadUrl(KUrl(urlString), Rekonq::NewFocusedTab, m_window);
+                    rApp->loadUrl(tabData.url(), Rekonq::NewFocusedTab, m_window);
                 }
             }
         }

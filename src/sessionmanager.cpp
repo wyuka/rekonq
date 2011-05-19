@@ -84,6 +84,7 @@ void SessionManager::saveSessions()
     return;
 }
 
+
 bool SessionManager::restoreSessions()
 {
     QFile sessionFile(m_sessionFilePath);
@@ -141,6 +142,7 @@ bool SessionManager::restoreSessions()
     return true;
 }
 
+
 QStringList SessionManager::closedSites()
 {
     QStringList list;
@@ -153,7 +155,6 @@ QStringList SessionManager::closedSites()
         kDebug() << "Unable to open session file" << sessionFile.fileName();
         return list;
     }
-    kDebug() << "starting read";
     QDomDocument document("sessionFile");
     if (!document.setContent(&sessionFile, false))
     {
@@ -161,15 +162,14 @@ QStringList SessionManager::closedSites()
         return list;
     }
     sessionFile.close();
-    kDebug() << "read finished";
     QDomNodeList l = document.elementsByTagName("tab");
-    kDebug() << l.count() << "tabs read";
     for (int i = 0; i < l.count(); ++i)
     {
         list << l.at(i).toElement().attribute("url");
     }
     return list;
 }
+
 
 Session* SessionManager::newSession(bool live, MainWindow *w)
 {
@@ -196,6 +196,7 @@ void SessionManager::deactivateSession()
         }
     }
 }
+
 
 void SessionManager::updateSessions()
 {
