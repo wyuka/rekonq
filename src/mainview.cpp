@@ -550,6 +550,7 @@ void MainView::webViewLoadFinished(bool ok)
 
     webViewIconChanged();
     emit browserTabLoading(false);
+    emit tabsChanged(); // to update changes in thumbnail
 
     // don't display messages for background tabs
     if (index != currentIndex())
@@ -606,6 +607,7 @@ void MainView::webViewTitleChanged(const QString &title)
     rApp->historyManager()->updateHistoryEntry(tab->url(), tabTitle);
     if (ReKonfig::hoveringTabOption() == 1)
         tabBar()->setTabToolTip(index, tabTitle.remove('&'));
+    emit tabsChanged(); // to update changes in title
 }
 
 
@@ -620,7 +622,7 @@ void MainView::webViewUrlChanged(const QUrl &url)
     if (ReKonfig::hoveringTabOption() == 2)
         tabBar()->setTabToolTip(index, webTab(index)->url().toMimeDataString());
 
-    emit tabsChanged();
+    emit tabsChanged(); // to update changes in url
 }
 
 

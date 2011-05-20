@@ -36,6 +36,7 @@
 #include "mainwindow.h"
 #include "sessiontabdata.h"
 #include "tabbar.h"
+#include "websnap.h"
 #include "webtab.h"
 
 // KDE Includes
@@ -52,21 +53,6 @@ Session::Session(QObject* parent)
     m_live = false;
     m_window = 0;
 }
-
-/*void Session::update()
-{
-    if (!m_live)
-    {
-        return;
-    }
-    MainView *mv = m_window->mainView();
-    m_urlList.clear();
-    for (int i=0; i < mv->count(); ++i)
-    {
-        QByteArray url = mv->webTab(i)->url().toEncoded();
-        m_urlList << url;
-    }
-}*/
 
 
 void Session::update()
@@ -85,6 +71,7 @@ void Session::update()
         SessionTabData tabData;
         tabData.setUrl(url);
         tabData.setTitle(title);
+        tabData.setThumbnail(WebSnap::renderTabPreview(*mv->webTab(i)->page(),200,150));
         m_tabDataList << tabData;
     }
 }
@@ -93,13 +80,18 @@ void Session::update()
 QDomElement Session::getXml(QDomDocument& document)
 {
     QDomElement sessionDom = document.createElement("session");
-    //QString urlString;
     SessionTabData tabData;
+    QString thumbnailPath;
     foreach(tabData, m_tabDataList)
     {
         QDomElement tab = document.createElement("tab");
         tab.setAttribute("url",QString(tabData.url().toEncoded()));
         tab.setAttribute("title",tabData.title());
+        if (m_live)
+        {
+            tabData.saveThumbnail();
+        }
+        //if (!tabData.thumbnail().isNull()) tab.setAttribute("thumb",WebSnap::imagePathFromUrl(tabData.url()));
         sessionDom.appendChild(tab);
     }
     if (m_live)
@@ -112,7 +104,6 @@ QDomElement Session::getXml(QDomDocument& document)
 
 void Session::setXml(QDomElement sessionDom)
 {
-    //m_urlList.clear();
     m_tabDataList.clear();
     for (int tabNo = 0; tabNo < sessionDom.elementsByTagName("tab").count(); ++tabNo)
     {
@@ -121,6 +112,8 @@ void Session::setXml(QDomElement sessionDom)
         SessionTabData tabData;
         tabData.setUrl(url);
         tabData.setTitle(title);
+        tabData.loadThumbnail();
+
         m_tabDataList << tabData;
     }
 }
@@ -132,7 +125,6 @@ bool Session::load()
     {
         if (m_window)
         {
-            //QString urlString;
             bool firstTab = true;
             SessionTabData tabData;
             foreach(tabData, m_tabDataList)
