@@ -127,6 +127,16 @@ Q_SIGNALS:
     void triggerPartFind();
 
     void windowClosed();
+    
+    // tab change signals
+    // - one tab is closed
+    void tabClosed(WebTab* webTab);
+    // - one tab is added
+    void tabAdded(WebTab* webTab);
+    // - one tab is updated (eg: changes url)
+    void tabChanged(WebTab* webTab);
+    // - current tab changes
+    void currentTabChanged(WebTab* webTab);
 
 protected Q_SLOTS:
     void saveNewToolbarConfig();

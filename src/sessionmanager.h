@@ -69,7 +69,6 @@ public slots:
     void deactivateSession();
     
 protected slots:
-    void updateSessions();
     void saveSessions();
 
 private:

@@ -113,7 +113,11 @@ void MainView::postLaunch()
     }
 
     // Session Manager
-    connect(this, SIGNAL(tabsChanged()), rApp->sessionManager(), SLOT(updateSessions()));
+    //connect(this, SIGNAL(tabsChanged()), rApp->sessionManager(), SLOT(updateSessions()));
+    connect(this, SIGNAL(tabAdded(WebTab*)), m_parentWindow, SIGNAL(tabAdded(WebTab*)));
+    connect(this, SIGNAL(tabClosed(WebTab*)), m_parentWindow, SIGNAL(tabClosed(WebTab*)));
+    connect(this, SIGNAL(tabChanged(WebTab*)), m_parentWindow, SIGNAL(tabChanged(WebTab*)));
+    connect(this, SIGNAL(currentTabChanged(WebTab*)), m_parentWindow, SIGNAL(currentTabChanged(WebTab*)));
 
     m_addTabButton->setDefaultAction(m_parentWindow->actionByName("new_tab"));
 
@@ -282,7 +286,7 @@ void MainView::currentChanged(int index)
 
     tabBar()->resetTabHighlighted(index);
 
-    emit tabsChanged();
+    emit currentTabChanged(tab);
 }
 
 
@@ -330,15 +334,10 @@ WebTab *MainView::newWebTab(bool focused)
     }
     updateTabBar();
 
+    emit tabAdded(tab);
     if (focused)
     {
         setCurrentWidget(tab);
-    }
-    else
-    {
-        // if tab is not focused,
-        // current index doesn't change...
-        emit tabsChanged();
     }
 
     return tab;
@@ -507,8 +506,7 @@ void MainView::closeTab(int index, bool del)
     }
 
     // if tab was not focused, current index does not change...
-    if (index != currentIndex())
-        emit tabsChanged();
+    emit tabClosed(tabToClose);
 }
 
 
@@ -550,7 +548,7 @@ void MainView::webViewLoadFinished(bool ok)
 
     webViewIconChanged();
     emit browserTabLoading(false);
-    emit tabsChanged(); // to update changes in thumbnail
+    emit tabChanged(webTab(index)); // to update changes in thumbnail
 
     // don't display messages for background tabs
     if (index != currentIndex())
@@ -607,7 +605,7 @@ void MainView::webViewTitleChanged(const QString &title)
     rApp->historyManager()->updateHistoryEntry(tab->url(), tabTitle);
     if (ReKonfig::hoveringTabOption() == 1)
         tabBar()->setTabToolTip(index, tabTitle.remove('&'));
-    emit tabsChanged(); // to update changes in title
+    emit tabChanged(tab); // to update changes in title
 }
 
 
@@ -622,7 +620,7 @@ void MainView::webViewUrlChanged(const QUrl &url)
     if (ReKonfig::hoveringTabOption() == 2)
         tabBar()->setTabToolTip(index, webTab(index)->url().toMimeDataString());
 
-    emit tabsChanged(); // to update changes in url
+    emit tabChanged(webTab(index)); // to update changes in url
 }
 
 

@@ -49,49 +49,91 @@
 
 Session::Session(QObject* parent)
         : QObject(parent)
+        , m_window(0)
+        , m_currentTabData(0)
 {
     m_live = false;
     m_window = 0;
+    m_webTabMap.clear();
+    m_tabDataList.clear();
 }
 
 
-void Session::update()
+void Session::addTabData(WebTab* webTab)
 {
-    if (!m_live)
+    if (m_webTabMap.find(webTab) != m_webTabMap.end())
+    {
+        changeTabData(webTab);
+        return;
+    }
+    SessionTabData* tabData = new SessionTabData(this);
+    tabData->setTitle(webTab->view()->title());
+    tabData->setUrl(webTab->url());
+    m_tabDataList << tabData;
+    m_webTabMap[webTab] = tabData;
+    emit changesMade();
+}
+
+
+void Session::changeTabData(WebTab* webTab)
+{
+    if (m_webTabMap.find(webTab) == m_webTabMap.end())
+    {
+        addTabData(webTab);
+        return;
+    }
+    SessionTabData* tabData = m_webTabMap[webTab];
+    tabData->setTitle(webTab->view()->title());
+    tabData->setUrl(webTab->url());
+    tabData->setThumbnail(WebSnap::renderTabPreview(*webTab->page(), 200 , 150));
+    emit changesMade();
+}
+
+
+void Session::removeTabData(WebTab* webTab)
+{
+    if (m_webTabMap.find(webTab) == m_webTabMap.end())
     {
         return;
     }
-    MainView *mv = m_window->mainView();
-    m_tabDataList.clear();
-    for (int i=0; i < mv->count(); ++i)
+    SessionTabData* tabData = m_webTabMap[webTab];
+    m_tabDataList.removeOne(tabData);
+    m_webTabMap.remove(webTab);
+    tabData->deleteLater();
+    emit changesMade();
+}
+
+
+void Session::setCurrentTabData(WebTab* webTab)
+{
+    if (m_webTabMap.find(webTab) == m_webTabMap.end())
     {
-        KUrl url = mv->webTab(i)->url();
-        QString title = mv->webTab(i)->view()->title();
-        
-        SessionTabData tabData;
-        tabData.setUrl(url);
-        tabData.setTitle(title);
-        tabData.setThumbnail(WebSnap::renderTabPreview(*mv->webTab(i)->page(),200,150));
-        m_tabDataList << tabData;
+        addTabData(webTab);
     }
+    m_currentTabData = m_webTabMap[webTab];
+    changesMade();
 }
 
 
 QDomElement Session::getXml(QDomDocument& document)
 {
     QDomElement sessionDom = document.createElement("session");
-    SessionTabData tabData;
+    SessionTabData* tabData;
     QString thumbnailPath;
     foreach(tabData, m_tabDataList)
     {
         QDomElement tab = document.createElement("tab");
-        tab.setAttribute("url",QString(tabData.url().toEncoded()));
-        tab.setAttribute("title",tabData.title());
+        tab.setAttribute("url",QString(tabData->url().toEncoded()));
+        tab.setAttribute("title",tabData->title());
         if (m_live)
         {
-            tabData.saveThumbnail();
+            tabData->saveThumbnail();
         }
-        //if (!tabData.thumbnail().isNull()) tab.setAttribute("thumb",WebSnap::imagePathFromUrl(tabData.url()));
+        //if (!tabData->thumbnail().isNull()) tab.setAttribute("thumb",WebSnap::imagePathFromUrl(tabData->url()));
+        if (m_currentTabData == tabData)
+        {
+            tab.setAttribute("current","true");
+        }
         sessionDom.appendChild(tab);
     }
     if (m_live)
@@ -104,15 +146,19 @@ QDomElement Session::getXml(QDomDocument& document)
 
 void Session::setXml(QDomElement sessionDom)
 {
-    m_tabDataList.clear();
+    clearSession();
     for (int tabNo = 0; tabNo < sessionDom.elementsByTagName("tab").count(); ++tabNo)
     {
         KUrl url(sessionDom.elementsByTagName("tab").at(tabNo).toElement().attribute("url"));
         QString title(sessionDom.elementsByTagName("tab").at(tabNo).toElement().attribute("title"));
-        SessionTabData tabData;
-        tabData.setUrl(url);
-        tabData.setTitle(title);
-        tabData.loadThumbnail();
+        SessionTabData *tabData = new SessionTabData(this);
+        tabData->setUrl(url);
+        tabData->setTitle(title);
+        tabData->loadThumbnail();
+        if (sessionDom.elementsByTagName("tab").at(tabNo).toElement().hasAttribute("current"))
+        {
+            m_currentTabData = tabData;
+        }
 
         m_tabDataList << tabData;
     }
@@ -126,17 +172,26 @@ bool Session::load()
         if (m_window)
         {
             bool firstTab = true;
-            SessionTabData tabData;
+            SessionTabData* tabData;
+            WebTab* webTab;
             foreach(tabData, m_tabDataList)
             {
                 if (firstTab)
                 {
-                    rApp->loadUrl(tabData.url(), Rekonq::CurrentTab, m_window);
+                    webTab = rApp->loadUrl(tabData->url(), Rekonq::CurrentTab, m_window);
                     firstTab = false;
                 }
                 else
                 {
-                    rApp->loadUrl(tabData.url(), Rekonq::NewFocusedTab, m_window);
+                    webTab = rApp->loadUrl(tabData->url(), Rekonq::NewBackTab, m_window);
+                }
+                if (webTab)
+                {
+                    m_webTabMap[webTab] = tabData;
+                }
+                if (tabData == m_currentTabData)
+                {
+                    m_window->mainView()->setCurrentWidget(webTab);
                 }
             }
         }
@@ -149,16 +204,21 @@ bool Session::load()
 }
 
 
-void Session::setMainWindow(MainWindow* w)
+void Session::setWindow(MainWindow* w)
 {
-    if (w)
+    if (!m_live)
     {
-        m_window = w;
+        m_live = true;
     }
+    m_window = w;
+    connect(m_window,SIGNAL(tabAdded(WebTab*)),this,SLOT(addTabData(WebTab*)));
+    connect(m_window,SIGNAL(tabClosed(WebTab*)),this,SLOT(removeTabData(WebTab*)));
+    connect(m_window,SIGNAL(tabChanged(WebTab*)),this,SLOT(changeTabData(WebTab*)));
+    connect(m_window,SIGNAL(currentTabChanged(WebTab*)),this,SLOT(setCurrentTabData(WebTab*)));
 }
 
 
-MainWindow* Session::mainWindow()
+MainWindow* Session::window()
 {
     return m_window;
 }
@@ -168,18 +228,21 @@ void Session::deactivate()
 {
     if (m_live)
     {
+        m_window->disconnect(this);
         m_window = 0;
         m_live = false;
+        clearSession();
         emit changesMade();
     }
 }
 
-
-void Session::activate(MainWindow* w)
+void Session::clearSession()
 {
-    if (!m_live)
+    SessionTabData* tabData;
+    foreach(tabData, m_tabDataList)
     {
-        m_window = w;
-        m_live = true;
+        tabData->deleteLater();
     }
+    m_tabDataList.clear();
+    m_webTabMap.clear();
 }

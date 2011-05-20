@@ -106,12 +106,15 @@ public:
     }
 
 Q_SIGNALS:
-    // tabs change when:
-    // - current tab change
+    // tab change signals
     // - one tab is closed
+    void tabClosed(WebTab* webTab);
     // - one tab is added
+    void tabAdded(WebTab* webTab);
     // - one tab is updated (eg: changes url)
-    void tabsChanged();
+    void tabChanged(WebTab* webTab);
+    // - current tab changes
+    void currentTabChanged(WebTab* webTab);
 
     // current tab signals
     void currentTitle(const QString &url);

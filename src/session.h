@@ -41,11 +41,13 @@
 #include <QtCore/QStringList>
 #include <QtXml/QDomElement>
 #include <QtCore/QList>
+#include <QtCore/QMap>
 
 class MainWindow;
 class QDomDocument;
+class WebTab;
 
-typedef QList<SessionTabData> TabDataList;
+typedef QList<SessionTabData* > TabDataList;
 
 class Session : public QObject
 {
@@ -53,26 +55,36 @@ class Session : public QObject
 
 public:
     explicit Session(QObject* parent = 0);
+
     QDomElement getXml(QDomDocument& document);
-    MainWindow* mainWindow();
-    inline bool isLive() const
+    MainWindow* window();
+    inline bool live() const
     {
         return m_live;
     }
-    
-    bool load();
-    void update();
-    void setMainWindow(MainWindow *w);
-    void deactivate();
-    void activate(MainWindow *w);
+
     void setXml(QDomElement sessionDom);
+    void setWindow(MainWindow *w);
+    bool load();
+    void deactivate();
 
 signals:
     void changesMade();
 
+protected slots:
+    void addTabData(WebTab* webTab);
+    void removeTabData(WebTab* webTab);
+    void changeTabData(WebTab* webTab);
+    void setCurrentTabData(WebTab* webTab);
+
+    //utility function
+    void clearSession();
+
 private:
     MainWindow *m_window;
     QStringList m_urlList;
+    QMap<WebTab*,SessionTabData*> m_webTabMap;
+    SessionTabData* m_currentTabData;
     TabDataList m_tabDataList;
     bool m_live;
 };

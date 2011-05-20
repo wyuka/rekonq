@@ -342,7 +342,7 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 void TabBar::tabMoved(int, int)
 {
     MainView *mv = qobject_cast<MainView *>(parent());
-    QTimer::singleShot(200, mv, SIGNAL(tabsChanged()));
+    //QTimer::singleShot(200, mv, SIGNAL(tabsChanged()));
 }
 
 

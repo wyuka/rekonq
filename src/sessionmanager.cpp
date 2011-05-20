@@ -97,7 +97,7 @@ bool SessionManager::restoreSessions()
     }
 
     Session* alreadyOpenSession = rApp->mainWindowList().count()
-                                ? m_sessionList.at(0)
+                                ? m_sessionList.last()
                                 : 0;
 
     QDomDocument document("sessionFile");
@@ -127,7 +127,7 @@ bool SessionManager::restoreSessions()
             else
             {
                 rApp->newMainWindow(true);
-                s = m_sessionList.at(0);
+                s = m_sessionList.last();
             }
             s->setXml(l.at(i).toElement());
             s->load();
@@ -135,7 +135,7 @@ bool SessionManager::restoreSessions()
         else
         {
             newSession(false);
-            s = m_sessionList.at(0);
+            s = m_sessionList.last();
             s->setXml(l.at(i).toElement());
         }
     }
@@ -176,10 +176,10 @@ Session* SessionManager::newSession(bool live, MainWindow *w)
     Session* s = new Session(this);
     if (live == true && w != 0)
     {
-        s->activate(w);
+        s->setWindow(w);
     }
     connect(s,SIGNAL(changesMade()),this,SIGNAL(readyForSave()));
-    m_sessionList.prepend(s);
+    m_sessionList << s;
     return s;
 }
 
@@ -190,20 +190,9 @@ void SessionManager::deactivateSession()
     MainWindow *window = qobject_cast<MainWindow *>(sender());
     foreach (s, m_sessionList)
     {
-        if (s->mainWindow() == window)
+        if (s->window() == window)
         {
             s->deactivate();
         }
     }
-}
-
-
-void SessionManager::updateSessions()
-{
-    Session* s;
-    foreach (s, m_sessionList)
-    {
-        s->update();
-    }
-    emit readyForSave();
 }

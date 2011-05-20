@@ -49,6 +49,7 @@ class IconManager;
 class MainWindow;
 class OpenSearchManager;
 class SessionManager;
+class WebTab;
 
 class KAction;
 
@@ -127,7 +128,7 @@ public slots:
      */
     void saveConfiguration() const;
 
-    void loadUrl(const KUrl& url,
+    WebTab* loadUrl(const KUrl& url,
                  const Rekonq::OpenType& type = Rekonq::CurrentTab,
                  MainWindow* window = 0
                 );
