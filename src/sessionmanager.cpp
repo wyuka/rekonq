@@ -49,7 +49,18 @@ SessionManager::SessionManager(QObject *parent)
         , m_safe(false)
 {
     m_sessionFilePath = KStandardDirs::locateLocal("appdata" , "session");
-    connect(this, SIGNAL(readyForSave()), this, SLOT(saveSessions()));
+
+    m_timer = new QTimer(this);
+    m_timer->setInterval(saveDelay);
+    m_timer->setSingleShot(true);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(saveSessions()));
+    connect(this, SIGNAL(readyForSave()), this, SLOT(doDelayedSave()));
+}
+
+
+void SessionManager::doDelayedSave()
+{
+    m_timer->start();
 }
 
 
@@ -171,10 +182,10 @@ QStringList SessionManager::closedSites()
 }
 
 
-Session* SessionManager::newSession(bool live, MainWindow *w)
+Session* SessionManager::newSession(bool active, MainWindow *w)
 {
     Session* s = new Session(this);
-    if (live == true && w != 0)
+    if (active == true && w != 0)
     {
         s->setWindow(w);
     }

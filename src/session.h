@@ -58,9 +58,9 @@ public:
 
     QDomElement getXml(QDomDocument& document);
     MainWindow* window();
-    inline bool live() const
+    inline bool isActive() const
     {
-        return m_live;
+        return m_active;
     }
 
     void setXml(QDomElement sessionDom);
@@ -86,7 +86,7 @@ private:
     QMap<WebTab*,SessionTabData*> m_webTabMap;
     SessionTabData* m_currentTabData;
     TabDataList m_tabDataList;
-    bool m_live;
+    bool m_active;
 };
 
 #endif // SESSION_H

@@ -35,14 +35,19 @@
 
 // Qt Includes
 #include <QtCore/QObject>
+#include <QtCore/QTimer>
 
 // Forward Declarations
 class MainWindow;
 class QDomDocument;
 class QString;
+class QTimer;
 class Session;
 
+
 typedef QList< Session* > SessionList;
+
+static const int saveDelay = 500;
 
 /**
   * Session Management
@@ -59,7 +64,7 @@ public:
     }
 
     QStringList closedSites();
-    Session* newSession(bool live, MainWindow *w=0);
+    Session* newSession(bool active, MainWindow *w=0);
 
 signals:
     void readyForSave();
@@ -70,11 +75,13 @@ public slots:
     
 protected slots:
     void saveSessions();
+    void doDelayedSave();
 
 private:
     QString m_sessionFilePath;
     bool m_safe;
     SessionList m_sessionList;
+    QTimer* m_timer;
 };
 
 

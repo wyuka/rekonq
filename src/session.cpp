@@ -52,7 +52,7 @@ Session::Session(QObject* parent)
         , m_window(0)
         , m_currentTabData(0)
 {
-    m_live = false;
+    m_active = false;
     m_window = 0;
     m_webTabMap.clear();
     m_tabDataList.clear();
@@ -125,7 +125,7 @@ QDomElement Session::getXml(QDomDocument& document)
         QDomElement tab = document.createElement("tab");
         tab.setAttribute("url",QString(tabData->url().toEncoded()));
         tab.setAttribute("title",tabData->title());
-        if (m_live)
+        if (m_active)
         {
             tabData->saveThumbnail();
         }
@@ -136,7 +136,7 @@ QDomElement Session::getXml(QDomDocument& document)
         }
         sessionDom.appendChild(tab);
     }
-    if (m_live)
+    if (m_active)
     {
         sessionDom.setAttribute("active","true");
     }
@@ -167,7 +167,7 @@ void Session::setXml(QDomElement sessionDom)
 
 bool Session::load()
 {
-    if (m_live)
+    if (m_active)
     {
         if (m_window)
         {
@@ -206,9 +206,9 @@ bool Session::load()
 
 void Session::setWindow(MainWindow* w)
 {
-    if (!m_live)
+    if (!m_active)
     {
-        m_live = true;
+        m_active = true;
     }
     m_window = w;
     connect(m_window,SIGNAL(tabAdded(WebTab*)),this,SLOT(addTabData(WebTab*)));
@@ -226,11 +226,11 @@ MainWindow* Session::window()
 
 void Session::deactivate()
 {
-    if (m_live)
+    if (m_active)
     {
         m_window->disconnect(this);
         m_window = 0;
-        m_live = false;
+        m_active = false;
         clearSession();
         emit changesMade();
     }
