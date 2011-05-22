@@ -208,6 +208,7 @@ void SessionManager::deactivateSession()
     }
 }
 
+
 void SessionManager::activateSession(Session* session)
 {
     if (session->isActive())

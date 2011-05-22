@@ -94,6 +94,13 @@ MainView::MainView(MainWindow *parent)
     // current page index changing
     connect(this, SIGNAL(currentChanged(int)), this, SLOT(currentChanged(int)));
 
+    // Session Manager
+    connect(this, SIGNAL(tabAdded(WebTab*)), m_parentWindow, SIGNAL(tabAdded(WebTab*)));
+    connect(this, SIGNAL(tabClosed(WebTab*)), m_parentWindow, SIGNAL(tabClosed(WebTab*)));
+    connect(this, SIGNAL(tabChanged(WebTab*)), m_parentWindow, SIGNAL(tabChanged(WebTab*)));
+    connect(this, SIGNAL(currentTabChanged(WebTab*)), m_parentWindow, SIGNAL(currentTabChanged(WebTab*)));
+
+
     QTimer::singleShot(0, this, SLOT(postLaunch()));
 }
 
@@ -111,13 +118,6 @@ void MainView::postLaunch()
         m_recentlyClosedTabs.removeAll(item);
         m_recentlyClosedTabs.prepend(item);
     }
-
-    // Session Manager
-    //connect(this, SIGNAL(tabsChanged()), rApp->sessionManager(), SLOT(updateSessions()));
-    connect(this, SIGNAL(tabAdded(WebTab*)), m_parentWindow, SIGNAL(tabAdded(WebTab*)));
-    connect(this, SIGNAL(tabClosed(WebTab*)), m_parentWindow, SIGNAL(tabClosed(WebTab*)));
-    connect(this, SIGNAL(tabChanged(WebTab*)), m_parentWindow, SIGNAL(tabChanged(WebTab*)));
-    connect(this, SIGNAL(currentTabChanged(WebTab*)), m_parentWindow, SIGNAL(currentTabChanged(WebTab*)));
 
     m_addTabButton->setDefaultAction(m_parentWindow->actionByName("new_tab"));
 
@@ -744,5 +744,6 @@ void MainView::detachTab(int index, MainWindow *toWindow)
         w->mainView()->addTab(tab, rApp->iconManager()->iconForUrl(u), label);
         w->mainView()->widgetBar()->insertWidget(0, bar);
         w->mainView()->updateTabBar();
+        emit w->mainView()->tabAdded(tab);
     }
 }
