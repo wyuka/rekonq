@@ -241,6 +241,7 @@ void MainWindow::updateToolsMenu()
 
         m_toolsMenu->addAction(actionByName(QL1S("private_browsing")));
         m_toolsMenu->addAction(actionByName(QL1S("clear_private_data")));
+        m_toolsMenu->addAction(actionByName(QL1S("view_sessions"))); // TODO remove this
 
         m_toolsMenu->addSeparator();
 
@@ -430,6 +431,12 @@ void MainWindow::setupActions()
     a->setShortcut(KShortcut(Qt::CTRL + Qt::Key_U));
     actionCollection()->addAction(QL1S("page_source"), a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(viewPageSource()));
+
+    a = new KAction(i18n("View Sessions"), this); // temporary, to test activation of inactive sessions
+    a->setIcon(KIcon("application-xhtml+xml")); // TODO remove this piece of code
+    a->setShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_E));
+    actionCollection()->addAction(QL1S("view_sessions"), a);
+    connect(a, SIGNAL(triggered(bool)), rApp->sessionManager(), SLOT(loadAllSessions()));
 
     a = rApp->privateBrowsingAction();
     a->setShortcut(Qt::ControlModifier + Qt::ShiftModifier + Qt::Key_P);

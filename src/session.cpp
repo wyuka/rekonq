@@ -228,10 +228,11 @@ void Session::deactivate()
 {
     if (m_active)
     {
+        m_webTabMap.clear();
         m_window->disconnect(this);
         m_window = 0;
         m_active = false;
-        clearSession();
+        
         emit changesMade();
     }
 }

@@ -63,13 +63,14 @@ public:
         return m_active;
     }
 
+signals:
+    void changesMade();
+
+public slots:
     void setXml(QDomElement sessionDom);
     void setWindow(MainWindow *w);
     bool load();
     void deactivate();
-
-signals:
-    void changesMade();
 
 protected slots:
     void addTabData(WebTab* webTab);

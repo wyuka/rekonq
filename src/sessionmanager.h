@@ -71,7 +71,9 @@ signals:
 
 public slots:
     bool restoreSessions();
+    void activateSession(Session* session);
     void deactivateSession();
+    void loadAllSessions();
     
 protected slots:
     void saveSessions();

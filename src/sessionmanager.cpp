@@ -207,3 +207,27 @@ void SessionManager::deactivateSession()
         }
     }
 }
+
+void SessionManager::activateSession(Session* session)
+{
+    if (session->isActive())
+    {
+        return;
+    }
+    MainWindow* window = rApp->newMainWindow(true);
+    Session* s = m_sessionList.last();
+    m_sessionList.removeLast();
+    s->deactivate();
+    s->deleteLater();
+    session->setWindow(window);
+    session->load();
+}
+
+
+void SessionManager::loadAllSessions()
+{
+    foreach(Session* s, m_sessionList)
+    {
+        activateSession(s);
+    }
+}
