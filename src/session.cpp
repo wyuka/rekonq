@@ -177,16 +177,16 @@ bool Session::load()
             {
                 if (firstTab)
                 {
-                    rApp->loadUrl(tabData->url(), Rekonq::CurrentTab, m_window);
+                    rApp->loadUrl(tabData->url(), Rekonq::CurrentTabLastWindow);
                     firstTab = false;
                 }
                 else if (tabData != m_currentTabData)
                 {
-                    rApp->loadUrl(tabData->url(), Rekonq::NewBackTab, m_window);
+                    rApp->loadUrl(tabData->url(), Rekonq::NewBackTabLastWindow);
                 }
                 else
                 {
-                    rApp->loadUrl(tabData->url(), Rekonq::NewFocusedTab, m_window);
+                    rApp->loadUrl(tabData->url(), Rekonq::NewFocusedTabLastWindow);
                 }
                 m_tabDataList.removeOne(tabData);
                 tabData->deleteLater();

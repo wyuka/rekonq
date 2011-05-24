@@ -356,7 +356,7 @@ IconManager *Application::iconManager()
 }
 
 
-void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type, MainWindow* window)
+void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type)
 {
     if (url.isEmpty())
         return;
@@ -370,12 +370,19 @@ void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type, MainWin
     // first, create the webview(s) to not let hangs UI..
     WebTab *tab = 0;
     MainWindow *w = 0;
-    w = (window == 0)
-        ? mainWindow()
-        : window;
-    w = (type == Rekonq::NewWindow)
-        ? newMainWindow()
-        : w;
+    
+    if (type == Rekonq::CurrentTabLastWindow || type == Rekonq::NewFocusedTabLastWindow || type == Rekonq::NewBackTabLastWindow)
+    {
+        w = m_mainWindows.at(0).data();
+    }
+    else if (type == Rekonq::NewWindow)
+    {
+        w = newMainWindow();
+    }
+    else
+    {
+        w = mainWindow();
+    }
 
     switch (type)
     {
@@ -388,13 +395,16 @@ void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type, MainWin
             tab = w->mainView()->currentWebTab();
         }
         break;
+    case Rekonq::NewFocusedTabLastWindow:
     case Rekonq::NewFocusedTab:
         tab = w->mainView()->newWebTab(true);
         break;
+    case Rekonq::NewBackTabLastWindow:
     case Rekonq::NewBackTab:
         tab = w->mainView()->newWebTab(false);
         break;
     case Rekonq::NewWindow:
+    case Rekonq::CurrentTabLastWindow:
     case Rekonq::CurrentTab:
         tab = w->mainView()->currentWebTab();
         break;
