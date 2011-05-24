@@ -178,21 +178,19 @@ bool Session::load()
             {
                 if (firstTab)
                 {
-                    webTab = rApp->loadUrl(tabData->url(), Rekonq::CurrentTab, m_window);
+                    rApp->loadUrl(tabData->url(), Rekonq::CurrentTab, m_window);
                     firstTab = false;
+                }
+                else if (tabData != m_currentTabData)
+                {
+                    rApp->loadUrl(tabData->url(), Rekonq::NewBackTab, m_window);
                 }
                 else
                 {
-                    webTab = rApp->loadUrl(tabData->url(), Rekonq::NewBackTab, m_window);
+                    rApp->loadUrl(tabData->url(), Rekonq::NewFocusedTab, m_window);
                 }
-                if (webTab)
-                {
-                    m_webTabMap[webTab] = tabData;
-                }
-                if (tabData == m_currentTabData)
-                {
-                    m_window->mainView()->setCurrentWidget(webTab);
-                }
+                m_tabDataList.removeOne(tabData);
+                tabData->deleteLater();
             }
         }
         else
