@@ -356,15 +356,15 @@ IconManager *Application::iconManager()
 }
 
 
-WebTab* Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type, MainWindow* window)
+void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type, MainWindow* window)
 {
     if (url.isEmpty())
-        return 0;
+        return;
 
     if (!url.isValid())
     {
         KMessageBox::error(0, i18n("Malformed URL:\n%1", url.url(KUrl::RemoveTrailingSlash)));
-        return 0;
+        return;
     }
 
     // first, create the webview(s) to not let hangs UI..
@@ -415,7 +415,6 @@ WebTab* Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type, Main
         FilterUrlJob *job = new FilterUrlJob(view, url.pathOrUrl(), this);
         Weaver::instance()->enqueue(job);
     }
-    return tab;
 }
 
 

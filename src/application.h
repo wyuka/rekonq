@@ -128,7 +128,7 @@ public slots:
      */
     void saveConfiguration() const;
 
-    WebTab* loadUrl(const KUrl& url,
+    void loadUrl(const KUrl& url,
                  const Rekonq::OpenType& type = Rekonq::CurrentTab,
                  MainWindow* window = 0
                 );

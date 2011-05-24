@@ -173,7 +173,6 @@ bool Session::load()
         {
             bool firstTab = true;
             SessionTabData* tabData;
-            WebTab* webTab;
             foreach(tabData, m_tabDataList)
             {
                 if (firstTab)
