@@ -164,6 +164,9 @@ MainWindow::MainWindow()
 
     // no more status bar..
     setStatusBar(0);
+    
+    // hide the session view
+    m_sessionView->hide();
 
     // give me some time to do all the other stuffs...
     QTimer::singleShot(100, this, SLOT(postLaunch()));
@@ -1644,6 +1647,12 @@ void MainWindow::showSessionView()
 {
     m_view->hide();
     m_view->widgetBar()->hide();
+    QWidget* centralWidget = new QWidget();
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(m_sessionView);
+    centralWidget->setLayout(layout);
+    setCentralWidget(centralWidget);
     m_sessionView->show();
 }
 

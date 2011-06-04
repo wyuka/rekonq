@@ -203,9 +203,9 @@ private Q_SLOTS:
 
 private:
     MainView *m_view;
+    SessionView *m_sessionView;
     FindBar *m_findBar;
     ZoomBar *m_zoomBar;
-    SessionView *m_sessionView;
     HistoryPanel *m_historyPanel;
     BookmarksPanel *m_bookmarksPanel;
     WebInspectorPanel *m_webInspectorPanel;
