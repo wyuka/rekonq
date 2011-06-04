@@ -24,6 +24,7 @@ SET( rekonq_KDEINIT_SRCS
     session.cpp
     sessionmanager.cpp
     sessiontabdata.cpp
+    sessionview.cpp
     tabbar.cpp
     tabhighlighteffect.cpp
     urlfilterproxymodel.cpp

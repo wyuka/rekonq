@@ -46,6 +46,7 @@ class HistoryPanel;
 class MainView;
 class NetworkAnalyzerPanel;
 class Session;
+class SessionView;
 class WebInspectorPanel;
 class WebTab;
 class ZoomBar;
@@ -197,9 +198,12 @@ private Q_SLOTS:
     
     void initBookmarkBar();
     void updateToolsMenu();
+    
+    void showSessionView();
 
 private:
     MainView *m_view;
+    SessionView *m_sessionView;
     FindBar *m_findBar;
     ZoomBar *m_zoomBar;
 

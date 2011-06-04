@@ -46,6 +46,7 @@
 #include "mainview.h"
 #include "session.h"
 #include "sessionmanager.h"
+#include "sessionview.h"
 #include "settingsdialog.h"
 #include "stackedurlbar.h"
 #include "tabbar.h"
@@ -102,6 +103,7 @@
 MainWindow::MainWindow()
         : KXmlGuiWindow()
         , m_view(new MainView(this))
+        , m_sessionView(new SessionView(this))
         , m_findBar(new FindBar(this))
         , m_zoomBar(new ZoomBar(this))
         , m_historyPanel(0)
@@ -436,7 +438,8 @@ void MainWindow::setupActions()
     a->setIcon(KIcon("application-xhtml+xml")); // TODO remove this piece of code
     a->setShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_E));
     actionCollection()->addAction(QL1S("view_sessions"), a);
-    connect(a, SIGNAL(triggered(bool)), rApp->sessionManager(), SLOT(loadAllSessions()));
+    //connect(a, SIGNAL(triggered(bool)), rApp->sessionManager(), SLOT(loadAllSessions()));
+    connect(a, SIGNAL(triggered(bool)), this, SLOT(showSessionView()));
 
     a = rApp->privateBrowsingAction();
     a->setShortcut(Qt::ControlModifier + Qt::ShiftModifier + Qt::Key_P);
@@ -1635,3 +1638,12 @@ void MainWindow::setEditable(bool on)
 {
     currentTab()->page()->setContentEditable(on);
 }
+
+
+void MainWindow::showSessionView()
+{
+    m_view->hide();
+    m_view->widgetBar()->hide();
+    m_sessionView->show();
+}
+
