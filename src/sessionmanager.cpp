@@ -225,6 +225,15 @@ void SessionManager::activateSession(Session* session)
 }
 
 
+void SessionManager::deleteSession(Session* session)
+{
+    session->deactivate();
+    m_sessionList.removeOne(session);
+    session->deleteLater();
+    emit readyForSave();
+}
+
+
 void SessionManager::loadAllSessions()
 {
     foreach(Session* s, m_sessionList)

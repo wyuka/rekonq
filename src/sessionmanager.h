@@ -74,6 +74,7 @@ public slots:
     void activateSession(Session* session);
     void deactivateSession();
     void loadAllSessions();
+    void deleteSession(Session* session);
     
 protected slots:
     void saveSessions();

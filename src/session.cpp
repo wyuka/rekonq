@@ -129,7 +129,6 @@ QDomElement Session::getXml(QDomDocument& document)
         {
             tabData->saveThumbnail();
         }
-        //if (!tabData->thumbnail().isNull()) tab.setAttribute("thumb",WebSnap::imagePathFromUrl(tabData->url()));
         if (m_currentTabData == tabData)
         {
             tab.setAttribute("current","true");
@@ -233,6 +232,7 @@ void Session::deactivate()
         emit changesMade();
     }
 }
+
 
 void Session::clearSession()
 {
