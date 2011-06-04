@@ -198,15 +198,14 @@ private Q_SLOTS:
     
     void initBookmarkBar();
     void updateToolsMenu();
-    
+
     void showSessionView();
 
 private:
     MainView *m_view;
-    SessionView *m_sessionView;
     FindBar *m_findBar;
     ZoomBar *m_zoomBar;
-
+    SessionView *m_sessionView;
     HistoryPanel *m_historyPanel;
     BookmarksPanel *m_bookmarksPanel;
     WebInspectorPanel *m_webInspectorPanel;
