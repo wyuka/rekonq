@@ -435,8 +435,8 @@ void MainWindow::setupActions()
     actionCollection()->addAction(QL1S("page_source"), a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(viewPageSource()));
 
-    a = new KAction(i18n("View Sessions"), this); // temporary, to test activation of inactive sessions
-    a->setIcon(KIcon("application-xhtml+xml")); // TODO remove this piece of code
+    a = new KAction(i18n("View Sessions"), this);
+    a->setIcon(KIcon("application-xhtml+xml")); // TODO change the icon
     a->setShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_E));
     a->setCheckable(true);
     a->setChecked(false);

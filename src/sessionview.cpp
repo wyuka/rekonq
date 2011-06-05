@@ -39,11 +39,11 @@ SessionView::SessionView(QWidget* parent)
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
     setResizeAnchor(AnchorViewCenter);
+    setScene(scene);
     QGraphicsItem *text = scene->addText("Hello, world!");
     scene->addRect(0,0,400,400);
     centerOn(0,0);
-    setScene(scene);
-    
+
     //start off hidden
     hide();
 }
