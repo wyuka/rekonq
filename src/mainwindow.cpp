@@ -441,7 +441,6 @@ void MainWindow::setupActions()
     a->setCheckable(true);
     a->setChecked(false);
     actionCollection()->addAction(QL1S("view_sessions"), a);
-    //connect(a, SIGNAL(triggered(bool)), rApp->sessionManager(), SLOT(loadAllSessions()));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleSessionView(bool)));
 
     a = rApp->privateBrowsingAction();
