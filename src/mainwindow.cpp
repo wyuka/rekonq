@@ -119,7 +119,7 @@ MainWindow::MainWindow()
         , m_toolsMenu(0)
         , m_developerMenu(0)
 {
-    // creating a centralWidget containing panel, m_view and the hidden findbar
+    // creating a centralWidget containing panel, m_view, m_sessionView and the hidden findbar
     QWidget *centralWidget = new QWidget;
     centralWidget->setContentsMargins(0, 0, 0, 0);
 
@@ -127,6 +127,7 @@ MainWindow::MainWindow()
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_view);
+    layout->addWidget(m_sessionView);
     layout->addWidget(m_findBar);
     layout->addWidget(m_zoomBar);
     centralWidget->setLayout(layout);
@@ -164,9 +165,6 @@ MainWindow::MainWindow()
 
     // no more status bar..
     setStatusBar(0);
-    
-    // hide the session view
-    m_sessionView->hide();
 
     // give me some time to do all the other stuffs...
     QTimer::singleShot(100, this, SLOT(postLaunch()));
@@ -440,9 +438,11 @@ void MainWindow::setupActions()
     a = new KAction(i18n("View Sessions"), this); // temporary, to test activation of inactive sessions
     a->setIcon(KIcon("application-xhtml+xml")); // TODO remove this piece of code
     a->setShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_E));
+    a->setCheckable(true);
+    a->setChecked(false);
     actionCollection()->addAction(QL1S("view_sessions"), a);
     //connect(a, SIGNAL(triggered(bool)), rApp->sessionManager(), SLOT(loadAllSessions()));
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(showSessionView()));
+    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleSessionView(bool)));
 
     a = rApp->privateBrowsingAction();
     a->setShortcut(Qt::ControlModifier + Qt::ShiftModifier + Qt::Key_P);
@@ -1643,16 +1643,33 @@ void MainWindow::setEditable(bool on)
 }
 
 
-void MainWindow::showSessionView()
+void MainWindow::toggleSessionView(bool show)
 {
-    m_view->hide();
-    m_view->widgetBar()->hide();
-    QWidget* centralWidget = new QWidget();
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(m_sessionView);
-    centralWidget->setLayout(layout);
-    setCentralWidget(centralWidget);
-    m_sessionView->show();
+    static bool findBarFlag;
+    static bool zoomBarFlag;
+    
+    if (show)
+    {
+        findBarFlag = m_findBar->isHidden();
+        zoomBarFlag = m_zoomBar->isHidden();
+
+        m_findBar->hide();
+        m_zoomBar->hide();
+        m_view->hide();
+        setWidgetsVisible(false);
+
+        m_sessionView->show();
+    }
+    else
+    {
+        setWidgetsVisible(true);
+        m_sessionView->hide();
+        m_view->show();
+
+        if (!findBarFlag)
+            m_findBar->show();
+        if (!zoomBarFlag)
+            m_zoomBar->show();
+    }
 }
 

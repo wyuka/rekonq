@@ -25,18 +25,25 @@
 
 #include "sessionview.h"
 
+#include <QtGui/QGraphicsItem>
+
 
 SessionView::SessionView(QWidget* parent)
         : QGraphicsView(parent)
 {
     QGraphicsScene* scene = new QGraphicsScene(this);
-    /*scene->setItemIndexMethod(QGraphicsScene::NoIndex);
+    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     scene->setSceneRect(0, 0, 400, 400);
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
-    setResizeAnchor(AnchorViewCenter);*/
-    //scene->addText("Hello, world!");
+    setResizeAnchor(AnchorViewCenter);
+    QGraphicsItem *text = scene->addText("Hello, world!");
+    scene->addRect(0,0,400,400);
+    centerOn(0,0);
     setScene(scene);
+    
+    //start off hidden
+    hide();
 }

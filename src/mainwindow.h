@@ -199,7 +199,7 @@ private Q_SLOTS:
     void initBookmarkBar();
     void updateToolsMenu();
 
-    void showSessionView();
+    void toggleSessionView(bool show);
 
 private:
     MainView *m_view;
