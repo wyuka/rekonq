@@ -1656,13 +1656,11 @@ void MainWindow::toggleSessionView(bool show)
         m_findBar->hide();
         m_zoomBar->hide();
         m_view->hide();
-        setWidgetsVisible(false);
 
         m_sessionView->show();
     }
     else
     {
-        setWidgetsVisible(true);
         m_sessionView->hide();
         m_view->show();
 
