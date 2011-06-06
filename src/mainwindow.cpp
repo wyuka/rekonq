@@ -40,6 +40,7 @@
 #include "bookmarkprovider.h"
 #include "bookmarkspanel.h"
 #include "bookmarkstoolbar.h"
+#include "downloadmanager.h"
 #include "findbar.h"
 #include "historypanel.h"
 #include "iconmanager.h"
@@ -1300,7 +1301,7 @@ void MainWindow::clearPrivateData()
 
         if (clearWidget.clearDownloads->isChecked())
         {
-            rApp->clearDownloadsHistory();
+            rApp->downloadManager()->clearDownloadsHistory();
         }
 
         if (clearWidget.clearCookies->isChecked())
