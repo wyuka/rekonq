@@ -59,6 +59,12 @@ Session::Session(QObject* parent)
 }
 
 
+TabDataList Session::tabDataList()
+{
+    return m_tabDataList;
+}
+
+
 void Session::addTabData(WebTab* webTab)
 {
     if (m_webTabMap.find(webTab) != m_webTabMap.end())

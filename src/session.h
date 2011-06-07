@@ -62,6 +62,7 @@ public:
     {
         return m_active;
     }
+    TabDataList tabDataList();
 
 signals:
     void changesMade();
