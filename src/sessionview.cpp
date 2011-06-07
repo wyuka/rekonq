@@ -32,17 +32,9 @@ SessionView::SessionView(QWidget* parent)
         : QGraphicsView(parent)
 {
     QGraphicsScene* scene = new QGraphicsScene(this);
-    scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    scene->setSceneRect(0, 0, 400, 400);
-    setCacheMode(CacheBackground);
-    setViewportUpdateMode(BoundingRectViewportUpdate);
-    setRenderHint(QPainter::Antialiasing);
-    setTransformationAnchor(AnchorUnderMouse);
-    setResizeAnchor(AnchorViewCenter);
     setScene(scene);
-    QGraphicsItem *text = scene->addText("Hello, world!");
-    scene->addRect(0,0,400,400);
-    centerOn(0,0);
+
+    setRenderHint(QPainter::Antialiasing);
 
     //start off hidden
     hide();
