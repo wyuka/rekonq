@@ -65,6 +65,7 @@ public:
 
     QStringList closedSites();
     Session* newSession(bool active, MainWindow *w=0);
+    SessionList sessionList();
 
 signals:
     void readyForSave();
