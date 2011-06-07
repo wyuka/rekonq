@@ -58,6 +58,12 @@ SessionManager::SessionManager(QObject *parent)
 }
 
 
+SessionList SessionManager::sessionList()
+{
+    return m_sessionList;
+}
+
+
 void SessionManager::doDelayedSave()
 {
     m_timer->start();
