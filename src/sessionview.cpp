@@ -56,13 +56,18 @@ void SessionView::showEvent(QShowEvent* event)
     foreach(Session* session, sessionList)
     {
         QGraphicsTextItem* text;
+        QString title = session->title();
+        if (title.isEmpty() || title.isNull())
+        {
+            title = "Unnamed";
+        }
         if (session->isActive())
         {
-            text = scene()->addText(session->window()->windowTitle());
+            text = scene()->addText("Active session - " + title);
         }
         else
         {
-            text = scene()->addText("Inactive session");
+            text = scene()->addText("Inactive session - " + title);
         }
         text->setPos(-100, windowY);
 
