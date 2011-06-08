@@ -23,9 +23,15 @@
 *
 * ============================================================ */
 
+#include "application.h"
+#include "mainwindow.h"
+#include "session.h"
+#include "sessionmanager.h"
+#include "sessiontabdata.h"
 #include "sessionview.h"
 
 #include <QtGui/QGraphicsItem>
+
 
 
 SessionView::SessionView(QWidget* parent)
@@ -38,4 +44,50 @@ SessionView::SessionView(QWidget* parent)
 
     //start off hidden
     hide();
+}
+
+
+void SessionView::showEvent(QShowEvent* event)
+{
+    scene()->clear();
+
+    SessionList sessionList = rApp->sessionManager()->sessionList();
+    int windowY = 0;
+    foreach(Session* session, sessionList)
+    {
+        QGraphicsTextItem* text;
+        if (session->isActive())
+        {
+            text = scene()->addText(session->window()->windowTitle());
+        }
+        else
+        {
+            text = scene()->addText("Inactive session");
+        }
+        text->setPos(-100, windowY);
+
+        TabDataList tabDataList = session->tabDataList();
+        int tabY = windowY;
+        foreach(SessionTabData* tabData, tabDataList)
+        {
+            QGraphicsTextItem* text;
+            text = scene()->addText(tabData->title());
+            tabY += 20;
+            text->setPos(0, tabY);
+
+            QGraphicsPixmapItem* pixmap;
+            QGraphicsRectItem* rect;
+            QPixmap thumb = tabData->thumbnail();
+            pixmap = scene()->addPixmap(thumb);
+            rect = scene()->addRect(thumb.rect());
+            tabY += 20;
+            pixmap->setPos(0, tabY);
+            rect->setPos(0, tabY);
+            tabY += thumb.height();
+        }
+
+        windowY = tabY + 20;
+    }
+
+    QGraphicsView::showEvent(event);
 }

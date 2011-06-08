@@ -35,6 +35,9 @@ class SessionView : public QGraphicsView
 
 public:
     SessionView(QWidget* parent = 0);
+
+protected slots:
+    void showEvent(QShowEvent* event);
 };
 
 #endif // SESSIONVIEW_H
