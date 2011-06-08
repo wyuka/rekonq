@@ -125,16 +125,11 @@ QDomElement Session::getXml(QDomDocument& document)
 {
     QDomElement sessionDom = document.createElement("session");
     SessionTabData* tabData;
-    QString thumbnailPath;
     foreach(tabData, m_tabDataList)
     {
         QDomElement tab = document.createElement("tab");
         tab.setAttribute("url",QString(tabData->url().toEncoded()));
         tab.setAttribute("title",tabData->title());
-        if (m_active)
-        {
-            tabData->saveThumbnail();
-        }
         if (m_currentTabData == tabData)
         {
             tab.setAttribute("current","true");
@@ -159,7 +154,6 @@ void Session::setXml(QDomElement sessionDom)
         SessionTabData *tabData = new SessionTabData(this);
         tabData->setUrl(url);
         tabData->setTitle(title);
-        tabData->loadThumbnail();
         if (sessionDom.elementsByTagName("tab").at(tabNo).toElement().hasAttribute("current"))
         {
             m_currentTabData = tabData;

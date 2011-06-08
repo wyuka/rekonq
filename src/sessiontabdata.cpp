@@ -53,7 +53,6 @@
 SessionTabData::SessionTabData(QObject* parent)
         : QObject(parent)
 {
-    m_thumbnailSet = false;
 }
 
 
@@ -62,8 +61,6 @@ SessionTabData::SessionTabData(const SessionTabData& tabData)
 {
     m_title = tabData.m_title;
     m_url = tabData.m_url;
-    m_thumbnail = tabData.m_thumbnail;
-    m_thumbnailSet = tabData.m_thumbnailSet;
 }
 
 
@@ -71,8 +68,6 @@ void SessionTabData::operator=(const SessionTabData& tabData)
 {
     m_title = tabData.m_title;
     m_url = tabData.m_url;
-    m_thumbnail = tabData.m_thumbnail;
-    m_thumbnailSet = tabData.m_thumbnailSet;
 }
 
 
@@ -90,8 +85,7 @@ void SessionTabData::setUrl(KUrl url)
 
 void SessionTabData::setThumbnail(QPixmap pixmap)
 {
-    m_thumbnail = pixmap;
-    m_thumbnailSet = true;
+    saveThumbnail(pixmap);
 }
 
 
@@ -109,26 +103,26 @@ KUrl SessionTabData::url()
 
 QPixmap SessionTabData::thumbnail()
 {
-    return m_thumbnail;
+    QPixmap pixmap = loadThumbnail();
+    return pixmap;
 }
 
 
-void SessionTabData::saveThumbnail()
-{
-    if (m_thumbnailSet)
-    {
-        QString path = WebSnap::imagePathFromUrl(m_url);
-        QFile::remove(path);
-        m_thumbnail.save(path);
-    }
-}
-
-
-void SessionTabData::loadThumbnail()
+void SessionTabData::saveThumbnail(QPixmap& pixmap)
 {
     QString path = WebSnap::imagePathFromUrl(m_url);
+    QFile::remove(path);
+    pixmap.save(path);
+}
+
+
+QPixmap SessionTabData::loadThumbnail()
+{
+    QString path = WebSnap::imagePathFromUrl(m_url);
+    QPixmap thumbnail;
     if (QFile::exists(path))
     {
-        m_thumbnailSet = m_thumbnail.load(path);
+        thumbnail.load(path);
     }
+    return thumbnail;
 }
