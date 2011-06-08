@@ -55,9 +55,14 @@ class Session : public QObject
 
 public:
     explicit Session(QObject* parent = 0);
+    void setTitle(QString title);
+    void setXml(QDomElement sessionDom);
+    void setWindow(MainWindow *w);
 
+    QString title();
     QDomElement getXml(QDomDocument& document);
     MainWindow* window();
+
     inline bool isActive() const
     {
         return m_active;
@@ -68,10 +73,8 @@ signals:
     void changesMade();
 
 public slots:
-    void setXml(QDomElement sessionDom);
-    void setWindow(MainWindow *w);
     bool load();
-    void deactivate();
+    void deactivate();    
 
 protected slots:
     void addTabData(WebTab* webTab);
@@ -88,6 +91,7 @@ private:
     QMap<WebTab*,SessionTabData*> m_webTabMap;
     SessionTabData* m_currentTabData;
     TabDataList m_tabDataList;
+    QString m_title;
     bool m_active;
 };
 

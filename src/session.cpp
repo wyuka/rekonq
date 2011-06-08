@@ -65,6 +65,18 @@ TabDataList Session::tabDataList()
 }
 
 
+void Session::setTitle(QString title)
+{
+    m_title = title;
+}
+
+
+QString Session::title()
+{
+    return m_title;
+}
+
+
 void Session::addTabData(WebTab* webTab)
 {
     if (m_webTabMap.find(webTab) != m_webTabMap.end())
@@ -140,6 +152,7 @@ QDomElement Session::getXml(QDomDocument& document)
     {
         sessionDom.setAttribute("active","true");
     }
+    sessionDom.setAttribute("title", title());
     return sessionDom;
 }
 
@@ -147,6 +160,8 @@ QDomElement Session::getXml(QDomDocument& document)
 void Session::setXml(QDomElement sessionDom)
 {
     clearSession();
+
+    setTitle(sessionDom.attribute("title"));
     for (int tabNo = 0; tabNo < sessionDom.elementsByTagName("tab").count(); ++tabNo)
     {
         KUrl url(sessionDom.elementsByTagName("tab").at(tabNo).toElement().attribute("url"));
