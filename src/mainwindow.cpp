@@ -437,7 +437,7 @@ void MainWindow::setupActions()
     connect(a, SIGNAL(triggered(bool)), this, SLOT(viewPageSource()));
 
     a = new KAction(i18n("View Sessions"), this);
-    a->setIcon(KIcon("table")); // TODO change the icon
+    a->setIcon(KIcon("table"));
     a->setShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_E));
     a->setCheckable(true);
     a->setChecked(false);

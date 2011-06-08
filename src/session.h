@@ -84,7 +84,6 @@ protected slots:
 
 private:
     MainWindow *m_window;
-    QStringList m_urlList;
     QMap<WebTab*,SessionTabData*> m_webTabMap;
     SessionTabData* m_currentTabData;
     TabDataList m_tabDataList;
