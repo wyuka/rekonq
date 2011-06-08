@@ -47,9 +47,6 @@ public:
     SessionTabData(const SessionTabData& tabData);
     void operator=(const SessionTabData& tabData);
 
-    void saveThumbnail();
-    void loadThumbnail();
-
     void setUrl(KUrl url);
     void setTitle(QString title);
     void setThumbnail(QPixmap pixmap);
@@ -58,10 +55,12 @@ public:
     QString title();
     QPixmap thumbnail();
 
+protected slots:
+    void saveThumbnail(QPixmap& pixmap);
+    QPixmap loadThumbnail();
+
 private:
     KUrl m_url;
-    QPixmap m_thumbnail;
-    bool m_thumbnailSet;
     QString m_title;
 };
 
