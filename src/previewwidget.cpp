@@ -31,7 +31,6 @@
 
 PreviewWidget::PreviewWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags): QGraphicsWidget(parent, wFlags)
 {
-
 }
 
 
@@ -49,9 +48,12 @@ SessionTabData* PreviewWidget::tabData()
 
 void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    painter->drawText(QRectF(0, 0, 200, 20), Qt::AlignCenter, m_tabData->title());
+    QString title = m_tabData->title();
+    if (title.length() > 17)
+        title = title.left(17) + "...";
+    painter->drawText(QRectF(0, 0, 200, 20), Qt::AlignCenter, title);
     painter->drawPixmap(0, 20, m_tabData->thumbnail());
-    painter->drawRoundedRect(boundingRect(), 10, 10);
+    painter->drawRect(boundingRect());
 }
 
 
