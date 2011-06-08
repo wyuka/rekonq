@@ -25,9 +25,14 @@
 
 #include "sessionwidget.h"
 
+#include "flowlayout.h"
+#include "previewwidget.h"
 #include "session.h"
+#include "sessiontabdata.h"
+
 
 #include <QtGui/QPainter>
+
 
 SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
         : QGraphicsWidget(parent, wFlags)
@@ -37,15 +42,14 @@ SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
 
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    painter->drawText(QRectF(0, 0, 200, 20), Qt::AlignCenter, m_session->title());
-    painter->drawPixmap(0, 20, m_session->tabDataList().at(0)->thumbnail());
     painter->drawRoundedRect(boundingRect(), 10, 10);
+    QGraphicsWidget::paint(painter, option, widget);
 }
 
 
 QSizeF SessionWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
-    return QSizeF(200,170);
+    return QGraphicsWidget::sizeHint(which, constraint);
 }
 
 
@@ -58,5 +62,14 @@ Session* SessionWidget::session()
 void SessionWidget::setSession(Session* session)
 {
     m_session = session;
+    FlowLayout* layout = new FlowLayout;
+    TabDataList tabDataList = m_session->tabDataList();
+    foreach (SessionTabData* tabData, tabDataList)
+    {
+        PreviewWidget* pw = new PreviewWidget;
+        layout->addItem(pw);
+        pw->setTabData(tabData);
+    }
+    setLayout(layout);
 }
 
