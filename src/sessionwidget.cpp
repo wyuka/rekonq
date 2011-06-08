@@ -37,14 +37,15 @@ SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
 
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    //painter->drawRect(-10, -10, 10, 10);
-    painter->drawPixmap(0, 0, session()->tabDataList().at(0)->thumbnail());
+    painter->drawText(QRectF(0, 0, 200, 20), Qt::AlignCenter, m_session->title());
+    painter->drawPixmap(0, 20, m_session->tabDataList().at(0)->thumbnail());
+    painter->drawRoundedRect(boundingRect(), 10, 10);
 }
 
 
 QSizeF SessionWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
-    return QSizeF(200,150);
+    return QSizeF(200,170);
 }
 
 
