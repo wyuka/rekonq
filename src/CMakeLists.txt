@@ -23,6 +23,7 @@ SET( rekonq_KDEINIT_SRCS
     notificationbar.cpp
     paneltreeview.cpp
     previewselectorbar.cpp
+    previewwidget.cpp
     protocolhandler.cpp
     session.cpp
     sessionmanager.cpp
