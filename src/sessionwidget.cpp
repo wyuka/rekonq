@@ -29,7 +29,7 @@
 
 #include <QtGui/QPainter>
 
-SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
+SessionWidget::SessionWidget(QGraphicsItem* parent = 0, Qt::WindowFlags wFlags = 0)
         : QGraphicsWidget(parent, wFlags)
 {
 }
@@ -47,7 +47,7 @@ Session* SessionWidget::session()
 }
 
 
-SessionWidget::setSession(Session* session)
+void SessionWidget::setSession(Session* session)
 {
     m_session = session;
 }
