@@ -28,6 +28,7 @@
 
 #include <QtGui/QGraphicsWidget>
 
+class Session;
 
 class SessionWidget : public QGraphicsWidget
 {
@@ -35,9 +36,15 @@ class SessionWidget : public QGraphicsWidget
 
 public:
     SessionWidget(QGraphicsItem* parent = 0, Qt::WindowFlags wFlags = 0);
+    setSession(Session* session);
+    
+    Session* session();
 
 protected:
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+
+private:
+    Session* m_session;
 };
 
 #endif // SESSIONWIDGET_H

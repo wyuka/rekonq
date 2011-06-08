@@ -25,6 +25,8 @@
 
 #include "sessionwidget.h"
 
+#include "session.h"
+
 #include <QtGui/QPainter>
 
 SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
@@ -36,4 +38,16 @@ SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     painter->drawRect(-10, -10, 10, 10);
+}
+
+
+Session* SessionWidget::session()
+{
+    return m_session;
+}
+
+
+SessionWidget::setSession(Session* session)
+{
+    m_session = session;
 }
