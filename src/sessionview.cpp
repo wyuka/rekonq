@@ -24,6 +24,7 @@
 * ============================================================ */
 
 #include "application.h"
+#include "flowlayout.h"
 #include "mainwindow.h"
 #include "session.h"
 #include "sessionmanager.h"
@@ -54,7 +55,7 @@ void SessionView::showEvent(QShowEvent* event)
     scene()->clear();
 
     SessionList sessionList = rApp->sessionManager()->sessionList();
-    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout;
+    FlowLayout* layout = new FlowLayout;
     foreach(Session* session, sessionList)
     {
         SessionWidget* sw = new SessionWidget;
