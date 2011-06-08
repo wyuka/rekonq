@@ -37,7 +37,14 @@ SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
 
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    painter->drawRect(-10, -10, 10, 10);
+    //painter->drawRect(-10, -10, 10, 10);
+    painter->drawPixmap(0, 0, session()->tabDataList().at(0)->thumbnail());
+}
+
+
+QSizeF SessionWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
+{
+    return QSizeF(200,150);
 }
 
 
@@ -51,3 +58,4 @@ void SessionWidget::setSession(Session* session)
 {
     m_session = session;
 }
+
