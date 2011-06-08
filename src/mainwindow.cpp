@@ -245,7 +245,7 @@ void MainWindow::updateToolsMenu()
 
         m_toolsMenu->addAction(actionByName(QL1S("private_browsing")));
         m_toolsMenu->addAction(actionByName(QL1S("clear_private_data")));
-        m_toolsMenu->addAction(actionByName(QL1S("view_sessions"))); // TODO remove this
+        m_toolsMenu->addAction(actionByName(QL1S("view_sessions")));
 
         m_toolsMenu->addSeparator();
 
@@ -437,7 +437,7 @@ void MainWindow::setupActions()
     connect(a, SIGNAL(triggered(bool)), this, SLOT(viewPageSource()));
 
     a = new KAction(i18n("View Sessions"), this);
-    a->setIcon(KIcon("application-xhtml+xml")); // TODO change the icon
+    a->setIcon(KIcon("table")); // TODO change the icon
     a->setShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_E));
     a->setCheckable(true);
     a->setChecked(false);
