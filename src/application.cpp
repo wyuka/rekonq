@@ -524,6 +524,7 @@ bool Application::eventFilter( QObject* watched, QEvent* event )
                 int index = m_mainWindows.indexOf(QWeakPointer<MainWindow>(window));
                 Q_ASSERT(index != -1);
                 m_mainWindows.prepend(m_mainWindows.takeAt(index));
+                sessionManager()->setCurrentSessionFromWindow(m_mainWindows.at(0).data());
             }
         }
     }

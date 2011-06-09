@@ -36,6 +36,7 @@
 // Qt Includes
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
+#include <QtCore/QWeakPointer>
 
 // Forward Declarations
 class MainWindow;
@@ -76,6 +77,7 @@ public slots:
     void deactivateSession();
     void loadAllSessions();
     void deleteSession(Session* session);
+    void setCurrentSessionFromWindow(MainWindow* window);
     
 protected slots:
     void saveSessions();
@@ -86,6 +88,7 @@ private:
     bool m_safe;
     SessionList m_sessionList;
     QTimer* m_timer;
+    QWeakPointer<Session> m_currentSession;
 };
 
 
