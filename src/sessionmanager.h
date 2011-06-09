@@ -67,6 +67,11 @@ public:
     QStringList closedSites();
     Session* newSession(bool active, MainWindow *w=0);
     SessionList sessionList();
+    
+    inline Session* currentSession()
+    {
+        return m_currentSession.data();
+    }
 
 signals:
     void readyForSave();

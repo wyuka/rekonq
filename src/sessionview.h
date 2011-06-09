@@ -42,6 +42,7 @@ public slots:
 
 protected slots:
     void showEvent(QShowEvent* event);
+    virtual void hideEvent(QHideEvent* event);
 
 private:
     QGraphicsDropShadowEffect* m_currentSessionShadow;

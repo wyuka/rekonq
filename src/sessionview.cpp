@@ -33,23 +33,18 @@
 #include "sessionwidget.h"
 
 #include <QtGui/QGraphicsItem>
-#include <QtGui/QGraphicsLinearLayout>
 #include <QtGui/QGraphicsDropShadowEffect>
 
 
 SessionView::SessionView(QWidget* parent)
         : QGraphicsView(parent)
+        , m_currentSessionShadow(0)
 {
     QGraphicsScene* scene = new QGraphicsScene(this);
     setScene(scene);
 
     setRenderHint(QPainter::Antialiasing);
     scene->setBackgroundBrush(Qt::lightGray);
-    
-    m_currentSessionShadow = new QGraphicsDropShadowEffect;
-    m_currentSessionShadow->setOffset(QPointF(0, 0));
-    m_currentSessionShadow->setColor(Qt::black);
-    m_currentSessionShadow->setBlurRadius(20);
 
     //start off hidden
     hide();
@@ -57,27 +52,42 @@ SessionView::SessionView(QWidget* parent)
 
 
 void SessionView::showEvent(QShowEvent* event)
-{
-    scene()->clear();
+{    
+    m_currentSessionShadow = new QGraphicsDropShadowEffect(this);
+    m_currentSessionShadow->setOffset(QPointF(0, 0));
+    m_currentSessionShadow->setColor(Qt::black);
+    m_currentSessionShadow->setBlurRadius(20);
 
     SessionList sessionList = rApp->sessionManager()->sessionList();
     FlowLayout* layout = new FlowLayout;
     layout->setSpacing(Qt::Horizontal, 20);
     layout->setSpacing(Qt::Vertical, 20);
+    Session* currentSession = rApp->sessionManager()->currentSession();
     foreach(Session* session, sessionList)
     {
         SessionWidget* sw = new SessionWidget;
         sw->setSession(session);
         connect(sw, SIGNAL(mousePressed()), this, SLOT(setCurrentSessionWidget()));
         layout->addItem(sw);
+        if (session == currentSession)
+        {
+            sw->setGraphicsEffect(m_currentSessionShadow);
+        }
     }
     
     QGraphicsWidget* form = new QGraphicsWidget;
     form->setLayout(layout);
-    
     scene()->addItem(form);
-
+    
     QGraphicsView::showEvent(event);
+}
+
+
+void SessionView::hideEvent(QHideEvent* event)
+{
+    m_currentSessionShadow->deleteLater();
+    scene()->clear();
+    QWidget::hideEvent(event);
 }
 
 
