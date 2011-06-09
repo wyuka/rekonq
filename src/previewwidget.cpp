@@ -24,6 +24,7 @@
 * ============================================================ */
 
 #include "previewwidget.h"
+#include "previewwidget.moc"
 
 #include "sessiontabdata.h"
 
@@ -49,15 +50,64 @@ SessionTabData* PreviewWidget::tabData()
 void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QString title = m_tabData->title();
-    if (title.length() > 17)
-        title = title.left(17) + "...";
-    painter->drawText(QRectF(0, 0, 200, 20), Qt::AlignCenter, title);
-    painter->drawPixmap(0, 20, m_tabData->thumbnail());
-    painter->drawRect(boundingRect());
+    QPixmap thumbnail = m_tabData->thumbnail();
+    
+    QSizeF sh = this->size();
+    qreal thumbheight = sh.height() * thumbToTextRatio;
+    qreal thumbwidth = thumbheight * (1 / thumbAspectRatio);
+
+    painter->drawPixmap(QRectF(0, 0, thumbwidth, thumbheight), thumbnail, thumbnail.rect());
+    if (painter->fontMetrics().width(title) > sh.width())
+    {
+        painter->drawText(QRectF(0, thumbheight, sh.width(), sh.height() - thumbheight), Qt::AlignLeft | Qt::AlignVCenter, title);
+    }
+    else
+    {
+        painter->drawText(QRectF(0, thumbheight, sh.width(), sh.height() - thumbheight), Qt::AlignCenter | Qt::AlignVCenter, title);
+    }
 }
 
 
 QSizeF PreviewWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
-    return QSizeF(200,170);
+    QSizeF sh = constraint;
+
+    switch (which)
+    {
+        case Qt::PreferredSize:
+            if (constraint.width() > 0)
+            {
+                sh = QSizeF(constraint.width(), getHeightForWidth(constraint.width()));
+            }
+            else if(constraint.height() > 0)
+            {
+                sh = QSizeF(getWidthForHeight(constraint.height()), constraint.height());
+            }
+            else
+            {
+                sh = QSizeF(200,getHeightForWidth(200));
+            }
+            break;
+        case Qt::MinimumSize:
+            sh = QSizeF(100, getHeightForWidth(100));
+            break;
+        case Qt::MaximumSize:
+            sh = QSizeF(400, getHeightForWidth(400));
+            break;
+        default:
+            break;
+    }
+    return sh;
+}
+
+
+qreal PreviewWidget::getWidthForHeight(qreal height) const
+{
+    return (height*thumbToTextRatio)*(1/thumbAspectRatio);
+}
+
+
+qreal PreviewWidget::getHeightForWidth(qreal width) const
+{
+    return width*thumbAspectRatio*(1/thumbToTextRatio);
 }

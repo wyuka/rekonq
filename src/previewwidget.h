@@ -30,6 +30,9 @@
 
 class SessionTabData;
 
+static const qreal thumbAspectRatio = 0.75;
+static const qreal thumbToTextRatio = 0.9;
+
 class PreviewWidget : public QGraphicsWidget
 {
     Q_OBJECT
@@ -44,7 +47,11 @@ protected:
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
 
+    qreal getWidthForHeight(qreal height) const;
+    qreal getHeightForWidth(qreal width) const;
+
 private:
+    
     SessionTabData* m_tabData;
 };
 
