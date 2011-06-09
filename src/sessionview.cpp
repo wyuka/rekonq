@@ -57,6 +57,8 @@ void SessionView::showEvent(QShowEvent* event)
 
     SessionList sessionList = rApp->sessionManager()->sessionList();
     FlowLayout* layout = new FlowLayout;
+    layout->setSpacing(Qt::Horizontal, 20);
+    layout->setSpacing(Qt::Vertical, 20);
     foreach(Session* session, sessionList)
     {
         SessionWidget* sw = new SessionWidget;

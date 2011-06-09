@@ -44,8 +44,8 @@
 
 FlowLayout::FlowLayout()
 {
-    m_spacing[0] = 10;
-    m_spacing[1] = 10;
+    m_spacing[0] = 6;
+    m_spacing[1] = 6;
     QSizePolicy sp = sizePolicy();
     sp.setHeightForWidth(true);
     setSizePolicy(sp);
