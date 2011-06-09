@@ -32,6 +32,7 @@
 #include "sessiontabdata.h"
 
 
+#include <QtGui/QGraphicsDropShadowEffect>
 #include <QtGui/QPainter>
 
 
@@ -76,3 +77,14 @@ void SessionWidget::setSession(Session* session)
     setLayout(layout);
 }
 
+
+void SessionWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    Q_UNUSED(event)
+}
+
+void SessionWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    Q_UNUSED(event)
+    emit mousePressed();
+}

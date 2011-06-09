@@ -34,7 +34,7 @@
 
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QGraphicsLinearLayout>
-
+#include <QtGui/QGraphicsDropShadowEffect>
 
 
 SessionView::SessionView(QWidget* parent)
@@ -45,6 +45,11 @@ SessionView::SessionView(QWidget* parent)
 
     setRenderHint(QPainter::Antialiasing);
     scene->setBackgroundBrush(Qt::lightGray);
+    
+    m_currentSessionShadow = new QGraphicsDropShadowEffect;
+    m_currentSessionShadow->setOffset(QPointF(0, 0));
+    m_currentSessionShadow->setColor(Qt::black);
+    m_currentSessionShadow->setBlurRadius(20);
 
     //start off hidden
     hide();
@@ -63,6 +68,7 @@ void SessionView::showEvent(QShowEvent* event)
     {
         SessionWidget* sw = new SessionWidget;
         sw->setSession(session);
+        connect(sw, SIGNAL(mousePressed()), this, SLOT(setCurrentSessionWidget()));
         layout->addItem(sw);
     }
     
@@ -73,3 +79,11 @@ void SessionView::showEvent(QShowEvent* event)
 
     QGraphicsView::showEvent(event);
 }
+
+
+void SessionView::setCurrentSessionWidget()
+{
+    SessionWidget* currentSessionWidget = static_cast<SessionWidget*>(sender());
+    currentSessionWidget->setGraphicsEffect(m_currentSessionShadow);
+}
+

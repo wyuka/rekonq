@@ -30,6 +30,8 @@
 
 class Session;
 
+class QGraphicsDropShadowEffect;
+
 class SessionWidget : public QGraphicsWidget
 {
     Q_OBJECT
@@ -40,9 +42,14 @@ public:
     
     Session* session();
 
+signals:
+    void mousePressed();
+
 protected:
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
 private:
     Session* m_session;

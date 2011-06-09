@@ -28,6 +28,7 @@
 
 #include <QGraphicsView>
 
+class QGraphicsDropShadowEffect;
 
 class SessionView : public QGraphicsView
 {
@@ -36,8 +37,14 @@ class SessionView : public QGraphicsView
 public:
     SessionView(QWidget* parent = 0);
 
+public slots:
+    void setCurrentSessionWidget();
+
 protected slots:
     void showEvent(QShowEvent* event);
+
+private:
+    QGraphicsDropShadowEffect* m_currentSessionShadow;
 };
 
 #endif // SESSIONVIEW_H
