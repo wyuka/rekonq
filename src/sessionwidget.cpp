@@ -24,6 +24,7 @@
 * ============================================================ */
 
 #include "sessionwidget.h"
+#include "sessionwidget.moc"
 
 #include "flowlayout.h"
 #include "previewwidget.h"
@@ -42,7 +43,9 @@ SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
 
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    painter->drawRoundedRect(boundingRect(), 10, 10);
+    QBrush brush(QColor(224,224,224));
+    painter->setBrush(brush);
+    painter->drawRoundedRect(boundingRect(), 3, 3);
     QGraphicsWidget::paint(painter, option, widget);
 }
 
