@@ -44,6 +44,7 @@ SessionView::SessionView(QWidget* parent)
     setScene(scene);
 
     setRenderHint(QPainter::Antialiasing);
+    scene->setBackgroundBrush(Qt::lightGray);
 
     //start off hidden
     hide();
