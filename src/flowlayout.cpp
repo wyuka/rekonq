@@ -51,6 +51,24 @@ FlowLayout::FlowLayout()
     setSizePolicy(sp);
 }
 
+FlowLayout::~FlowLayout()
+{
+    for (int i = count() - 1; i >= 0; --i)
+    {
+        QGraphicsLayoutItem *item = itemAt(i);
+        // The following lines can be removed, but this removes the item
+        // from the layout more efficiently than the implementation of
+        // ~QGraphicsLayoutItem.
+        removeAt(i);
+        if (item)
+        {
+            item->setParentLayoutItem(0);     
+            if (item->ownedByLayout())
+                delete item;
+        }
+    }
+}
+
 void FlowLayout::insertItem(int index, QGraphicsLayoutItem *item)
 {
     item->setParentLayoutItem(this);
@@ -72,8 +90,21 @@ QGraphicsLayoutItem *FlowLayout::itemAt(int index) const
 
 void FlowLayout::removeAt(int index)
 {
+    QGraphicsLayoutItem* item = m_items.value(index);
     m_items.removeAt(index);
+    item->setParentLayoutItem(0);
     invalidate();
+}
+
+void FlowLayout::removeItem(QGraphicsLayoutItem* item)
+{
+    if (item && m_items.contains(item))
+    {
+
+        m_items.removeOne(item);
+        item->setParentLayoutItem(0);
+        invalidate();
+    }
 }
 
 qreal FlowLayout::spacing(Qt::Orientation o) const

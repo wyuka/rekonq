@@ -44,6 +44,7 @@ class FlowLayout : public QGraphicsLayout
 {
 public:
     FlowLayout();
+    virtual ~FlowLayout();
     inline void addItem(QGraphicsLayoutItem *item);
     void insertItem(int index, QGraphicsLayoutItem *item);
     void setSpacing(Qt::Orientations o, qreal spacing);
@@ -54,6 +55,7 @@ public:
     int count() const;
     QGraphicsLayoutItem *itemAt(int index) const;
     void removeAt(int index);
+    void removeItem(QGraphicsLayoutItem *item);
 
 protected:
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
