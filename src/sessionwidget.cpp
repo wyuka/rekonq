@@ -33,14 +33,16 @@
 
 
 #include <QtGui/QGraphicsDropShadowEffect>
+#include <QtGui/QGraphicsSceneMouseEvent>
 #include <QtGui/QPainter>
 
 
-SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
+SessionWidget::SessionWidget(FlowLayout* layout, QGraphicsItem* parent, Qt::WindowFlags wFlags)
         : QGraphicsWidget(parent, wFlags)
         , m_current(false)
 {
     m_session = 0;
+    m_layout = layout;
 }
 
 
@@ -56,7 +58,7 @@ void SessionWidget::setCurrent(bool current)
     else
     {
         m_dropShadow = new QGraphicsDropShadowEffect(this);
-        m_dropShadow.data()->setOffset(QPointF(0, 0));
+        m_dropShadow.data()->setOffset(QPointF(1, 1));
         m_dropShadow.data()->setColor(Qt::black);
         m_dropShadow.data()->setBlurRadius(20);
         setGraphicsEffect(m_dropShadow.data());
@@ -98,7 +100,7 @@ Session* SessionWidget::session()
 void SessionWidget::setSession(Session* session)
 {
     m_session = session;
-    FlowLayout* layout = new FlowLayout;
+    FlowLayout *layout = new FlowLayout;
     TabDataList tabDataList = m_session->tabDataList();
     foreach (SessionTabData* tabData, tabDataList)
     {
@@ -113,10 +115,18 @@ void SessionWidget::setSession(Session* session)
 void SessionWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     Q_UNUSED(event)
+    m_inMotion = false;
 }
 
 void SessionWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     Q_UNUSED(event)
+    m_inMotion = true;
+    //m_layout->removeItem(this);
     emit mousePressed();
+}
+
+void SessionWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+    setPos(mapToParent(event->pos()-event->lastPos()));
 }

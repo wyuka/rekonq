@@ -59,7 +59,7 @@ void SessionView::showEvent(QShowEvent* event)
     Session* currentSession = rApp->sessionManager()->currentSession();
     foreach(Session* session, sessionList)
     {
-        SessionWidget* sw = new SessionWidget;
+        SessionWidget* sw = new SessionWidget(layout);
         sw->setSession(session);
         connect(sw, SIGNAL(mousePressed()), this, SLOT(setCurrentSessionWidget()));
         layout->addItem(sw);

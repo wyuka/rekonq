@@ -29,6 +29,7 @@
 #include <QtGui/QGraphicsWidget>
 #include <QtCore/QWeakPointer>
 
+class FlowLayout;
 class Session;
 
 class QGraphicsDropShadowEffect;
@@ -38,7 +39,7 @@ class SessionWidget : public QGraphicsWidget
     Q_OBJECT
 
 public:
-    SessionWidget(QGraphicsItem* parent = 0, Qt::WindowFlags wFlags = 0);
+    SessionWidget(FlowLayout* layout, QGraphicsItem* parent = 0, Qt::WindowFlags wFlags = 0);
     void setSession(Session* session);
     
     Session* session();
@@ -54,11 +55,15 @@ protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
 
 private:
+    FlowLayout* m_layout;
     Session* m_session;
     bool m_current;
     QWeakPointer<QGraphicsDropShadowEffect> m_dropShadow;
+
+    bool m_inMotion;
 };
 
 #endif // SESSIONWIDGET_H
