@@ -66,7 +66,7 @@ void SessionView::showEvent(QShowEvent* event)
         if (session == currentSession)
         {
             m_currentSessionWidget = sw;
-            m_currentSessionWidget->setCurrent(true);
+            m_currentSessionWidget.data()->setCurrent(true);
         }
     }
     
@@ -87,8 +87,11 @@ void SessionView::hideEvent(QHideEvent* event)
 
 void SessionView::setCurrentSessionWidget()
 {
-    m_currentSessionWidget->setCurrent(false);
+    if (m_currentSessionWidget.data())
+    {
+        m_currentSessionWidget.data()->setCurrent(false);
+    }
     m_currentSessionWidget = static_cast<SessionWidget*>(sender());
-    m_currentSessionWidget->setCurrent(true);
+    m_currentSessionWidget.data()->setCurrent(true);
 }
 

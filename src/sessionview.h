@@ -27,6 +27,7 @@
 #define SESSIONVIEW_H
 
 #include <QGraphicsView>
+#include <QWeakPointer>
 
 class SessionWidget;
 class QGraphicsDropShadowEffect;
@@ -46,8 +47,7 @@ protected slots:
     virtual void hideEvent(QHideEvent* event);
 
 private:
-    //QGraphicsDropShadowEffect* m_currentSessionShadow;
-    SessionWidget* m_currentSessionWidget;
+    QWeakPointer<SessionWidget> m_currentSessionWidget;
 };
 
 #endif // SESSIONVIEW_H
