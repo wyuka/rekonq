@@ -38,7 +38,6 @@
 
 SessionView::SessionView(QWidget* parent)
         : QGraphicsView(parent)
-        , m_currentSessionShadow(0)
 {
     QGraphicsScene* scene = new QGraphicsScene(this);
     setScene(scene);
@@ -52,12 +51,7 @@ SessionView::SessionView(QWidget* parent)
 
 
 void SessionView::showEvent(QShowEvent* event)
-{    
-    m_currentSessionShadow = new QGraphicsDropShadowEffect(this);
-    m_currentSessionShadow->setOffset(QPointF(0, 0));
-    m_currentSessionShadow->setColor(Qt::black);
-    m_currentSessionShadow->setBlurRadius(20);
-
+{
     SessionList sessionList = rApp->sessionManager()->sessionList();
     FlowLayout* layout = new FlowLayout;
     layout->setSpacing(Qt::Horizontal, 20);
@@ -71,7 +65,8 @@ void SessionView::showEvent(QShowEvent* event)
         layout->addItem(sw);
         if (session == currentSession)
         {
-            sw->setGraphicsEffect(m_currentSessionShadow);
+            m_currentSessionWidget = sw;
+            m_currentSessionWidget->setCurrent(true);
         }
     }
     
@@ -85,7 +80,6 @@ void SessionView::showEvent(QShowEvent* event)
 
 void SessionView::hideEvent(QHideEvent* event)
 {
-    m_currentSessionShadow->deleteLater();
     scene()->clear();
     QWidget::hideEvent(event);
 }
@@ -93,7 +87,8 @@ void SessionView::hideEvent(QHideEvent* event)
 
 void SessionView::setCurrentSessionWidget()
 {
-    SessionWidget* currentSessionWidget = static_cast<SessionWidget*>(sender());
-    currentSessionWidget->setGraphicsEffect(m_currentSessionShadow);
+    m_currentSessionWidget->setCurrent(false);
+    m_currentSessionWidget = static_cast<SessionWidget*>(sender());
+    m_currentSessionWidget->setCurrent(true);
 }
 

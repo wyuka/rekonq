@@ -27,6 +27,7 @@
 #define SESSIONWIDGET_H
 
 #include <QtGui/QGraphicsWidget>
+#include <QtCore/QWeakPointer>
 
 class Session;
 
@@ -45,6 +46,9 @@ public:
 signals:
     void mousePressed();
 
+public slots:
+    void setCurrent(bool current = true);
+
 protected:
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
@@ -53,6 +57,8 @@ protected:
 
 private:
     Session* m_session;
+    bool m_current;
+    QWeakPointer<QGraphicsDropShadowEffect> m_dropShadow;
 };
 
 #endif // SESSIONWIDGET_H

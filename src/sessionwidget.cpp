@@ -38,14 +38,46 @@
 
 SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
         : QGraphicsWidget(parent, wFlags)
+        , m_current(false)
 {
+    m_session = 0;
+}
+
+
+void SessionWidget::setCurrent(bool current)
+{
+    m_current = current;
+    if (m_current == false)
+    {
+        setGraphicsEffect(0);
+        if (m_dropShadow.data())
+            m_dropShadow.data()->deleteLater();
+    }
+    else
+    {
+        m_dropShadow = new QGraphicsDropShadowEffect(this);
+        m_dropShadow.data()->setOffset(QPointF(0, 0));
+        m_dropShadow.data()->setColor(Qt::black);
+        m_dropShadow.data()->setBlurRadius(20);
+        setGraphicsEffect(m_dropShadow.data());
+    }
+    update();
 }
 
 
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    QBrush brush(QColor(224,224,224));
-    painter->setBrush(brush);
+    painter->setBrush(QColor(224,224,224));
+    if (m_current)
+    {
+        painter->setPen(Qt::NoPen);
+    }
+    else
+    {
+        QPen pen(QColor(240,240,240));
+        pen.setWidth(3);
+        painter->setPen(pen);
+    }
     painter->drawRoundedRect(boundingRect(), 3, 3);
     QGraphicsWidget::paint(painter, option, widget);
 }
