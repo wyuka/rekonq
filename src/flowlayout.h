@@ -51,11 +51,13 @@ public:
     qreal spacing(Qt::Orientation o) const;
     // inherited functions
     void setGeometry(const QRectF &geom);
+    void setContentsMargin(qreal left, qreal top, qreal right, qreal bottom);
 
     int count() const;
     QGraphicsLayoutItem *itemAt(int index) const;
     void removeAt(int index);
     void removeItem(QGraphicsLayoutItem *item);
+    void getContentsMargin(qreal *left, qreal *top, qreal *right, qreal *bottom);
 
 protected:
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
@@ -68,6 +70,10 @@ private:
 
     QList<QGraphicsLayoutItem*> m_items;
     qreal m_spacing[2];
+    qreal m_left;
+    qreal m_top;
+    qreal m_right;
+    qreal m_bottom;
 };
 
 inline void FlowLayout::addItem(QGraphicsLayoutItem *item)

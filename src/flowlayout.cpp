@@ -251,3 +251,35 @@ QSizeF FlowLayout::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
     }
     return sh;
 }
+
+void FlowLayout::getContentsMargin(qreal* left, qreal* top, qreal* right, qreal* bottom)
+{
+    if (left)
+    {
+        *left = m_left;
+    }
+
+    if (top)
+    {
+        *top = m_top;
+    }
+
+    if (right)
+    {
+        *right = m_right;
+    }
+
+    if (bottom)
+    {
+        *bottom = m_bottom;
+    }
+}
+
+
+void FlowLayout::setContentsMargin(qreal left, qreal top, qreal right, qreal bottom)
+{
+    m_left = left;
+    m_top = top;
+    m_right = right;
+    m_bottom = bottom;
+}
