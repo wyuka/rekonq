@@ -52,6 +52,8 @@ void SessionWidget::setCurrent(bool current)
     if (m_current == false)
     {
         setGraphicsEffect(0);
+        if (m_currentPreviewWidget.data())
+            m_currentPreviewWidget.data()->setCurrent(false);
         if (m_dropShadow.data())
             m_dropShadow.data()->deleteLater();
     }
@@ -62,6 +64,8 @@ void SessionWidget::setCurrent(bool current)
         m_dropShadow.data()->setColor(Qt::black);
         m_dropShadow.data()->setBlurRadius(20);
         setGraphicsEffect(m_dropShadow.data());
+        if (m_currentPreviewWidget.data())
+            m_currentPreviewWidget.data()->setCurrent(true);
     }
     update();
 }
@@ -101,12 +105,21 @@ void SessionWidget::setSession(Session* session)
 {
     m_session = session;
     FlowLayout *layout = new FlowLayout;
+    layout->setSpacing(Qt::Horizontal, 15);
+    layout->setSpacing(Qt::Vertical, 15);
     TabDataList tabDataList = m_session->tabDataList();
+    SessionTabData* currentTabData = session->currentTabData();
     foreach (SessionTabData* tabData, tabDataList)
     {
         PreviewWidget* pw = new PreviewWidget;
-        layout->addItem(pw);
         pw->setTabData(tabData);
+        connect(pw, SIGNAL(mousePressed()), this, SLOT(setCurrentPreviewWidget()));
+        layout->addItem(pw);
+        if (tabData == currentTabData)
+        {
+            m_currentPreviewWidget = pw;
+            m_currentPreviewWidget.data()->setCurrent(true);
+        }
     }
     setLayout(layout);
 }
@@ -129,4 +142,19 @@ void SessionWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
 void SessionWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     setPos(mapToParent(event->pos()-event->lastPos()));
+}
+
+
+void SessionWidget::setCurrentPreviewWidget()
+{
+    PreviewWidget* toBeCurrent = static_cast<PreviewWidget*>(sender());
+    if (m_currentPreviewWidget.data() == toBeCurrent)
+        return;
+
+    if (m_currentPreviewWidget.data())
+    {
+        m_currentPreviewWidget.data()->setCurrent(false);
+    }
+    m_currentPreviewWidget = toBeCurrent;
+    m_currentPreviewWidget.data()->setCurrent(true);
 }

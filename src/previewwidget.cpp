@@ -63,7 +63,7 @@ void PreviewWidget::setCurrent(bool current)
     {
         m_dropShadow = new QGraphicsDropShadowEffect(this);
         m_dropShadow.data()->setOffset(QPointF(1, 1));
-        m_dropShadow.data()->setColor(QColor(30,30,255));
+        m_dropShadow.data()->setColor(QColor(50,50,255));
         m_dropShadow.data()->setBlurRadius(20);
         setGraphicsEffect(m_dropShadow.data());
     }
@@ -73,35 +73,30 @@ void PreviewWidget::setCurrent(bool current)
 
 void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
+
     QString title = m_tabData->title();
     QPixmap thumbnail = m_tabData->thumbnail();
     
     QSizeF sh = size();
-    qreal thumbheight = sh.height() * thumbToTextRatio;
+    qreal thumbheight = (sh.height() - 3) * thumbToTextRatio;
     qreal thumbwidth = thumbheight * (1 / thumbAspectRatio);
 
-    painter->drawPixmap(QRectF(0, 0, thumbwidth, thumbheight), thumbnail, thumbnail.rect());
-
-    if (painter->fontMetrics().width(title) > sh.width())
-    {
-        painter->drawText(QRectF(0, thumbheight, sh.width(), sh.height() - thumbheight), Qt::AlignLeft | Qt::AlignVCenter, title);
-    }
-    else
-    {
-        painter->drawText(QRectF(0, thumbheight, sh.width(), sh.height() - thumbheight), Qt::AlignCenter | Qt::AlignVCenter, title);
-    }
-
-    if (m_current)
-    {
-        painter->setPen(Qt::NoPen);
-    }
-    else
-    {
-        QPen pen(QColor(240,240,240));
-        pen.setWidth(3);
-        painter->setPen(pen);
-    }
+    painter->setBrush(Qt::white);
+    painter->setPen(Qt::NoPen);
     painter->drawRoundedRect(rect(), 3, 3);
+    painter->drawPixmap(QRectF(3, 3, thumbwidth, thumbheight), thumbnail, thumbnail.rect());
+    painter->setPen(Qt::black);
+
+    if (painter->fontMetrics().width(title) > sh.width() - 6)
+    {
+        painter->drawText(QRectF(3, thumbheight, sh.width() - 3, sh.height() - thumbheight), Qt::AlignLeft | Qt::AlignVCenter, title);
+    }
+    else
+    {
+        painter->drawText(QRectF(3, thumbheight, sh.width() - 3, sh.height() - thumbheight), Qt::AlignCenter | Qt::AlignVCenter, title);
+    }
 }
 
 
@@ -148,3 +143,10 @@ qreal PreviewWidget::getHeightForWidth(qreal width) const
 {
     return width*thumbAspectRatio*(1/thumbToTextRatio);
 }
+
+void PreviewWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    emit mousePressed();
+    QGraphicsItem::mousePressEvent(event);
+}
+

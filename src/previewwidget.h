@@ -49,11 +49,15 @@ public:
 protected:
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
     qreal getWidthForHeight(qreal height) const;
     qreal getHeightForWidth(qreal width) const;
 
-protected slots:
+signals:
+    void mousePressed();
+
+public slots:
     void setCurrent(bool current = true);
 
 private:

@@ -87,11 +87,15 @@ void SessionView::hideEvent(QHideEvent* event)
 
 void SessionView::setCurrentSessionWidget()
 {
+    SessionWidget* toBeCurrent = static_cast<SessionWidget*>(sender());
+    if (m_currentSessionWidget.data() == toBeCurrent)
+        return;
+
     if (m_currentSessionWidget.data())
     {
         m_currentSessionWidget.data()->setCurrent(false);
     }
-    m_currentSessionWidget = static_cast<SessionWidget*>(sender());
+    m_currentSessionWidget = toBeCurrent;
     m_currentSessionWidget.data()->setCurrent(true);
 }
 

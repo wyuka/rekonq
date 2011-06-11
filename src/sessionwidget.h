@@ -31,6 +31,7 @@
 
 class FlowLayout;
 class Session;
+class PreviewWidget;
 
 class QGraphicsDropShadowEffect;
 
@@ -57,13 +58,17 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
 
+protected slots:
+    void setCurrentPreviewWidget();
+
 private:
     FlowLayout* m_layout;
     Session* m_session;
     bool m_current;
     QWeakPointer<QGraphicsDropShadowEffect> m_dropShadow;
-
     bool m_inMotion;
+
+    QWeakPointer<PreviewWidget> m_currentPreviewWidget;
 };
 
 #endif // SESSIONWIDGET_H
