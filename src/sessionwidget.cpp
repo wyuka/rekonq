@@ -105,8 +105,9 @@ void SessionWidget::setSession(Session* session)
 {
     m_session = session;
     FlowLayout *layout = new FlowLayout;
-    layout->setSpacing(Qt::Horizontal, 15);
-    layout->setSpacing(Qt::Vertical, 15);
+    layout->setContentsMargins(10 , 10, 10, 10);
+    layout->setSpacing(Qt::Horizontal, 10);
+    layout->setSpacing(Qt::Vertical, 10);
     TabDataList tabDataList = m_session->tabDataList();
     SessionTabData* currentTabData = session->currentTabData();
     foreach (SessionTabData* tabData, tabDataList)
