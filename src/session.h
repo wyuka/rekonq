@@ -38,10 +38,9 @@
 
 // Qt Includes
 #include <QtCore/QObject>
-#include <QtCore/QStringList>
-#include <QtXml/QDomElement>
 #include <QtCore/QList>
 #include <QtCore/QMap>
+#include <QtCore/QWeakPointer>
 
 class MainWindow;
 class QDomDocument;
@@ -69,6 +68,11 @@ public:
     }
     TabDataList tabDataList();
 
+    inline Session* currentTabData()
+    {
+        return m_currentTabData.data();
+    }
+
 signals:
     void changesMade();
 
@@ -88,7 +92,7 @@ protected slots:
 private:
     MainWindow *m_window;
     QMap<WebTab*,SessionTabData*> m_webTabMap;
-    SessionTabData* m_currentTabData;
+    QWeakPointer<SessionTabData> m_currentTabData;
     TabDataList m_tabDataList;
     QString m_title;
     bool m_active;

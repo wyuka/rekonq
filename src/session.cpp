@@ -50,7 +50,6 @@
 Session::Session(QObject* parent)
         : QObject(parent)
         , m_window(0)
-        , m_currentTabData(0)
 {
     m_active = false;
     m_window = 0;
@@ -142,7 +141,7 @@ QDomElement Session::getXml(QDomDocument& document)
         QDomElement tab = document.createElement("tab");
         tab.setAttribute("url",QString(tabData->url().toEncoded()));
         tab.setAttribute("title",tabData->title());
-        if (m_currentTabData == tabData)
+        if (m_currentTabData.data() == tabData)
         {
             tab.setAttribute("current","true");
         }
@@ -194,7 +193,7 @@ bool Session::load()
                     rApp->loadUrl(tabData->url(), Rekonq::CurrentTabLastWindow);
                     firstTab = false;
                 }
-                else if (tabData != m_currentTabData)
+                else if (tabData != m_currentTabData.data())
                 {
                     rApp->loadUrl(tabData->url(), Rekonq::NewBackTabLastWindow);
                 }
