@@ -80,7 +80,7 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     QPixmap thumbnail = m_tabData->thumbnail();
     
     QSizeF sh = size();
-    qreal thumbheight = (sh.height() - 3) * thumbToTextRatio;
+    qreal thumbheight = sh.height() * thumbToTextRatio - 3;
     qreal thumbwidth = thumbheight * (1 / thumbAspectRatio);
 
     painter->setBrush(Qt::white);
