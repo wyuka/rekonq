@@ -80,7 +80,7 @@ void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
         pen.setWidth(3);
         painter->setPen(pen);
     }
-    painter->drawRoundedRect(boundingRect(), 3, 3);
+    painter->drawRoundedRect(boundingRect(), 5, 5);
     QGraphicsWidget::paint(painter, option, widget);
 }
 
