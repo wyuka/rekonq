@@ -27,8 +27,11 @@
 #define PREVIEWWIDGET_H
 
 #include <QtGui/QGraphicsWidget>
+#include <QtCore/QWeakPointer>
 
 class SessionTabData;
+
+class QGraphicsDropShadowEffect;
 
 static const qreal thumbAspectRatio = 0.75;
 static const qreal thumbToTextRatio = 0.9;
@@ -50,9 +53,14 @@ protected:
     qreal getWidthForHeight(qreal height) const;
     qreal getHeightForWidth(qreal width) const;
 
+protected slots:
+    void setCurrent(bool current = true);
+
 private:
-    
     SessionTabData* m_tabData;
+
+    bool m_current;
+    QWeakPointer<QGraphicsDropShadowEffect> m_dropShadow;
 };
 
 #endif // PREVIEWWIDGET_H

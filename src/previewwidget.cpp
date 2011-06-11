@@ -29,8 +29,11 @@
 #include "sessiontabdata.h"
 
 #include <QtGui/QPainter>
+#include <QtGui/QGraphicsDropShadowEffect>
 
-PreviewWidget::PreviewWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags): QGraphicsWidget(parent, wFlags)
+PreviewWidget::PreviewWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
+        : QGraphicsWidget(parent, wFlags)
+        , m_current(false)
 {
 }
 
@@ -47,16 +50,38 @@ SessionTabData* PreviewWidget::tabData()
 }
 
 
+void PreviewWidget::setCurrent(bool current)
+{
+    m_current = current;
+    if (m_current == false)
+    {
+        setGraphicsEffect(0);
+        if (m_dropShadow.data())
+            m_dropShadow.data()->deleteLater();
+    }
+    else
+    {
+        m_dropShadow = new QGraphicsDropShadowEffect(this);
+        m_dropShadow.data()->setOffset(QPointF(1, 1));
+        m_dropShadow.data()->setColor(QColor(30,30,255));
+        m_dropShadow.data()->setBlurRadius(20);
+        setGraphicsEffect(m_dropShadow.data());
+    }
+    update();
+}
+
+
 void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QString title = m_tabData->title();
     QPixmap thumbnail = m_tabData->thumbnail();
     
-    QSizeF sh = this->size();
+    QSizeF sh = size();
     qreal thumbheight = sh.height() * thumbToTextRatio;
     qreal thumbwidth = thumbheight * (1 / thumbAspectRatio);
 
     painter->drawPixmap(QRectF(0, 0, thumbwidth, thumbheight), thumbnail, thumbnail.rect());
+
     if (painter->fontMetrics().width(title) > sh.width())
     {
         painter->drawText(QRectF(0, thumbheight, sh.width(), sh.height() - thumbheight), Qt::AlignLeft | Qt::AlignVCenter, title);
@@ -65,6 +90,18 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     {
         painter->drawText(QRectF(0, thumbheight, sh.width(), sh.height() - thumbheight), Qt::AlignCenter | Qt::AlignVCenter, title);
     }
+
+    if (m_current)
+    {
+        painter->setPen(Qt::NoPen);
+    }
+    else
+    {
+        QPen pen(QColor(240,240,240));
+        pen.setWidth(3);
+        painter->setPen(pen);
+    }
+    painter->drawRoundedRect(rect(), 3, 3);
 }
 
 
