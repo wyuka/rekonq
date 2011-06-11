@@ -44,6 +44,7 @@
 
 class MainWindow;
 class QDomDocument;
+class QDomElement;
 class WebTab;
 
 typedef QList<SessionTabData* > TabDataList;
@@ -68,7 +69,7 @@ public:
     }
     TabDataList tabDataList();
 
-    inline Session* currentTabData()
+    inline SessionTabData* currentTabData()
     {
         return m_currentTabData.data();
     }
