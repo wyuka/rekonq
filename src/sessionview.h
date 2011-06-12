@@ -30,6 +30,8 @@
 #include <QWeakPointer>
 
 class SessionWidget;
+class MainWindow;
+
 class QGraphicsDropShadowEffect;
 
 class SessionView : public QGraphicsView
@@ -37,7 +39,7 @@ class SessionView : public QGraphicsView
     Q_OBJECT
 
 public:
-    SessionView(QWidget* parent = 0);
+    SessionView(MainWindow* parent = 0);
 
 public slots:
     void setCurrentSessionWidget();
@@ -48,6 +50,7 @@ protected slots:
 
 private:
     QWeakPointer<SessionWidget> m_currentSessionWidget;
+    MainWindow* m_parent;
 };
 
 #endif // SESSIONVIEW_H

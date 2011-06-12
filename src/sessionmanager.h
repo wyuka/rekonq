@@ -67,11 +67,7 @@ public:
     QStringList closedSites();
     Session* newSession(bool active, MainWindow *w=0);
     SessionList sessionList();
-    
-    inline Session* currentSession()
-    {
-        return m_currentSession.data();
-    }
+    Session* sessionForWindow(MainWindow* window);
 
 signals:
     void readyForSave();
@@ -82,7 +78,6 @@ public slots:
     void deactivateSession();
     void loadAllSessions();
     void deleteSession(Session* session);
-    void setCurrentSessionFromWindow(MainWindow* window);
     
 protected slots:
     void saveSessions();
@@ -93,7 +88,6 @@ private:
     bool m_safe;
     SessionList m_sessionList;
     QTimer* m_timer;
-    QWeakPointer<Session> m_currentSession;
 };
 
 

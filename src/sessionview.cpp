@@ -37,8 +37,9 @@
 #include <QtGui/QGraphicsLinearLayout>
 
 
-SessionView::SessionView(QWidget* parent)
+SessionView::SessionView(MainWindow* parent)
         : QGraphicsView(parent)
+        , m_parent(parent)
 {
     QGraphicsScene* scene = new QGraphicsScene(this);
     setScene(scene);
@@ -60,7 +61,7 @@ void SessionView::showEvent(QShowEvent* event)
     QGraphicsWidget* form = new QGraphicsWidget;
     form->setLayout(layout);
     scene()->addItem(form);
-    Session* currentSession = rApp->sessionManager()->currentSession();
+    Session* currentSession = rApp->sessionManager()->sessionForWindow(m_parent);
     foreach(Session* session, sessionList)
     {
         SessionWidget* sw = new SessionWidget(form);

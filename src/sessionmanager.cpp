@@ -83,10 +83,6 @@ void SessionManager::saveSessions()
     foreach (s, m_sessionList)
     {
         QDomElement e = s->getXml(domDocument);
-        if (s == m_currentSession.data())
-        {
-            e.setAttribute("current", "true");
-        }
         sessionFileDom.appendChild(e);
     }
 
@@ -253,13 +249,14 @@ void SessionManager::loadAllSessions()
 }
 
 
-void SessionManager::setCurrentSessionFromWindow(MainWindow* window)
+Session* SessionManager::sessionForWindow(MainWindow* window)
 {
     foreach (Session* s, m_sessionList)
     {
         if (s->window() == window)
         {
-            m_currentSession = s;
+            return s;
         }
     }
+    return 0;
 }
