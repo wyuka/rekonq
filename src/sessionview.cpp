@@ -34,6 +34,7 @@
 
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QGraphicsDropShadowEffect>
+#include <QtGui/QGraphicsLinearLayout>
 
 
 SessionView::SessionView(QWidget* parent)
@@ -53,13 +54,16 @@ SessionView::SessionView(QWidget* parent)
 void SessionView::showEvent(QShowEvent* event)
 {
     SessionList sessionList = rApp->sessionManager()->sessionList();
-    FlowLayout* layout = new FlowLayout;
-    layout->setSpacing(Qt::Horizontal, 20);
-    layout->setSpacing(Qt::Vertical, 20);
+    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout;
+    layout->setSpacing(20);
+    layout->setSpacing(20);
+    QGraphicsWidget* form = new QGraphicsWidget;
+    form->setLayout(layout);
+    scene()->addItem(form);
     Session* currentSession = rApp->sessionManager()->currentSession();
     foreach(Session* session, sessionList)
     {
-        SessionWidget* sw = new SessionWidget(layout);
+        SessionWidget* sw = new SessionWidget(form);
         sw->setSession(session);
         connect(sw, SIGNAL(mousePressed()), this, SLOT(setCurrentSessionWidget()));
         layout->addItem(sw);
@@ -69,11 +73,6 @@ void SessionView::showEvent(QShowEvent* event)
             m_currentSessionWidget.data()->setCurrent(true);
         }
     }
-    
-    QGraphicsWidget* form = new QGraphicsWidget;
-    form->setLayout(layout);
-    scene()->addItem(form);
-    
     QGraphicsView::showEvent(event);
 }
 

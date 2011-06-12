@@ -40,7 +40,7 @@ class SessionWidget : public QGraphicsWidget
     Q_OBJECT
 
 public:
-    SessionWidget(FlowLayout* layout, QGraphicsItem* parent = 0, Qt::WindowFlags wFlags = 0);
+    SessionWidget(QGraphicsItem* parent = 0, Qt::WindowFlags wFlags = 0);
     void setSession(Session* session);
     
     Session* session();
@@ -62,7 +62,6 @@ protected slots:
     void setCurrentPreviewWidget();
 
 private:
-    FlowLayout* m_layout;
     Session* m_session;
     bool m_current;
     QWeakPointer<QGraphicsDropShadowEffect> m_dropShadow;

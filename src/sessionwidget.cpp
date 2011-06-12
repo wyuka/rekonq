@@ -37,12 +37,11 @@
 #include <QtGui/QPainter>
 
 
-SessionWidget::SessionWidget(FlowLayout* layout, QGraphicsItem* parent, Qt::WindowFlags wFlags)
+SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
         : QGraphicsWidget(parent, wFlags)
         , m_current(false)
 {
     m_session = 0;
-    m_layout = layout;
 }
 
 
