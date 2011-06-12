@@ -64,7 +64,7 @@ protected slots:
 private:
     Session* m_session;
     bool m_current;
-    QWeakPointer<QGraphicsDropShadowEffect> m_dropShadow;
+    QGraphicsDropShadowEffect* m_dropShadow;
     bool m_inMotion;
 
     QWeakPointer<PreviewWidget> m_currentPreviewWidget;

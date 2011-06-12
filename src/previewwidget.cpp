@@ -35,6 +35,12 @@ PreviewWidget::PreviewWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
         : QGraphicsWidget(parent, wFlags)
         , m_current(false)
 {
+    m_dropShadow = new QGraphicsDropShadowEffect(this);
+    m_dropShadow->setOffset(QPointF(1, 1));
+    m_dropShadow->setColor(QColor(50,50,255));
+    m_dropShadow->setBlurRadius(20);
+    setGraphicsEffect(m_dropShadow);
+    m_dropShadow->setEnabled(false);
 }
 
 
@@ -55,17 +61,11 @@ void PreviewWidget::setCurrent(bool current)
     m_current = current;
     if (m_current == false)
     {
-        setGraphicsEffect(0);
-        if (m_dropShadow.data())
-            m_dropShadow.data()->deleteLater();
+        m_dropShadow->setEnabled(false);
     }
     else
     {
-        m_dropShadow = new QGraphicsDropShadowEffect(this);
-        m_dropShadow.data()->setOffset(QPointF(1, 1));
-        m_dropShadow.data()->setColor(QColor(50,50,255));
-        m_dropShadow.data()->setBlurRadius(20);
-        setGraphicsEffect(m_dropShadow.data());
+        m_dropShadow->setEnabled(true);
     }
     update();
 }

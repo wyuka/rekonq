@@ -42,6 +42,12 @@ SessionWidget::SessionWidget(QGraphicsItem* parent, Qt::WindowFlags wFlags)
         , m_current(false)
 {
     m_session = 0;
+    m_dropShadow = new QGraphicsDropShadowEffect(this);
+    m_dropShadow->setOffset(QPointF(1, 1));
+    m_dropShadow->setColor(Qt::black);
+    m_dropShadow->setBlurRadius(20);
+    setGraphicsEffect(m_dropShadow);
+    m_dropShadow->setEnabled(false);
 }
 
 
@@ -50,19 +56,13 @@ void SessionWidget::setCurrent(bool current)
     m_current = current;
     if (m_current == false)
     {
-        setGraphicsEffect(0);
+        m_dropShadow->setEnabled(false);
         if (m_currentPreviewWidget.data())
             m_currentPreviewWidget.data()->setCurrent(false);
-        if (m_dropShadow.data())
-            m_dropShadow.data()->deleteLater();
     }
     else
     {
-        m_dropShadow = new QGraphicsDropShadowEffect(this);
-        m_dropShadow.data()->setOffset(QPointF(1, 1));
-        m_dropShadow.data()->setColor(Qt::black);
-        m_dropShadow.data()->setBlurRadius(20);
-        setGraphicsEffect(m_dropShadow.data());
+        m_dropShadow->setEnabled(true);
         if (m_currentPreviewWidget.data())
             m_currentPreviewWidget.data()->setCurrent(true);
     }

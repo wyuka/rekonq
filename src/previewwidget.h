@@ -27,7 +27,6 @@
 #define PREVIEWWIDGET_H
 
 #include <QtGui/QGraphicsWidget>
-#include <QtCore/QWeakPointer>
 
 class SessionTabData;
 
@@ -64,7 +63,7 @@ private:
     SessionTabData* m_tabData;
 
     bool m_current;
-    QWeakPointer<QGraphicsDropShadowEffect> m_dropShadow;
+    QGraphicsDropShadowEffect* m_dropShadow;
 };
 
 #endif // PREVIEWWIDGET_H
