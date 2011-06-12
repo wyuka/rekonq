@@ -112,8 +112,8 @@ qreal SimilarItemLayout::doLayout(const QRectF &geom, bool applyNewGeometry) con
 {
     qreal left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
-    const qreal width = geom.width() - left - right;
-    const QSizeF itemSize = itemAt(0)->effectiveSizeHint(Qt::PreferredSize);
+    const qreal maxw = geom.width() - left - right;
+    const QSizeF itemSize = itemAt(0)->effectiveSizeHint(Qt::PreferredSize) ;
     qreal x = 0;
     qreal y = 0;
     qreal maxRowHeight = 0;
