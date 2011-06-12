@@ -103,8 +103,13 @@ KUrl SessionTabData::url()
 
 QPixmap SessionTabData::thumbnail()
 {
-    QPixmap pixmap = loadThumbnail();
-    return pixmap;
+    QString path = WebSnap::imagePathFromUrl(m_url);
+    QPixmap thumbnail;
+    if (QFile::exists(path))
+    {
+        thumbnail.load(path);
+    }
+    return thumbnail;
 }
 
 
@@ -113,16 +118,4 @@ void SessionTabData::saveThumbnail(QPixmap& pixmap)
     QString path = WebSnap::imagePathFromUrl(m_url);
     QFile::remove(path);
     pixmap.save(path);
-}
-
-
-QPixmap SessionTabData::loadThumbnail()
-{
-    QString path = WebSnap::imagePathFromUrl(m_url);
-    QPixmap thumbnail;
-    if (QFile::exists(path))
-    {
-        thumbnail.load(path);
-    }
-    return thumbnail;
 }

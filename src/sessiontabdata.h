@@ -57,7 +57,6 @@ public:
 
 protected slots:
     void saveThumbnail(QPixmap& pixmap);
-    QPixmap loadThumbnail();
 
 private:
     KUrl m_url;
