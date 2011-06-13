@@ -67,7 +67,6 @@ protected:
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
 private:
-    qreal doLayout(const QRectF &geom, bool applyNewGeometry) const;
 
     QList<QGraphicsLayoutItem*> m_items;
     qreal m_spacing[2];

@@ -41,13 +41,14 @@
 #include "similaritemlayout.h"
 #include <QtGui/qwidget.h>
 #include <QtCore/qmath.h>
+#include "kdebug.h"
 
 SimilarItemLayout::SimilarItemLayout()
 {
     m_spacing[0] = 6;
     m_spacing[1] = 6;
     QSizePolicy sp = sizePolicy();
-    sp.setHeightForWidth(true);
+    sp.setHeightForWidth(false);
     setSizePolicy(sp);
 }
 
@@ -105,55 +106,41 @@ void SimilarItemLayout::setSpacing(Qt::Orientations o, qreal spacing)
 void SimilarItemLayout::setGeometry(const QRectF &geom)
 {
     QGraphicsLayout::setGeometry(geom);
-    doLayout(geom, true);
-}
-
-qreal SimilarItemLayout::doLayout(const QRectF &geom, bool applyNewGeometry) const
-{
     qreal left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
-    const qreal maxw = geom.width() - left - right;
-    const QSizeF itemSize = itemAt(0)->effectiveSizeHint(Qt::PreferredSize) ;
+    QSizeF itemSize = itemAt(0)->effectiveSizeHint(Qt::PreferredSize);
+    int horizItems = qFloor((geom.width() + spacing(Qt::Horizontal) - left - right) / (itemSize.width() + spacing(Qt::Horizontal)));
+    if (horizItems <= 0)
+    {
+        return;
+    }
     qreal x = 0;
-    qreal y = 0;
-    qreal maxRowHeight = 0;
-    QSizeF pref;
+    qreal y = -(itemSize.height() + spacing(Qt::Vertical));
+
     for (int i = 0; i < m_items.count(); ++i)
     {
         QGraphicsLayoutItem *item = m_items.at(i);
-        pref = item->effectiveSizeHint(Qt::PreferredSize);
-        maxRowHeight = qMax(maxRowHeight, pref.height());
-
-        qreal next_x;
-        next_x = x + pref.width();
-        if (next_x > maxw)
+        if (i % horizItems == 0)
         {
-            if (x == 0)
-            {
-                pref.setWidth(maxw);
-            }
-            else
-            {
-                x = 0;
-                next_x = pref.width();
-            }
-            y += maxRowHeight + spacing(Qt::Vertical);
-            maxRowHeight = 0;
+            x = 0;
+            y += itemSize.height() + spacing(Qt::Vertical);
+        }
+        else
+        {
+            x += itemSize.width() + spacing(Qt::Horizontal);
         }
 
-        if (applyNewGeometry)
-            item->setGeometry(QRectF(QPointF(left + x, top + y), pref));
-        x = next_x + spacing(Qt::Horizontal);
+        item->setGeometry(QRectF(QPointF(left + x, top + y), itemSize));
      }
-    maxRowHeight = qMax(maxRowHeight, pref.height());
-    return top + y + maxRowHeight + bottom;
 }
 
-QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint, const QSizeF &constraint) const
+QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constraint) const
 {
-    QSizeF size(0, 0);
+    QSizeF size;
     qreal left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
+    int maxw = constraint.width() - left - right;
+    int maxh = constraint.height() - top - bottom;
     QSizeF itemSize;
     if (count() < 1)
     {
@@ -164,28 +151,49 @@ QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint, const QSizeF &constrai
         itemSize = itemAt(0)->effectiveSizeHint(sizeHint);
     }
 
-    if (constraint.height() >= 0) // width for height
+    if (constraint.height() >= 0 && itemSize.height() < maxh) // width for height
     {
-        const int vertItems = qFloor((constraint.height() + spacing(Qt::Vertical) - top - bottom) / (itemSize.height() + spacing(Qt::Vertical)));
-        const int horizItems = qCeil(qreal(count()) / vertItems);
-        const qreal width = horizItems*itemSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
+        int vertItems = qFloor((maxh + spacing(Qt::Vertical)) / (itemSize.height() + spacing(Qt::Vertical)));
+        int horizItems = qCeil(qreal(count()) / vertItems);
+        qreal width = horizItems*itemSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
         size = QSizeF(width, constraint.height());
+        kDebug() << "case A";
     }
-    else if (constraint.width() >= 0) // height for width
+    else if (constraint.width() >= 0 && itemSize.width() < maxw) // height for width
     {   
-        const int horizItems = qFloor((constraint.width() + spacing(Qt::Horizontal) - left - right) / (itemSize.width() + spacing(Qt::Horizontal)));
-        const int vertItems = qCeil(qreal(count()) / horizItems);
-        const qreal height = vertItems*itemSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
+        int horizItems = qFloor((maxw + spacing(Qt::Horizontal)) / (itemSize.width() + spacing(Qt::Horizontal)));
+        int vertItems = qCeil(qreal(count()) / horizItems);
+        qreal height = vertItems*itemSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
         size = QSizeF(constraint.width(), height);
+        kDebug() << "case B";
     }
     else
     {
-        const int vertItems = qFloor(qSqrt(count()));
-        const int horizItems = qCeil(qSqrt(count()));
-        const qreal width = horizItems*itemSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
-        const qreal height = vertItems*itemSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
+        // try to be as square-ish in demension as possible ( means keep the aspect ratio as near to 1 as possible )
+        int horizItems, vertItems;
+        int horizItems1 = qCeil(qSqrt(qreal(count())*itemSize.height()/itemSize.width()));        // when i prefer width over height
+        int vertItems1 = qCeil(qreal(count())/qreal(horizItems1));
+        int horizItems2 = qFloor(qSqrt(qreal(count())*itemSize.height()/itemSize.width()));       // when i prefer height over width
+        int vertItems2 = qCeil(qreal(count())/qreal(horizItems2));
+        qreal squareness1 = qAbs<qreal>((vertItems1 < horizItems1 ? qreal(vertItems1)/qreal(horizItems1) : qreal(horizItems1) / qreal(vertItems1)) - 1.0); // here squareness is an inverse measure of squareness :-P
+        qreal squareness2 = qAbs<qreal>((vertItems2 < horizItems2 ? qreal(vertItems2)/qreal(horizItems2) : qreal(horizItems2) / qreal(vertItems2)) - 1.0);
+        if ( squareness1 < squareness2 )        // select the one which is more square-ish
+        {
+            horizItems = horizItems1;
+            vertItems = vertItems1;
+        }
+        else
+        {
+            horizItems = horizItems2;
+            vertItems = vertItems2;
+        }
+        qreal width = horizItems*itemSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
+        qreal height = vertItems*itemSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
         size = QSizeF(width, height);
+        kDebug() << "case C";
     }
+    if (size.width() < size.height())
+        kDebug() << "for" << count() << "items size is" << size.width() << size.height();
     return size;
 }
 

@@ -103,7 +103,7 @@ Session* SessionWidget::session()
 void SessionWidget::setSession(Session* session)
 {
     m_session = session;
-    FlowLayout *layout = new FlowLayout;
+    SimilarItemLayout *layout = new SimilarItemLayout;
     layout->setContentsMargins(10 , 10, 10, 10);
     layout->setSpacing(Qt::Horizontal, 10);
     layout->setSpacing(Qt::Vertical, 10);
