@@ -26,7 +26,7 @@
 #include "sessionwidget.h"
 #include "sessionwidget.moc"
 
-#include "flowlayout.h"
+#include "similaritemlayout.h"
 #include "previewwidget.h"
 #include "session.h"
 #include "sessiontabdata.h"
