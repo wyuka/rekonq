@@ -48,7 +48,7 @@ SimilarItemLayout::SimilarItemLayout()
     m_spacing[0] = 6;
     m_spacing[1] = 6;
     QSizePolicy sp = sizePolicy();
-    sp.setHeightForWidth(false);
+    sp.setHeightForWidth(true);
     setSizePolicy(sp);
 }
 
