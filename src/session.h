@@ -73,7 +73,7 @@ signals:
 
 public slots:
     bool load();
-    void deactivate();    
+    void deactivate();
 
 protected slots:
     void addTabData(WebTab* webTab);
