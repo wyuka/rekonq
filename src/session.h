@@ -38,7 +38,6 @@
 
 // Qt Includes
 #include <QtCore/QObject>
-#include <QtCore/QStringList>
 #include <QtXml/QDomElement>
 #include <QtCore/QList>
 #include <QtCore/QMap>
@@ -87,7 +86,6 @@ protected slots:
 
 private:
     MainWindow *m_window;
-    QStringList m_urlList;
     QMap<WebTab*,SessionTabData*> m_webTabMap;
     SessionTabData* m_currentTabData;
     TabDataList m_tabDataList;
