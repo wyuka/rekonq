@@ -501,7 +501,7 @@ void MainWindow::setupActions()
     {
         a = new KAction(i18n("Switch to Tab %1", i), this);
         a->setShortcut(KShortcut(QString("Alt+%1").arg(i)));
-        actionCollection()->addAction(QL1S(("switch_tab_" + QString::number(i)).toAscii()), a);
+        actionCollection()->addAction(QL1S(QString("switch_tab_" + QString::number(i)).toAscii()), a);
         connect(a, SIGNAL(triggered(bool)), tabSignalMapper, SLOT(map()));
         tabSignalMapper->setMapping(a, i);
     }
@@ -513,7 +513,7 @@ void MainWindow::setupActions()
     {
         a = new KAction(i18n("Switch to Favorite Page %1", i), this);
         a->setShortcut(KShortcut(QString("Ctrl+%1").arg(i)));
-        actionCollection()->addAction(QL1S(("switch_favorite_" + QString::number(i)).toAscii()), a);
+        actionCollection()->addAction(QL1S(QString("switch_favorite_" + QString::number(i)).toAscii()), a);
         connect(a, SIGNAL(triggered(bool)), favoritesSignalMapper, SLOT(map()));
         favoritesSignalMapper->setMapping(a, i);
     }
@@ -1008,7 +1008,7 @@ void MainWindow::viewPageSource()
         out << code;
     }
 
-    KRun::runUrl(QL1S("file://") + temp.fileName(), QL1S("text/plain"), this, false);
+    KRun::runUrl(QString(QL1S("file://") + temp.fileName()), QL1S("text/plain"), this, false);
     return;
 }
 
