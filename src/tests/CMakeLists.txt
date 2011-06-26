@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES (   ${CMAKE_CURRENT_BINARY_DIR}
                         ${CMAKE_CURRENT_SOURCE_DIR}/../opensearch
                         ${CMAKE_CURRENT_SOURCE_DIR}/../rekonqpage
                         ${CMAKE_CURRENT_SOURCE_DIR}/../settings
+                        ${CMAKE_CURRENT_SOURCE_DIR}/../sessionmanagement
                         ${CMAKE_CURRENT_SOURCE_DIR}/../urlbar
                         ${KDE4_INCLUDES}
                         ${QT4_INCLUDES}

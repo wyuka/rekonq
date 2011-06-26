@@ -23,9 +23,6 @@ SET( rekonq_KDEINIT_SRCS
     paneltreeview.cpp
     previewselectorbar.cpp
     protocolhandler.cpp
-    session.cpp
-    sessionmanager.cpp
-    sessiontabdata.cpp
     tabbar.cpp
     tabhighlighteffect.cpp
     urlfilterproxymodel.cpp
@@ -88,6 +85,10 @@ SET( rekonq_KDEINIT_SRCS
     opensearch/opensearchengine.cpp
     opensearch/suggestionparser.cpp
     #----------------------------------------
+    sessionmanagement/sessionmanager.cpp
+    sessionmanagement/session.cpp
+    sessionmanagement/sessiontabdata.cpp
+    #----------------------------------------
     useragent/useragentinfo.cpp
     useragent/useragentwidget.cpp
 )
@@ -116,6 +117,7 @@ INCLUDE_DIRECTORIES (   ${CMAKE_CURRENT_SOURCE_DIR}
                         ${CMAKE_CURRENT_SOURCE_DIR}/opensearch
                         ${CMAKE_CURRENT_SOURCE_DIR}/rekonqpage
                         ${CMAKE_CURRENT_SOURCE_DIR}/settings
+                        ${CMAKE_CURRENT_SOURCE_DIR}/sessionmanagement
                         ${CMAKE_CURRENT_SOURCE_DIR}/urlbar
                         ${CMAKE_CURRENT_SOURCE_DIR}/useragent
                         ${CMAKE_CURRENT_BINARY_DIR}
