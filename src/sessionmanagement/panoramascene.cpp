@@ -32,6 +32,7 @@
 #include "application.h"
 #include "mainview.h"
 #include "mainwindow.h"
+#include "sessionmanager.h"
 #include "session.h"
 #include "tabbar.h"
 #include "webtab.h"
@@ -42,4 +43,32 @@
 PanoramaScene::PanoramaScene(QObject* parent)
         : QGraphicsScene(parent)
 {
+    connect(rApp->sessionManager(), SIGNAL(sessionActivated(Session*)), this, SLOT(activateSession(Session*)));
+    connect(rApp->sessionManager(), SIGNAL(sessionAdded(Session*)), this, SLOT(addSession(Session*)));
+    connect(rApp->sessionManager(), SIGNAL(sessionDeactivated(Session*)), this, SLOT(deactivateSession(Session*)));
+    connect(rApp->sessionManager(), SIGNAL(sessionDeleted(Session*)), this, SLOT(deleteSession(Session*)));
+}
+
+
+void PanoramaScene::activateSession(Session* session)
+{
+    kDebug() << "session activated";
+}
+
+
+void PanoramaScene::addSession(Session* session)
+{
+    kDebug() << "session added";
+}
+
+
+void PanoramaScene::deactivateSession(Session* session)
+{
+    kDebug() << "session deactivated";
+}
+
+
+void PanoramaScene::deleteSession(Session* session)
+{
+    kDebug() << "session deleted";
 }

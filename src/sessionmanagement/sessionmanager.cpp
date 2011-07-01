@@ -213,6 +213,8 @@ void SessionManager::deactivateSession()
         if (s->window() == window)
         {
             s->deactivate();
+            emit sessionDeactivated(s);
+            break;
         }
     }
 }
@@ -231,6 +233,8 @@ void SessionManager::activateSession(Session* session)
     s->deleteLater();
     session->setWindow(window);
     session->load();
+
+    emit sessionActivated(session);
 }
 
 
@@ -238,6 +242,9 @@ void SessionManager::deleteSession(Session* session)
 {
     session->deactivate();
     m_sessionList.removeOne(session);
-    session->deleteLater();
+
+    emit sessionDeleted(session);
     emit readyForSave();
+
+    session->deleteLater();
 }

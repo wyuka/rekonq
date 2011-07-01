@@ -71,6 +71,12 @@ public:
 signals:
     void readyForSave();
 
+    //session signals
+    void sessionAdded(Session *session);
+    void sessionActivated(Session *session);
+    void sessionDeactivated(Session *session);
+    void sessionDeleted(Session *session);
+
 public slots:
     bool restoreSessions();
     void activateSession(Session* session);

@@ -37,6 +37,7 @@
 #include <QtGui/QGraphicsScene>
 
 // Forward Declarations
+class Session;
 
 /**
   * A QGraphicsScene to show the panorama view
@@ -44,9 +45,17 @@
 
 class PanoramaScene : public QGraphicsScene
 {
+    Q_OBJECT
+
 public:
     PanoramaScene(QObject* parent = 0);
+
+protected slots:
+    void addSession(Session* session);
+    void activateSession(Session* session);
+    void deactivateSession(Session* session);
+    void deleteSession(Session* session);
 };
 
 
-#endif // SESSION_MANAGER_H
+#endif // PANORAMA_SCENE_H
