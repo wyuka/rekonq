@@ -34,6 +34,7 @@
 #include "application.h"
 #include "mainview.h"
 #include "mainwindow.h"
+#include "panoramascene.h"
 #include "session.h"
 #include "tabbar.h"
 #include "webtab.h"
@@ -49,6 +50,8 @@ SessionManager::SessionManager(QObject *parent)
         , m_safe(false)
 {
     m_sessionFilePath = KStandardDirs::locateLocal("appdata" , "session");
+
+    m_scene = new PanoramaScene(this);
 
     m_timer = new QTimer(this);
     m_timer->setInterval(saveDelay);

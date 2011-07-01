@@ -26,69 +26,26 @@
 * ============================================================ */
 
 
-#ifndef SESSION_MANAGER_H
-#define SESSION_MANAGER_H
+#ifndef PANORAMA_SCENE_H
+#define PANORAMA_SCENE_H
 
 
 // Rekonq Includes
 #include "rekonq_defines.h"
 
 // Qt Includes
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
+#include <QtGui/QGraphicsScene>
 
 // Forward Declarations
-class MainWindow;
-class QDomDocument;
-class QString;
-class QTimer;
-class PanoramaScene;
-class Session;
-
-
-typedef QList< Session* > SessionList;
-
-static const int saveDelay = 500;
 
 /**
-  * Session Management
+  * A QGraphicsScene to show the panorama view
   */
-class REKONQ_TESTS_EXPORT SessionManager : public QObject
+
+class PanoramaScene : public QGraphicsScene
 {
-    Q_OBJECT
 public:
-    SessionManager(QObject *parent = 0);
-
-    inline void setSessionManagementEnabled(bool on)
-    {
-        m_safe = on;
-    }
-
-    QStringList closedSites();
-    Session* newSession(bool active, MainWindow *w=0);
-    SessionList sessionList();
-
-signals:
-    void readyForSave();
-
-public slots:
-    bool restoreSessions();
-    void activateSession(Session* session);
-    void deactivateSession();
-    void loadAllSessions();
-    void deleteSession(Session* session);
-    
-protected slots:
-    void saveSessions();
-    void doDelayedSave();
-
-private:
-    QString m_sessionFilePath;
-    bool m_safe;
-    SessionList m_sessionList;
-    QTimer* m_timer;
-
-    PanoramaScene* m_scene;
+    PanoramaScene(QObject* parent = 0);
 };
 
 
