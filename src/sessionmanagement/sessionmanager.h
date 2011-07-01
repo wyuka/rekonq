@@ -75,7 +75,6 @@ public slots:
     bool restoreSessions();
     void activateSession(Session* session);
     void deactivateSession();
-    void loadAllSessions();
     void deleteSession(Session* session);
     
 protected slots:

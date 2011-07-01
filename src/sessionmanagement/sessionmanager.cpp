@@ -241,12 +241,3 @@ void SessionManager::deleteSession(Session* session)
     session->deleteLater();
     emit readyForSave();
 }
-
-
-void SessionManager::loadAllSessions()
-{
-    foreach(Session* s, m_sessionList)
-    {
-        activateSession(s);
-    }
-}
