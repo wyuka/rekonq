@@ -45,7 +45,6 @@ class FindBar;
 class HistoryPanel;
 class MainView;
 class NetworkAnalyzerPanel;
-class Session;
 class WebInspectorPanel;
 class WebTab;
 class ZoomBar;
@@ -53,6 +52,7 @@ class ZoomBar;
 class KActionMenu;
 class KPassivePopup;
 
+class QGraphicsView;
 class QWebFrame;
 
 
@@ -198,11 +198,13 @@ private Q_SLOTS:
     void initBookmarkBar();
     void updateToolsMenu();
 
+    void togglePanoramaView(bool show);
+
 private:
     MainView *m_view;
+    QGraphicsView *m_panoramaView;
     FindBar *m_findBar;
     ZoomBar *m_zoomBar;
-
     HistoryPanel *m_historyPanel;
     BookmarksPanel *m_bookmarksPanel;
     WebInspectorPanel *m_webInspectorPanel;

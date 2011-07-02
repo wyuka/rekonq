@@ -49,11 +49,11 @@ SessionWidget::SessionWidget(QGraphicsItem* parent)
     setGraphicsEffect(m_dropShadow);
     m_dropShadow->setEnabled(false);
 
-    m_layout = new SimilarItemLayout;
+    /*m_layout = new SimilarItemLayout;
     m_layout->setContentsMargins(10 , 10, 10, 10);
     m_layout->setSpacing(Qt::Horizontal, 10);
     m_layout->setSpacing(Qt::Vertical, 10);
-    setLayout(m_layout);
+    setLayout(m_layout);*/
 }
 
 
@@ -136,13 +136,13 @@ void SessionWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 void SessionWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     Q_UNUSED(event)
-    m_inMotion = true;
     //m_layout->removeItem(this);
     emit mousePressed();
 }
 
 void SessionWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
+    m_inMotion = true;
     setPos(mapToParent(event->pos()-event->lastPos()));
 }
 

@@ -45,7 +45,7 @@
 #include "historypanel.h"
 #include "iconmanager.h"
 #include "mainview.h"
-#include "session.h"
+#include "panoramascene.h"
 #include "sessionmanager.h"
 #include "settingsdialog.h"
 #include "stackedurlbar.h"
@@ -89,6 +89,7 @@
 #include <QtDBus/QDBusReply>
 
 #include <QtGui/QDesktopWidget>
+#include <QtGui/QGraphicsView>
 #include <QtGui/QLabel>
 #include <QtGui/QPrintDialog>
 #include <QtGui/QPrinter>
@@ -103,6 +104,7 @@
 MainWindow::MainWindow()
         : KXmlGuiWindow()
         , m_view(new MainView(this))
+        , m_panoramaView(new QGraphicsView(this))
         , m_findBar(new FindBar(this))
         , m_zoomBar(new ZoomBar(this))
         , m_historyPanel(0)
@@ -118,7 +120,11 @@ MainWindow::MainWindow()
         , m_toolsMenu(0)
         , m_developerMenu(0)
 {
-    // creating a centralWidget containing panel, m_view and the hidden findbar
+    //setting scene for panorama view
+    //FIXME: this should be done when showing or hiding the panorama
+    m_panoramaView->setScene(rApp->sessionManager()->panoramaScene());
+    m_panoramaView->hide();
+    // creating a centralWidget containing panel, m_view, m_panoramaView and the hidden findbar
     QWidget *centralWidget = new QWidget;
     centralWidget->setContentsMargins(0, 0, 0, 0);
 
@@ -126,6 +132,7 @@ MainWindow::MainWindow()
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_view);
+    layout->addWidget(m_panoramaView);
     layout->addWidget(m_findBar);
     layout->addWidget(m_zoomBar);
     centralWidget->setLayout(layout);
@@ -242,7 +249,7 @@ void MainWindow::updateToolsMenu()
 
         m_toolsMenu->addAction(actionByName(QL1S("private_browsing")));
         m_toolsMenu->addAction(actionByName(QL1S("clear_private_data")));
-        m_toolsMenu->addAction(actionByName(QL1S("view_sessions"))); // TODO remove this
+        m_toolsMenu->addAction(actionByName(QL1S("view_sessions")));
 
         m_toolsMenu->addSeparator();
 
@@ -433,11 +440,13 @@ void MainWindow::setupActions()
     actionCollection()->addAction(QL1S("page_source"), a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(viewPageSource()));
 
-    a = new KAction(i18n("View Sessions"), this); // temporary, to test activation of inactive sessions
-    a->setIcon(KIcon("application-xhtml+xml")); // TODO remove this piece of code
+    a = new KAction(i18n("View Sessions"), this);
+    a->setIcon(KIcon("table"));
     a->setShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_E));
+    a->setCheckable(true);
+    a->setChecked(false);
     actionCollection()->addAction(QL1S("view_sessions"), a);
-    connect(a, SIGNAL(triggered(bool)), rApp->sessionManager(), SLOT(loadAllSessions()));
+    connect(a, SIGNAL(triggered(bool)), this, SLOT(togglePanoramaView(bool)));
 
     a = rApp->privateBrowsingAction();
     a->setShortcut(Qt::ControlModifier + Qt::ShiftModifier + Qt::Key_P);
@@ -1636,3 +1645,33 @@ void MainWindow::setEditable(bool on)
 {
     currentTab()->page()->setContentEditable(on);
 }
+
+
+void MainWindow::togglePanoramaView(bool show)
+{
+    static bool findBarFlag;
+    static bool zoomBarFlag;
+    
+    if (show)
+    {
+        findBarFlag = m_findBar->isHidden();
+        zoomBarFlag = m_zoomBar->isHidden();
+
+        m_findBar->hide();
+        m_zoomBar->hide();
+        m_view->hide();
+
+        m_panoramaView->show();
+    }
+    else
+    {
+        m_panoramaView->hide();
+        m_view->show();
+
+        if (!findBarFlag)
+            m_findBar->show();
+        if (!zoomBarFlag)
+            m_zoomBar->show();
+    }
+}
+

@@ -198,6 +198,7 @@ Session* SessionManager::newSession(bool active, MainWindow *w)
     {
         s->setWindow(w);
     }
+    emit sessionAdded(s);
     connect(s,SIGNAL(changesMade()),this,SIGNAL(readyForSave()));
     m_sessionList << s;
     return s;
