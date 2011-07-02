@@ -120,9 +120,6 @@ MainWindow::MainWindow()
         , m_toolsMenu(0)
         , m_developerMenu(0)
 {
-    //setting scene for panorama view
-    //FIXME: this should be done when showing or hiding the panorama
-    m_panoramaView->setScene(rApp->sessionManager()->panoramaScene());
     m_panoramaView->hide();
     // creating a centralWidget containing panel, m_view, m_panoramaView and the hidden findbar
     QWidget *centralWidget = new QWidget;
@@ -1661,11 +1658,13 @@ void MainWindow::togglePanoramaView(bool show)
         m_zoomBar->hide();
         m_view->hide();
 
+        m_panoramaView->setScene(rApp->sessionManager()->panoramaScene());
         m_panoramaView->show();
     }
     else
     {
         m_panoramaView->hide();
+        m_panoramaView->setScene(0);
         m_view->show();
 
         if (!findBarFlag)
