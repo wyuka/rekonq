@@ -33,20 +33,31 @@
 #include "mainview.h"
 #include "mainwindow.h"
 #include "sessionmanager.h"
+#include "sessionwidget.h"
 #include "session.h"
 #include "tabbar.h"
 #include "webtab.h"
 
 // Qt Includes
 #include <QtGui/QGraphicsScene>
+#include <QtGui/QGraphicsWidget>
+#include <QtGui/QGraphicsLinearLayout>
 
-PanoramaScene::PanoramaScene(QObject* parent)
-        : QGraphicsScene(parent)
+PanoramaScene::PanoramaScene(SessionManager *sessionManager)
+        : QGraphicsScene(sessionManager)
+        , m_sessionManager(sessionManager)
 {
-    connect(rApp->sessionManager(), SIGNAL(sessionActivated(Session*)), this, SLOT(activateSession(Session*)));
-    connect(rApp->sessionManager(), SIGNAL(sessionAdded(Session*)), this, SLOT(addSession(Session*)));
-    connect(rApp->sessionManager(), SIGNAL(sessionDeactivated(Session*)), this, SLOT(deactivateSession(Session*)));
-    connect(rApp->sessionManager(), SIGNAL(sessionDeleted(Session*)), this, SLOT(deleteSession(Session*)));
+    connect(sessionManager, SIGNAL(sessionActivated(Session*)), this, SLOT(activateSession(Session*)));
+    connect(sessionManager, SIGNAL(sessionAdded(Session*)), this, SLOT(addSession(Session*)));
+    connect(sessionManager, SIGNAL(sessionDeactivated(Session*)), this, SLOT(deactivateSession(Session*)));
+    connect(sessionManager, SIGNAL(sessionDeleted(Session*)), this, SLOT(deleteSession(Session*)));
+
+    m_layout = new QGraphicsLinearLayout;
+    m_layout->setSpacing(20);
+    m_layout->setSpacing(20);
+    QGraphicsWidget* form = new QGraphicsWidget;
+    form->setLayout(m_layout);
+    addItem(form);
 }
 
 
@@ -59,6 +70,9 @@ void PanoramaScene::activateSession(Session* session)
 void PanoramaScene::addSession(Session* session)
 {
     kDebug() << "session added";
+    SessionWidget *sessionWidget = new SessionWidget;
+    sessionWidget->setSession(session);
+    m_layout->addItem(sessionWidget);
 }
 
 

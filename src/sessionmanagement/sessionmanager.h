@@ -68,6 +68,11 @@ public:
     Session* newSession(bool active, MainWindow *w=0);
     SessionList sessionList();
 
+    inline PanoramaScene* panoramaScene()
+    {
+        return m_scene;
+    }
+
 signals:
     void readyForSave();
 

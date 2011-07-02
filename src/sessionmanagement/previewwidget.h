@@ -2,9 +2,7 @@
 *
 * This file is a part of the rekonq project
 *
-* Copyright (C) 2009-2011 by Andrea Diamantini <adjam7 at gmail dot com>
-* Copyright (C) 2009 by Yoram Bar-Haim <<yoram.b at zend dot com>
-* Copyright (C) 2009-2011 by Lionel Chauvin <megabigbug@yahoo.fr>
+* Copyright (C) 2010-2011 by Andrea Diamantini <adjam7 at gmail dot com>
 *
 *
 * This program is free software; you can redistribute it and/or
@@ -25,43 +23,47 @@
 *
 * ============================================================ */
 
+#ifndef PREVIEWWIDGET_H
+#define PREVIEWWIDGET_H
 
-#ifndef PANORAMA_SCENE_H
-#define PANORAMA_SCENE_H
+#include <QtGui/QGraphicsWidget>
 
+class SessionTabData;
 
-// Rekonq Includes
-#include "rekonq_defines.h"
+class QGraphicsDropShadowEffect;
 
-// Qt Includes
-#include <QtGui/QGraphicsScene>
+static const qreal thumbAspectRatio = 0.75;
+static const qreal thumbToTextRatio = 0.9;
 
-// Forward Declarations
-class QGraphicsLinearLayout;
-class Session;
-class SessionManager;
-
-/**
-  * A QGraphicsScene to show the panorama view
-  */
-
-class PanoramaScene : public QGraphicsScene
+class PreviewWidget : public QGraphicsWidget
 {
     Q_OBJECT
 
 public:
-    PanoramaScene(SessionManager *sessionManager);
+    PreviewWidget(QGraphicsItem* parent = 0);
+    void setTabData(SessionTabData* tabData);
 
-protected slots:
-    void addSession(Session* session);
-    void activateSession(Session* session);
-    void deactivateSession(Session* session);
-    void deleteSession(Session* session);
+    SessionTabData* tabData();
+
+protected:
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+
+    qreal getWidthForHeight(qreal height) const;
+    qreal getHeightForWidth(qreal width) const;
+
+signals:
+    void mousePressed();
+
+public slots:
+    void setCurrent(bool current = true);
 
 private:
-    QGraphicsLinearLayout *m_layout;
-    SessionManager *m_sessionManager;
+    SessionTabData* m_tabData;
+
+    bool m_current;
+    QGraphicsDropShadowEffect* m_dropShadow;
 };
 
-
-#endif // PANORAMA_SCENE_H
+#endif // PREVIEWWIDGET_H
