@@ -33,8 +33,8 @@
 
 // Qt Includes
 #include <KUrl>
-#include <QtGui/QPixmap>
-#include <QtCore/QString>
+#include <QPixmap>
+#include <QString>
 
 class SessionTabData : public QObject
 {

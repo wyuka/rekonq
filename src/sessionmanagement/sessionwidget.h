@@ -26,8 +26,8 @@
 #ifndef SESSIONWIDGET_H
 #define SESSIONWIDGET_H
 
-#include <QtGui/QGraphicsWidget>
-#include <QtCore/QWeakPointer>
+#include <QGraphicsWidget>
+#include <QWeakPointer>
 
 class SimilarItemLayout;
 class FlowLayout;

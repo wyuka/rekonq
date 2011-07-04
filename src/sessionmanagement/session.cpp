@@ -41,9 +41,9 @@
 #include <KStandardDirs>
 
 // Qt Includes
-#include <QtCore/QFile>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QFile>
+#include <QString>
+#include <QStringList>
 
 Session::Session(QObject* parent)
         : QObject(parent)

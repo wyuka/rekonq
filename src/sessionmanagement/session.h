@@ -35,10 +35,10 @@
 #include "sessiontabdata.h"
 
 // Qt Includes
-#include <QtCore/QObject>
-#include <QtCore/QList>
-#include <QtCore/QMap>
-#include <QtCore/QWeakPointer>
+#include <QObject>
+#include <QList>
+#include <QMap>
+#include <QWeakPointer>
 
 class MainWindow;
 class QDomDocument;

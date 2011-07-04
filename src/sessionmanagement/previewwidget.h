@@ -26,7 +26,7 @@
 #ifndef PREVIEWWIDGET_H
 #define PREVIEWWIDGET_H
 
-#include <QtGui/QGraphicsWidget>
+#include <QGraphicsWidget>
 
 class SessionTabData;
 

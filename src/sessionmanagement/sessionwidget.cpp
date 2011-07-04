@@ -32,9 +32,9 @@
 #include "sessiontabdata.h"
 
 
-#include <QtGui/QGraphicsDropShadowEffect>
-#include <QtGui/QGraphicsSceneMouseEvent>
-#include <QtGui/QPainter>
+#include <QGraphicsDropShadowEffect>
+#include <QGraphicsSceneMouseEvent>
+#include <QPainter>
 
 
 SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)

@@ -24,8 +24,8 @@
 * ============================================================ */
 
 #include "similaritemlayout.h"
-#include <QtGui/qwidget.h>
-#include <QtCore/qmath.h>
+#include <QWidget>
+#include <qmath.h>
 #include "kdebug.h"
 
 SimilarItemLayout::SimilarItemLayout()

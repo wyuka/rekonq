@@ -32,7 +32,7 @@
 #include "rekonq_defines.h"
 
 // Qt Includes
-#include <QtGui/QGraphicsScene>
+#include <QGraphicsScene>
 
 // Forward Declarations
 class QGraphicsLinearLayout;

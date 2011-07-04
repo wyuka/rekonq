@@ -35,8 +35,8 @@
 #include "rekonq_defines.h"
 
 // Qt Includes
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
+#include <QObject>
+#include <QTimer>
 
 // Forward Declarations
 class MainWindow;

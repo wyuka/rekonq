@@ -39,9 +39,9 @@
 #include "webtab.h"
 
 // Qt Includes
-#include <QtGui/QGraphicsScene>
-#include <QtGui/QGraphicsWidget>
-#include <QtGui/QGraphicsLinearLayout>
+#include <QGraphicsScene>
+#include <QGraphicsWidget>
+#include <QGraphicsLinearLayout>
 
 PanoramaScene::PanoramaScene(SessionManager *sessionManager)
         : QGraphicsScene(sessionManager)

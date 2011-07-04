@@ -28,8 +28,8 @@
 
 #include "sessiontabdata.h"
 
-#include <QtGui/QPainter>
-#include <QtGui/QGraphicsDropShadowEffect>
+#include <QPainter>
+#include <QGraphicsDropShadowEffect>
 
 PreviewWidget::PreviewWidget(QGraphicsItem* parent)
         : QGraphicsWidget(parent)

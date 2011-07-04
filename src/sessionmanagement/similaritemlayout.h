@@ -26,7 +26,7 @@
 #ifndef SIMILARITEMLAYOUT_H
 #define SIMILARITEMLAYOUT_H
 
-#include <QtGui/qgraphicslayout.h>
+#include <QGraphicsLayout>
 
 class SimilarItemLayout : public QGraphicsLayout
 {

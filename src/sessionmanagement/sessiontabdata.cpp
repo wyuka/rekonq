@@ -41,11 +41,11 @@
 
 // Qt Includes
 #include <KUrl>
-#include <QtCore/QFile>
-#include <QtCore/QHash>
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtGui/QPixmap>
+#include <QFile>
+#include <QHash>
+#include <QObject>
+#include <QString>
+#include <QPixmap>
 
 
 SessionTabData::SessionTabData(QObject* parent)

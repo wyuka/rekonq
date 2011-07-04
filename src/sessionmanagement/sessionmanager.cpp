@@ -44,7 +44,7 @@
 #include <KStandardDirs>
 
 // Qt Includes
-#include <QtCore/QFile>
+#include <QFile>
 
 SessionManager::SessionManager(QObject *parent)
         : QObject(parent)
