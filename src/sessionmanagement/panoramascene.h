@@ -40,6 +40,7 @@
 class QGraphicsLinearLayout;
 class Session;
 class SessionManager;
+class SessionWidget;
 
 /**
   * A QGraphicsScene to show the panorama view
@@ -61,6 +62,7 @@ protected slots:
 private:
     QGraphicsLinearLayout *m_layout;
     SessionManager *m_sessionManager;
+    QMap<Session*, SessionWidget*> m_sessionMap;
 };
 
 
