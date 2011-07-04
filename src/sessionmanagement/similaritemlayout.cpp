@@ -90,6 +90,10 @@ void SimilarItemLayout::setSpacing(Qt::Orientations o, qreal spacing)
 
 void SimilarItemLayout::setGeometry(const QRectF &geom)
 {
+    if (count() < 1)
+    {
+        return;
+    }
     QGraphicsLayout::setGeometry(geom);
     qreal left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);

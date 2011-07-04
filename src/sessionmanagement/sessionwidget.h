@@ -41,9 +41,8 @@ class SessionWidget : public QGraphicsWidget
     Q_OBJECT
 
 public:
-    SessionWidget(QGraphicsItem* parent = 0);
-    void setSession(Session* session);
-    
+    SessionWidget(Session *session, QGraphicsItem *parent = 0);
+
     Session* session();
 
 signals:
@@ -63,6 +62,7 @@ protected slots:
     void setCurrentPreviewWidget();
 
 private:
+
     Session* m_session;
     bool m_current;
     QGraphicsDropShadowEffect* m_dropShadow;

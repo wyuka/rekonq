@@ -71,8 +71,7 @@ void PanoramaScene::activateSession(Session* session)
 void PanoramaScene::addSession(Session* session)
 {
     kDebug() << "session added";
-    SessionWidget *sessionWidget = new SessionWidget;
-    sessionWidget->setSession(session);
+    SessionWidget *sessionWidget = new SessionWidget(session);
     m_layout->addItem(sessionWidget);
 }
 

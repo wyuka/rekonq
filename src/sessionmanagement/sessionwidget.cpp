@@ -37,11 +37,11 @@
 #include <QtGui/QPainter>
 
 
-SessionWidget::SessionWidget(QGraphicsItem* parent)
+SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
         : QGraphicsWidget(parent)
         , m_current(false)
 {
-    m_session = 0;
+    m_session = session;
     m_dropShadow = new QGraphicsDropShadowEffect(this);
     m_dropShadow->setOffset(QPointF(1, 1));
     m_dropShadow->setColor(Qt::black);
@@ -49,11 +49,11 @@ SessionWidget::SessionWidget(QGraphicsItem* parent)
     setGraphicsEffect(m_dropShadow);
     m_dropShadow->setEnabled(false);
 
-    /*m_layout = new SimilarItemLayout;
+    m_layout = new SimilarItemLayout;
     m_layout->setContentsMargins(10 , 10, 10, 10);
     m_layout->setSpacing(Qt::Horizontal, 10);
     m_layout->setSpacing(Qt::Vertical, 10);
-    setLayout(m_layout);*/
+    setLayout(m_layout);
 }
 
 
@@ -78,17 +78,19 @@ void SessionWidget::setCurrent(bool current)
 
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    painter->setBrush(QColor(224,224,224));
-    if (m_current)
+    if (m_session->isActive() == false)
     {
-        painter->setPen(Qt::NoPen);
-    }
-    else
-    {
+        painter->setBrush(QColor(224,224,224));
         QPen pen(QColor(240,240,240));
         pen.setWidth(3);
         painter->setPen(pen);
     }
+    else
+    {
+        painter->setBrush(QColor(0, 0, 0, 160));
+        painter->setPen(Qt::NoPen);
+    }
+
     painter->drawRoundedRect(boundingRect(), 5, 5);
     QGraphicsWidget::paint(painter, option, widget);
 }
@@ -106,11 +108,11 @@ Session* SessionWidget::session()
 }
 
 
-void SessionWidget::setSession(Session* session)
+/*void SessionWidget::setSession(Session* session)
 {
     m_session = session;
 
-    /*TabDataList tabDataList = m_session->tabDataList();
+    TabDataList tabDataList = m_session->tabDataList();
     SessionTabData* currentTabData = session->currentTabData();
     foreach (SessionTabData* tabData, tabDataList)
     {
@@ -123,8 +125,8 @@ void SessionWidget::setSession(Session* session)
             m_currentPreviewWidget = pw;
             m_currentPreviewWidget.data()->setCurrent(true);
         }
-    }*/
-}
+    }
+}*/
 
 
 void SessionWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
