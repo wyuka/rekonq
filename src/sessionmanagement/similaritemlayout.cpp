@@ -90,11 +90,11 @@ void SimilarItemLayout::setSpacing(Qt::Orientations o, qreal spacing)
 
 void SimilarItemLayout::setGeometry(const QRectF &geom)
 {
-    if (count() < 1)
+    QGraphicsLayout::setGeometry(geom);
+    if (m_items.count() < 1)
     {
         return;
     }
-    QGraphicsLayout::setGeometry(geom);
     qreal left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
     QSizeF itemSize = itemAt(0)->effectiveSizeHint(Qt::PreferredSize);
