@@ -51,8 +51,6 @@ Session::Session(QObject* parent)
 {
     m_active = false;
     m_window = 0;
-    m_webTabMap.clear();
-    m_tabDataList.clear();
 }
 
 
@@ -86,6 +84,7 @@ void Session::addTabData(WebTab* webTab)
     tabData->setUrl(webTab->url());
     m_tabDataList << tabData;
     m_webTabMap[webTab] = tabData;
+    emit tabAdded(tabData);
     emit changesMade();
 }
 
@@ -114,6 +113,7 @@ void Session::removeTabData(WebTab* webTab)
     SessionTabData* tabData = m_webTabMap[webTab];
     m_tabDataList.removeOne(tabData);
     m_webTabMap.remove(webTab);
+    emit tabRemoved(tabData);
     tabData->deleteLater();
     emit changesMade();
 }
@@ -172,6 +172,7 @@ void Session::setXml(QDomElement sessionDom)
         }
 
         m_tabDataList << tabData;
+        emit tabAdded(tabData);
     }
 }
 
@@ -200,6 +201,7 @@ bool Session::load()
                     rApp->loadUrl(tabData->url(), Rekonq::NewFocusedTabLastWindow);
                 }
                 m_tabDataList.removeOne(tabData);
+                tabRemoved(tabData);
                 tabData->deleteLater();
             }
         }
@@ -251,6 +253,7 @@ void Session::clearSession()
     SessionTabData* tabData;
     foreach(tabData, m_tabDataList)
     {
+        emit tabRemoved(tabData);
         tabData->deleteLater();
     }
     m_tabDataList.clear();

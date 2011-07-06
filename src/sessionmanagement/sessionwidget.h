@@ -29,12 +29,14 @@
 #include <QGraphicsWidget>
 #include <QWeakPointer>
 
+class SessionTabData;
 class SimilarItemLayout;
 class FlowLayout;
 class Session;
 class PreviewWidget;
-
+class Session;
 class QGraphicsDropShadowEffect;
+class QGraphicsLinearLayout;
 
 class SessionWidget : public QGraphicsWidget
 {
@@ -61,13 +63,17 @@ protected:
 protected slots:
     void setCurrentPreviewWidget();
 
+    void addTabPreview(SessionTabData *tabData);
+    void removeTabPreview(SessionTabData *tabData);
+
 private:
 
-    Session* m_session;
+    QWeakPointer<Session> m_session;
     bool m_current;
     QGraphicsDropShadowEffect* m_dropShadow;
     bool m_inMotion;
-    SimilarItemLayout *m_layout;
+    QGraphicsLinearLayout *m_layout;
+    QMap<SessionTabData*, PreviewWidget*> m_tabMap;
 
     QWeakPointer<PreviewWidget> m_currentPreviewWidget;
 };

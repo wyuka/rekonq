@@ -35,6 +35,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
+#include <QtGui>
 
 
 SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
@@ -49,11 +50,15 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     setGraphicsEffect(m_dropShadow);
     m_dropShadow->setEnabled(false);
 
-    m_layout = new SimilarItemLayout;
+    m_layout = new QGraphicsLinearLayout;
     m_layout->setContentsMargins(10 , 10, 10, 10);
-    m_layout->setSpacing(Qt::Horizontal, 10);
-    m_layout->setSpacing(Qt::Vertical, 10);
+    //m_layout->setSpacing(Qt::Horizontal, 10);
+    //m_layout->setSpacing(Qt::Vertical, 10);
+    m_layout->setSpacing(10);
     setLayout(m_layout);
+
+    connect(m_session.data(), SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
+    connect(m_session.data(), SIGNAL(tabRemoved(SessionTabData*)), this, SLOT(removeTabPreview(SessionTabData*)));
 }
 
 
@@ -78,7 +83,11 @@ void SessionWidget::setCurrent(bool current)
 
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    if (m_session->isActive() == false)
+    if (m_session.data() == 0)
+    {
+        return;
+    }
+    if (m_session.data()->isActive() == false)
     {
         painter->setBrush(QColor(224,224,224));
         QPen pen(QColor(240,240,240));
@@ -104,7 +113,31 @@ QSizeF SessionWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) con
 
 Session* SessionWidget::session()
 {
-    return m_session;
+    return m_session.data();
+}
+
+
+void SessionWidget::addTabPreview(SessionTabData *tabData)
+{
+    PreviewWidget *pw = new PreviewWidget;
+    pw->setTabData(tabData);
+    //QGraphicsProxyWidget *pw = new QGraphicsProxyWidget;
+    //QLineEdit *le = new QLineEdit;
+    //pw->setWidget(le);
+    m_layout->addItem(pw);
+    m_tabMap[tabData] = pw;
+    kDebug() << "tab preview added" << tabData->url();
+}
+
+
+void SessionWidget::removeTabPreview(SessionTabData* tabData)
+{
+    PreviewWidget *pw;
+    if ((pw = m_tabMap[tabData]) != 0)
+    {
+        m_layout->removeItem(pw);
+        pw->deleteLater();
+    }
 }
 
 

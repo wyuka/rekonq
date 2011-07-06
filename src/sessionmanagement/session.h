@@ -75,6 +75,10 @@ public:
 signals:
     void changesMade();
 
+    void tabAdded(SessionTabData* tabData);
+    void tabRemoved(SessionTabData* tabData);
+    void tabChanged(SessionTabData* tabData);
+
 public slots:
     bool load();
     void deactivate();

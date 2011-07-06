@@ -52,7 +52,7 @@ void PreviewWidget::setTabData(SessionTabData* tabData)
 
 SessionTabData* PreviewWidget::tabData()
 {
-    return m_tabData;
+    return m_tabData.data();
 }
 
 
@@ -76,8 +76,13 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    QString title = m_tabData->title();
-    QPixmap thumbnail = m_tabData->thumbnail();
+    if (m_tabData.data() == 0)
+    {
+        return;
+    }
+
+    QString title = m_tabData.data()->title();
+    QPixmap thumbnail = m_tabData.data()->thumbnail();
     
     QSizeF sh = size();
     qreal thumbheight = sh.height() * thumbToTextRatio - 3;

@@ -27,9 +27,9 @@
 #define PREVIEWWIDGET_H
 
 #include <QGraphicsWidget>
+#include <QWeakPointer>
 
 class SessionTabData;
-
 class QGraphicsDropShadowEffect;
 
 static const qreal thumbAspectRatio = 0.75;
@@ -60,7 +60,7 @@ public slots:
     void setCurrent(bool current = true);
 
 private:
-    SessionTabData* m_tabData;
+    QWeakPointer<SessionTabData> m_tabData;
 
     bool m_current;
     QGraphicsDropShadowEffect* m_dropShadow;
