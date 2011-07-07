@@ -36,7 +36,6 @@ class Session;
 class PreviewWidget;
 class Session;
 class QGraphicsDropShadowEffect;
-class QGraphicsLinearLayout;
 
 class SessionWidget : public QGraphicsWidget
 {
@@ -72,7 +71,7 @@ private:
     bool m_current;
     QGraphicsDropShadowEffect* m_dropShadow;
     bool m_inMotion;
-    QGraphicsLinearLayout *m_layout;
+    SimilarItemLayout *m_layout;
     QMap<SessionTabData*, PreviewWidget*> m_tabMap;
 
     QWeakPointer<PreviewWidget> m_currentPreviewWidget;

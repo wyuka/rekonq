@@ -35,7 +35,6 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-#include <QtGui>
 
 
 SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
@@ -50,11 +49,10 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     setGraphicsEffect(m_dropShadow);
     m_dropShadow->setEnabled(false);
 
-    m_layout = new QGraphicsLinearLayout;
+    m_layout = new SimilarItemLayout;
     m_layout->setContentsMargins(10 , 10, 10, 10);
-    //m_layout->setSpacing(Qt::Horizontal, 10);
-    //m_layout->setSpacing(Qt::Vertical, 10);
-    m_layout->setSpacing(10);
+    m_layout->setSpacing(Qt::Horizontal, 10);
+    m_layout->setSpacing(Qt::Vertical, 10);
     setLayout(m_layout);
 
     connect(m_session.data(), SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
@@ -119,11 +117,8 @@ Session* SessionWidget::session()
 
 void SessionWidget::addTabPreview(SessionTabData *tabData)
 {
-    PreviewWidget *pw = new PreviewWidget;
+    PreviewWidget *pw = new PreviewWidget(this);
     pw->setTabData(tabData);
-    //QGraphicsProxyWidget *pw = new QGraphicsProxyWidget;
-    //QLineEdit *le = new QLineEdit;
-    //pw->setWidget(le);
     m_layout->addItem(pw);
     m_tabMap[tabData] = pw;
     kDebug() << "tab preview added" << tabData->url();
@@ -136,6 +131,7 @@ void SessionWidget::removeTabPreview(SessionTabData* tabData)
     if ((pw = m_tabMap[tabData]) != 0)
     {
         m_layout->removeItem(pw);
+        kDebug() << "deleted tab preview" << tabData->url();
         pw->deleteLater();
     }
 }
