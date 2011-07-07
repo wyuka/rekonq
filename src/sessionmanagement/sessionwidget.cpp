@@ -49,7 +49,7 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     setGraphicsEffect(m_dropShadow);
     m_dropShadow->setEnabled(false);
 
-    m_layout = new SimilarItemLayout;
+    m_layout = new SimilarItemLayout(this);
     m_layout->setContentsMargins(10 , 10, 10, 10);
     m_layout->setSpacing(Qt::Horizontal, 10);
     m_layout->setSpacing(Qt::Vertical, 10);
@@ -117,8 +117,7 @@ Session* SessionWidget::session()
 
 void SessionWidget::addTabPreview(SessionTabData *tabData)
 {
-    PreviewWidget *pw = new PreviewWidget(this);
-    pw->setTabData(tabData);
+    PreviewWidget *pw = new PreviewWidget(tabData, this);
     m_layout->addItem(pw);
     m_tabMap[tabData] = pw;
     kDebug() << "tab preview added" << tabData->url();

@@ -28,7 +28,8 @@
 #include <QtCore/qmath.h>
 #include "kdebug.h"
 
-SimilarItemLayout::SimilarItemLayout()
+SimilarItemLayout::SimilarItemLayout(QGraphicsLayoutItem* parent)
+        : QGraphicsLayout(parent)
 {
     m_spacing[0] = 6;
     m_spacing[1] = 6;

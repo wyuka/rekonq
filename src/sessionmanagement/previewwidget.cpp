@@ -31,9 +31,10 @@
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 
-PreviewWidget::PreviewWidget(QGraphicsItem* parent)
+PreviewWidget::PreviewWidget(SessionTabData *tabData, QGraphicsItem* parent)
         : QGraphicsWidget(parent)
         , m_current(false)
+        , m_tabData(tabData)
 {
     m_dropShadow = new QGraphicsDropShadowEffect(this);
     m_dropShadow->setOffset(QPointF(1, 1));
@@ -41,12 +42,6 @@ PreviewWidget::PreviewWidget(QGraphicsItem* parent)
     m_dropShadow->setBlurRadius(20);
     setGraphicsEffect(m_dropShadow);
     m_dropShadow->setEnabled(false);
-}
-
-
-void PreviewWidget::setTabData(SessionTabData* tabData)
-{
-    m_tabData = tabData;
 }
 
 
@@ -107,8 +102,11 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 
 QSizeF PreviewWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
-    QSizeF sh = constraint;
+    return QSizeF(200,getHeightForWidth(200));
 
+    // for now, use only the preferred size, since we draw using preferredSize in SimilarItemLayout
+    /*
+    QSizeF sh = constraint;
     switch (which)
     {
         case Qt::PreferredSize:
@@ -135,6 +133,7 @@ QSizeF PreviewWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) con
             break;
     }
     return sh;
+    */
 }
 
 

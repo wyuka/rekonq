@@ -31,7 +31,7 @@
 class SimilarItemLayout : public QGraphicsLayout
 {
 public:
-    SimilarItemLayout();
+    SimilarItemLayout(QGraphicsLayoutItem* parent = 0);
 
     inline void addItem(QGraphicsLayoutItem *item);
     void insertItem(int index, QGraphicsLayoutItem *item);

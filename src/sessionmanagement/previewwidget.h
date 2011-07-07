@@ -40,8 +40,7 @@ class PreviewWidget : public QGraphicsWidget
     Q_OBJECT
 
 public:
-    PreviewWidget(QGraphicsItem* parent = 0);
-    void setTabData(SessionTabData* tabData);
+    PreviewWidget(SessionTabData *tabData, QGraphicsItem* parent = 0);
 
     SessionTabData* tabData();
 
