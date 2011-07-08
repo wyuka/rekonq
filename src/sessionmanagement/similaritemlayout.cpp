@@ -151,7 +151,6 @@ QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constrain
         int horizItems = qCeil(qreal(count()) / vertItems);
         qreal width = horizItems*itemSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
         size = QSizeF(width, constraint.height());
-        //kDebug() << "case A";
     }
     else if (constraint.width() >= 0 && itemSize.width() < maxw) // height for width
     {   
@@ -159,7 +158,6 @@ QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constrain
         int vertItems = qCeil(qreal(count()) / horizItems);
         qreal height = vertItems*itemSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
         size = QSizeF(constraint.width(), height);
-        //kDebug() << "case B";
     }
     else
     {
@@ -190,10 +188,7 @@ QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constrain
         qreal width = horizItems*itemSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
         qreal height = vertItems*itemSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
         size = QSizeF(width, height);
-        //kDebug() << "case C";
     }
-    //if (size.width() < size.height())
-    //    kDebug() << "for" << count() << "items size is" << size.width() << size.height();
     kDebug() << size.width() << size.height();
     return size;
 }
