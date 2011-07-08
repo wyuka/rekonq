@@ -197,35 +197,3 @@ QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constrain
     kDebug() << size.width() << size.height();
     return size;
 }
-
-void SimilarItemLayout::getContentsMargin(qreal* left, qreal* top, qreal* right, qreal* bottom)
-{
-    if (left)
-    {
-        *left = m_left;
-    }
-
-    if (top)
-    {
-        *top = m_top;
-    }
-
-    if (right)
-    {
-        *right = m_right;
-    }
-
-    if (bottom)
-    {
-        *bottom = m_bottom;
-    }
-}
-
-
-void SimilarItemLayout::setContentsMargin(qreal left, qreal top, qreal right, qreal bottom)
-{
-    m_left = left;
-    m_top = top;
-    m_right = right;
-    m_bottom = bottom;
-}
