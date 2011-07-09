@@ -49,8 +49,8 @@ protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
-    qreal getWidthForHeight(qreal height) const;
-    qreal getHeightForWidth(qreal width) const;
+    qreal widthForHeight(qreal height) const;
+    qreal heightForWidth(qreal width) const;
 
 signals:
     void mousePressed();

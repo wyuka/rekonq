@@ -34,8 +34,9 @@
 PreviewWidget::PreviewWidget(SessionTabData *tabData, QGraphicsItem* parent)
         : QGraphicsWidget(parent)
         , m_current(false)
-        , m_tabData(tabData)
 {
+    m_tabData = tabData;
+
     m_dropShadow = new QGraphicsDropShadowEffect(this);
     m_dropShadow->setOffset(QPointF(1, 1));
     m_dropShadow->setColor(QColor(50,50,255));
@@ -109,22 +110,22 @@ QSizeF PreviewWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) con
         case Qt::PreferredSize:
             if (constraint.width() > 0)
             {
-                sh = QSizeF(constraint.width(), getHeightForWidth(constraint.width()));
+                sh = QSizeF(constraint.width(), heightForWidth(constraint.width()));
             }
             else if(constraint.height() > 0)
             {
-                sh = QSizeF(getWidthForHeight(constraint.height()), constraint.height());
+                sh = QSizeF(widthForHeight(constraint.height()), constraint.height());
             }
             else
             {
-                sh = QSizeF(200,getHeightForWidth(200));
+                sh = QSizeF(200,heightForWidth(200));
             }
             break;
         case Qt::MinimumSize:
-            sh = QSizeF(150, getHeightForWidth(150));
+            sh = QSizeF(150, heightForWidth(150));
             break;
         case Qt::MaximumSize:
-            sh = QSizeF(400, getHeightForWidth(400));
+            sh = QSizeF(400, heightForWidth(400));
             break;
         default:
             break;
@@ -133,13 +134,13 @@ QSizeF PreviewWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) con
 }
 
 
-qreal PreviewWidget::getWidthForHeight(qreal height) const
+qreal PreviewWidget::widthForHeight(qreal height) const
 {
     return (height*thumbToTextRatio)*(1/thumbAspectRatio);
 }
 
 
-qreal PreviewWidget::getHeightForWidth(qreal width) const
+qreal PreviewWidget::heightForWidth(qreal width) const
 {
     return width*thumbAspectRatio*(1/thumbToTextRatio);
 }
