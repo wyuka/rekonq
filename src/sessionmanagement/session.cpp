@@ -80,6 +80,7 @@ void Session::addTabData(WebTab* webTab)
         return;
     }
     SessionTabData* tabData = new SessionTabData(this);
+    tabData->setWebTab(webTab);
     tabData->setTitle(webTab->view()->title());
     tabData->setUrl(webTab->url());
     m_tabDataList << tabData;
@@ -99,7 +100,8 @@ void Session::changeTabData(WebTab* webTab)
     SessionTabData* tabData = m_webTabMap[webTab];
     tabData->setTitle(webTab->view()->title());
     tabData->setUrl(webTab->url());
-    tabData->setThumbnail(WebSnap::renderTabPreview(*webTab->page(), 200 , 150));
+    tabData->updateThumbnail();
+    emit tabChanged(tabData);
     emit changesMade();
 }
 

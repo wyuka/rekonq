@@ -79,7 +79,7 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 
     QString title = m_tabData.data()->title();
     QPixmap thumbnail = m_tabData.data()->thumbnail();
-    
+
     QSizeF sh = size();
     qreal thumbheight = sh.height() * thumbToTextRatio - 3;
     qreal thumbwidth = thumbheight * (1 / thumbAspectRatio);
@@ -104,7 +104,7 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 QSizeF PreviewWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
     QSizeF sh = constraint;
-    
+
     switch (which)
     {
         case Qt::PreferredSize:

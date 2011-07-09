@@ -69,6 +69,12 @@ void SessionTabData::operator=(const SessionTabData& tabData)
 }
 
 
+void SessionTabData::setWebTab(WebTab* webTab)
+{
+    m_webTab = webTab;
+}
+
+
 void SessionTabData::setTitle(QString title)
 {
     m_title = title;
@@ -78,12 +84,6 @@ void SessionTabData::setTitle(QString title)
 void SessionTabData::setUrl(KUrl url)
 {
     m_url = url;
-}
-
-
-void SessionTabData::setThumbnail(QPixmap pixmap)
-{
-    saveThumbnail(pixmap);
 }
 
 
@@ -99,21 +99,41 @@ KUrl SessionTabData::url()
 }
 
 
-QPixmap SessionTabData::thumbnail()
+QPixmap& SessionTabData::thumbnail()
 {
-    QString path = WebSnap::imagePathFromUrl(m_url);
-    QPixmap thumbnail;
-    if (QFile::exists(path))
+    if (m_thumbnail.isNull())
     {
-        thumbnail.load(path);
+        QString path = WebSnap::imagePathFromUrl(m_url);
+        if (QFile::exists(path))
+        {
+            m_thumbnail.load(path);
+        }
     }
-    return thumbnail;
+    return m_thumbnail;
 }
 
 
-void SessionTabData::saveThumbnail(QPixmap& pixmap)
+void SessionTabData::updateThumbnail(int width, int height)
 {
+    static int prevWidth = 200;
+    static int prevHeight = 150;
+
+    if (m_webTab.data() == 0)
+    {
+        return;
+    }
+    if (width && height)
+    {
+        prevWidth = width;
+        prevHeight = height;
+        m_thumbnail = WebSnap::renderTabPreview(*m_webTab.data()->page(), width , height);
+    }
+    else
+    { 
+        m_thumbnail = WebSnap::renderTabPreview(*m_webTab.data()->page(), prevWidth , prevHeight);
+    }
     QString path = WebSnap::imagePathFromUrl(m_url);
     QFile::remove(path);
-    pixmap.save(path);
+    m_thumbnail.save(path);
+    kDebug() << "updated and saved";
 }
