@@ -47,11 +47,14 @@ public:
 
 protected:
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+    QSizeF findItemSize(const QRectF &geom, int &itemsPerRow);
 
 private:
 
     QList<QGraphicsLayoutItem*> m_items;
     qreal m_spacing[2];
+    QSizeF m_itemSize;
+    qreal m_aspectRatio;
 };
 
 void SimilarItemLayout::addItem(QGraphicsLayoutItem* item)

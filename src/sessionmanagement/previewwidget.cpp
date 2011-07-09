@@ -102,7 +102,34 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 
 QSizeF PreviewWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
-    return QSizeF(200,getHeightForWidth(200));
+    QSizeF sh = constraint;
+    
+    switch (which)
+    {
+        case Qt::PreferredSize:
+            if (constraint.width() > 0)
+            {
+                sh = QSizeF(constraint.width(), getHeightForWidth(constraint.width()));
+            }
+            else if(constraint.height() > 0)
+            {
+                sh = QSizeF(getWidthForHeight(constraint.height()), constraint.height());
+            }
+            else
+            {
+                sh = QSizeF(200,getHeightForWidth(200));
+            }
+            break;
+        case Qt::MinimumSize:
+            sh = QSizeF(150, getHeightForWidth(150));
+            break;
+        case Qt::MaximumSize:
+            sh = QSizeF(400, getHeightForWidth(400));
+            break;
+        default:
+            break;
+    }
+    return sh;
 }
 
 
