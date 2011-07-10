@@ -44,7 +44,7 @@ void SimilarItemLayout::insertItem(int index, QGraphicsLayoutItem *item)
     static bool firstUse = true;
     if (firstUse)
     {
-        m_itemSize = item->effectiveSizeHint(Qt::PreferredSize);
+        m_itemSize = item->effectiveSizeHint(Qt::MinimumSize);
         m_aspectRatio = m_itemSize.width() / m_itemSize.height();
         firstUse = false;
     }
