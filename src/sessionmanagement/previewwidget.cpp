@@ -122,7 +122,7 @@ QSizeF PreviewWidget::sizeHint(Qt::SizeHint which, const QSizeF& constraint) con
             }
             break;
         case Qt::MinimumSize:
-            sh = QSizeF(150, heightForWidth(150));
+            sh = QSizeF(100, heightForWidth(100));
             break;
         case Qt::MaximumSize:
             sh = QSizeF(400, heightForWidth(400));
