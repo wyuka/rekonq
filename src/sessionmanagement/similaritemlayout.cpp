@@ -26,10 +26,12 @@
 #include "similaritemlayout.h"
 #include <QtGui/qwidget.h>
 #include <QtCore/qmath.h>
+#include <QGraphicsLayoutItem>
 #include "kdebug.h"
 
 SimilarItemLayout::SimilarItemLayout(QGraphicsLayoutItem* parent)
         : QGraphicsLayout(parent)
+        , m_firstUse(true)
 {
     m_spacing[0] = 6;
     m_spacing[1] = 6;
@@ -41,12 +43,12 @@ SimilarItemLayout::SimilarItemLayout(QGraphicsLayoutItem* parent)
 
 void SimilarItemLayout::insertItem(int index, QGraphicsLayoutItem *item)
 {
-    static bool firstUse = true;
-    if (firstUse)
+    if (m_firstUse)
     {
+        kDebug() << "firstUse";
         m_itemSize = item->effectiveSizeHint(Qt::MinimumSize);
         m_aspectRatio = m_itemSize.width() / m_itemSize.height();
-        firstUse = false;
+        m_firstUse = false;
     }
 
     item->setParentLayoutItem(this);
@@ -183,7 +185,15 @@ QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constrain
     if (m_items.count() < 1)
     {
         kDebug() << "zero items";
-        return QSizeF(left + right, top + bottom);
+        if (curSize.width() <= 0 || curSize.height() <= 0)
+        {
+            parentLayoutItem()->updateGeometry();
+            return m_itemSize;
+        }
+        else
+        {
+            return geometry().size();
+        }
     }
 
     QSizeF minSize = m_items.at(0)->effectiveSizeHint(Qt::MinimumSize);
@@ -204,7 +214,7 @@ QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constrain
         if (curSize.width() > 0 && curSize.height() > 0 && curSize.height() >= totalHeight)
         {
             kDebug() << "so keeping same for" << m_items.count() << "elements";
-            toReturn = curSize + QSizeF(left + right, top + bottom);
+            toReturn = geometry().size();
             notEnoughSize = false;
         }
     }
@@ -243,6 +253,7 @@ QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constrain
         qreal width = horizItems*effectiveMinSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
         qreal height = vertItems*effectiveMinSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
         toReturn = QSizeF(width, height);
+        parentLayoutItem()->updateGeometry();
     }
     kDebug() << "returning sizeHint" << toReturn;
     return toReturn;

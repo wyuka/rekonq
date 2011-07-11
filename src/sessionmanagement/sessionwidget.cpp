@@ -35,6 +35,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
+#include <QGraphicsGridLayout>
 
 
 SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
@@ -49,11 +50,14 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     setGraphicsEffect(m_dropShadow);
     m_dropShadow->setEnabled(false);
 
-    m_layout = new SimilarItemLayout(this);
+    m_layout = new SimilarItemLayout;
     m_layout->setContentsMargins(10 , 10, 10, 10);
     m_layout->setSpacing(Qt::Horizontal, 10);
     m_layout->setSpacing(Qt::Vertical, 10);
-    setLayout(m_layout);
+
+    m_gridLayout = new QGraphicsGridLayout;
+    m_gridLayout->addItem(m_layout, 0, 0);
+    setLayout(m_gridLayout);
 
     connect(m_session.data(), SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
     connect(m_session.data(), SIGNAL(tabRemoved(SessionTabData*)), this, SLOT(removeTabPreview(SessionTabData*)));

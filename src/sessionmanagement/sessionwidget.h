@@ -29,6 +29,7 @@
 #include <QGraphicsWidget>
 #include <QWeakPointer>
 
+class QGraphicsGridLayout;
 class SessionTabData;
 class SimilarItemLayout;
 class FlowLayout;
@@ -72,6 +73,7 @@ private:
     QGraphicsDropShadowEffect* m_dropShadow;
     bool m_inMotion;
     SimilarItemLayout *m_layout;
+    QGraphicsGridLayout *m_gridLayout;
     QMap<SessionTabData*, PreviewWidget*> m_tabMap;
 
     QWeakPointer<PreviewWidget> m_currentPreviewWidget;

@@ -55,6 +55,8 @@ private:
     qreal m_spacing[2];
     QSizeF m_itemSize;
     qreal m_aspectRatio;
+
+    bool m_firstUse;
 };
 
 void SimilarItemLayout::addItem(QGraphicsLayoutItem* item)
