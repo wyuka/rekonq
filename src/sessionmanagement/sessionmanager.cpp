@@ -62,6 +62,11 @@ SessionManager::SessionManager(QObject *parent)
 }
 
 
+SessionManager::~SessionManager()
+{
+}
+
+
 SessionList SessionManager::sessionList()
 {
     return m_sessionList;

@@ -64,6 +64,11 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
 }
 
 
+SessionWidget::~SessionWidget()
+{
+}
+
+
 void SessionWidget::setCurrent(bool current)
 {
     m_current = current;

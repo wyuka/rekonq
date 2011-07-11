@@ -41,6 +41,12 @@ SimilarItemLayout::SimilarItemLayout(QGraphicsLayoutItem* parent)
     m_itemSize = QSizeF(0,0);
 }
 
+
+SimilarItemLayout::~SimilarItemLayout()
+{
+}
+
+
 void SimilarItemLayout::insertItem(int index, QGraphicsLayoutItem *item)
 {
     if (m_firstUse)

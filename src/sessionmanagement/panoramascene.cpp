@@ -62,6 +62,11 @@ PanoramaScene::PanoramaScene(SessionManager *sessionManager)
 }
 
 
+PanoramaScene::~PanoramaScene()
+{
+}
+
+
 void PanoramaScene::activateSession(Session* session)
 {
     kDebug() << "session activated";

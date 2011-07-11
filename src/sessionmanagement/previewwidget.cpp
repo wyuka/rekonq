@@ -46,6 +46,11 @@ PreviewWidget::PreviewWidget(SessionTabData *tabData, QGraphicsItem* parent)
 }
 
 
+PreviewWidget::~PreviewWidget()
+{
+}
+
+
 SessionTabData* PreviewWidget::tabData()
 {
     return m_tabData.data();

@@ -41,6 +41,7 @@ class PreviewWidget : public QGraphicsWidget
 
 public:
     PreviewWidget(SessionTabData *tabData, QGraphicsItem* parent = 0);
+    virtual ~PreviewWidget();
 
     SessionTabData* tabData();
 

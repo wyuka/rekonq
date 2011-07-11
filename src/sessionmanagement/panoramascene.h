@@ -50,6 +50,7 @@ class PanoramaScene : public QGraphicsScene
 
 public:
     PanoramaScene(SessionManager *sessionManager);
+    virtual ~PanoramaScene();
 
 protected slots:
     void addSession(Session* session);

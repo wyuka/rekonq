@@ -54,6 +54,11 @@ Session::Session(QObject* parent)
 }
 
 
+Session::~Session()
+{
+}
+
+
 TabDataList Session::tabDataList()
 {
     return m_tabDataList;

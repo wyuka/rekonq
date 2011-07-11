@@ -54,6 +54,11 @@ SessionTabData::SessionTabData(QObject* parent)
 }
 
 
+SessionTabData::~SessionTabData()
+{
+}
+
+
 SessionTabData::SessionTabData(const SessionTabData& tabData)
         : QObject()
 {

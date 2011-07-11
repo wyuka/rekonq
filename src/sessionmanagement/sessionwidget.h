@@ -44,6 +44,7 @@ class SessionWidget : public QGraphicsWidget
 
 public:
     SessionWidget(Session *session, QGraphicsItem *parent = 0);
+    virtual ~SessionWidget();
 
     Session* session();
 

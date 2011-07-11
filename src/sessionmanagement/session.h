@@ -52,7 +52,8 @@ class Session : public QObject
     Q_OBJECT
 
 public:
-    explicit Session(QObject* parent = 0);
+    Session(QObject* parent = 0);
+    virtual ~Session();
     void setTitle(QString title);
     void setXml(QDomElement sessionDom);
     void setWindow(MainWindow *w);

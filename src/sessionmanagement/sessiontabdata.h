@@ -47,6 +47,7 @@ public:
     explicit SessionTabData(QObject* parent = 0);
     SessionTabData(const SessionTabData& tabData);
     void operator=(const SessionTabData& tabData);
+    virtual ~SessionTabData();
 
     void setUrl(KUrl url);
     void setTitle(QString title);
