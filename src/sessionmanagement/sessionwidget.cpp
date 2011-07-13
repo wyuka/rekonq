@@ -66,8 +66,8 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
 
     setSessionActive(session->isActive());
 
-    connect(m_session.data(), SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
-    connect(m_session.data(), SIGNAL(tabRemoved(SessionTabData*)), this, SLOT(removeTabPreview(SessionTabData*)));
+    connect(session, SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
+    connect(session, SIGNAL(tabRemoved(SessionTabData*)), this, SLOT(removeTabPreview(SessionTabData*)));
 }
 
 
@@ -115,7 +115,7 @@ void SessionWidget::setCurrent(bool current)
 
 void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    if (m_session.data() == 0)
+    if (session() == 0)
     {
         return;
     }
