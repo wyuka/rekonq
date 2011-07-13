@@ -28,6 +28,8 @@
 
 #include <QGraphicsWidget>
 #include <QWeakPointer>
+#include <QBrush>
+#include <QPen>
 
 class QGraphicsGridLayout;
 class SessionTabData;
@@ -37,6 +39,7 @@ class Session;
 class PreviewWidget;
 class Session;
 class QGraphicsDropShadowEffect;
+class QLineEdit;
 
 class SessionWidget : public QGraphicsWidget
 {
@@ -53,6 +56,7 @@ signals:
 
 public slots:
     void setCurrent(bool current = true);
+    void setSessionActive(bool active);
 
 protected:
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
@@ -67,15 +71,26 @@ protected slots:
     void addTabPreview(SessionTabData *tabData);
     void removeTabPreview(SessionTabData *tabData);
 
+    void setupPreview();
+    //void setupStretcher();
+    //void setupActivateButton();
+    //void setupDeleteButton();
+    void setupTitleEdit();
+
 private:
 
     QWeakPointer<Session> m_session;
     bool m_current;
     QGraphicsDropShadowEffect* m_dropShadow;
     bool m_inMotion;
+    bool m_isActive;
+    QBrush m_backBrush;
+    QPen m_borderPen;
     SimilarItemLayout *m_layout;
     QGraphicsGridLayout *m_gridLayout;
     QMap<SessionTabData*, PreviewWidget*> m_tabMap;
+    QGraphicsWidget* m_titleEdit;
+    QLineEdit* m_titleLineEdit;
 
     QWeakPointer<PreviewWidget> m_currentPreviewWidget;
 };

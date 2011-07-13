@@ -35,7 +35,7 @@
 #include <QGraphicsScene>
 
 // Forward Declarations
-class QGraphicsLinearLayout;
+class QGraphicsWidget;
 class Session;
 class SessionManager;
 class SessionWidget;
@@ -59,7 +59,7 @@ protected slots:
     void deleteSession(Session* session);
 
 private:
-    QGraphicsLinearLayout *m_layout;
+    QGraphicsWidget *m_form;
     SessionManager *m_sessionManager;
     QMap<Session*, SessionWidget*> m_sessionMap;
 };

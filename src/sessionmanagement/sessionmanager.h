@@ -89,7 +89,7 @@ public slots:
     void activateSession(Session* session);
     void deactivateSession();
     void deleteSession(Session* session);
-    
+
 protected slots:
     void saveSessions();
     void doDelayedSave();

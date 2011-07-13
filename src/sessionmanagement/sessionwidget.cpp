@@ -36,6 +36,9 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QGraphicsGridLayout>
+#include <QMapIterator>
+#include <QGraphicsProxyWidget>
+#include <QLineEdit>
 
 
 SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
@@ -50,14 +53,14 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     setGraphicsEffect(m_dropShadow);
     m_dropShadow->setEnabled(false);
 
-    m_layout = new SimilarItemLayout;
-    m_layout->setContentsMargins(10 , 10, 10, 10);
-    m_layout->setSpacing(Qt::Horizontal, 10);
-    m_layout->setSpacing(Qt::Vertical, 10);
-
     m_gridLayout = new QGraphicsGridLayout;
-    m_gridLayout->addItem(m_layout, 0, 0);
+    m_gridLayout->setSpacing(20);
     setLayout(m_gridLayout);
+
+    setupTitleEdit();
+    setupPreview();
+
+    setSessionActive(session->isActive());
 
     connect(m_session.data(), SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
     connect(m_session.data(), SIGNAL(tabRemoved(SessionTabData*)), this, SLOT(removeTabPreview(SessionTabData*)));
@@ -66,6 +69,26 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
 
 SessionWidget::~SessionWidget()
 {
+}
+
+
+void SessionWidget::setupTitleEdit()
+{
+    QGraphicsProxyWidget *titleEdit = new QGraphicsProxyWidget(this);
+    m_titleLineEdit = new QLineEdit;
+    titleEdit->setWidget(m_titleLineEdit);
+    m_titleEdit = titleEdit;
+    m_gridLayout->addItem(titleEdit, 1, 0);
+}
+
+
+void SessionWidget::setupPreview()
+{
+    m_layout = new SimilarItemLayout(m_gridLayout);
+    m_layout->setContentsMargins(10 , 10, 10, 10);
+    m_layout->setSpacing(Qt::Horizontal, 10);
+    m_layout->setSpacing(Qt::Vertical, 10);
+    m_gridLayout->addItem(m_layout, 0, 0);
 }
 
 
@@ -94,19 +117,8 @@ void SessionWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     {
         return;
     }
-    if (m_session.data()->isActive() == false)
-    {
-        painter->setBrush(QColor(224,224,224));
-        QPen pen(QColor(240,240,240));
-        pen.setWidth(3);
-        painter->setPen(pen);
-    }
-    else
-    {
-        painter->setBrush(QColor(0, 0, 0, 160));
-        painter->setPen(Qt::NoPen);
-    }
-
+    painter->setBrush(m_backBrush);
+    painter->setPen(m_borderPen);
     painter->drawRoundedRect(boundingRect(), 5, 5);
     QGraphicsWidget::paint(painter, option, widget);
 }
@@ -141,6 +153,39 @@ void SessionWidget::removeTabPreview(SessionTabData* tabData)
         m_layout->removeItem(pw);
         kDebug() << "deleted tab preview" << tabData->url();
         pw->deleteLater();
+    }
+}
+
+
+void SessionWidget::setSessionActive(bool active)
+{
+    if (active)
+    {
+        m_titleLineEdit->setStyleSheet(
+            "QLineEdit { border: 1px solid white;\
+            border-radius: 3px;\
+            margin: 4px 8px;\
+            color: white;\
+            background: transparent;\
+            selection-background-color: transparent;\
+            selection-color: darkgray; }\
+            ");
+        m_backBrush = QColor(0, 0, 0, 160);
+        m_borderPen = Qt::NoPen;
+    }
+    else
+    {
+        m_titleLineEdit->setStyleSheet(
+            "QLineEdit { border: 1px solid gray;\
+            border-radius: 3px;\
+            margin: 4px 8px;\
+            background: transparent;\
+            selection-background-color: transparent;\
+            selection-color: darkgray; }\
+            ");
+        m_backBrush = QColor(224,224,224);
+        m_borderPen = QColor(240,240,240);
+        m_borderPen.setWidth(3);
     }
 }
 

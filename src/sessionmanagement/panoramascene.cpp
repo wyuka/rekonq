@@ -53,12 +53,12 @@ PanoramaScene::PanoramaScene(SessionManager *sessionManager)
     connect(sessionManager, SIGNAL(sessionDeleted(Session*)), this, SLOT(deleteSession(Session*)));
 
     setBackgroundBrush(Qt::lightGray);
-    m_layout = new QGraphicsLinearLayout;
-    m_layout->setSpacing(20);
-    m_layout->setSpacing(20);
-    QGraphicsWidget* form = new QGraphicsWidget;
-    form->setLayout(m_layout);
-    addItem(form);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
+    layout->setSpacing(20);
+    layout->setSpacing(20);
+    m_form = new QGraphicsWidget;
+    m_form->setLayout(layout);
+    addItem(m_form);
 }
 
 
@@ -70,14 +70,20 @@ PanoramaScene::~PanoramaScene()
 void PanoramaScene::activateSession(Session* session)
 {
     kDebug() << "session activated";
+    SessionWidget *sw;
+    if ((sw = m_sessionMap[session]) != 0)
+    {
+        sw->setSessionActive(true);
+    }
 }
 
 
 void PanoramaScene::addSession(Session* session)
 {
     kDebug() << "session added";
-    SessionWidget *sessionWidget = new SessionWidget(session);
-    m_layout->addItem(sessionWidget);
+    SessionWidget *sessionWidget = new SessionWidget(session, m_form);
+    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(m_form->layout());
+    layout->addItem(sessionWidget);
     m_sessionMap[session] = sessionWidget;
 }
 
@@ -85,6 +91,11 @@ void PanoramaScene::addSession(Session* session)
 void PanoramaScene::deactivateSession(Session* session)
 {
     kDebug() << "session deactivated";
+    SessionWidget *sw;
+    if ((sw = m_sessionMap[session]) != 0)
+    {
+        sw->setSessionActive(true);
+    }
 }
 
 
