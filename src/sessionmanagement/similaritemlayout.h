@@ -37,6 +37,7 @@ public:
     inline void addItem(QGraphicsLayoutItem *item);
     void insertItem(int index, QGraphicsLayoutItem *item);
     void setSpacing(Qt::Orientations o, qreal spacing);
+    void setSpacing(qreal spacing);
     qreal spacing(Qt::Orientation o) const;
     // inherited functions
     void setGeometry(const QRectF &geom);

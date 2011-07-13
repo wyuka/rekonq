@@ -116,6 +116,12 @@ void SimilarItemLayout::setSpacing(Qt::Orientations o, qreal spacing)
         m_spacing[1] = spacing;
 }
 
+void SimilarItemLayout::setSpacing(qreal spacing)
+{
+    m_spacing[0] = spacing;
+    m_spacing[1] = spacing;
+}
+
 void SimilarItemLayout::setGeometry(const QRectF &geom)
 {
     QGraphicsLayout::setGeometry(geom);
@@ -147,7 +153,7 @@ void SimilarItemLayout::setGeometry(const QRectF &geom)
             x += m_itemSize.width() + spacing(Qt::Horizontal);
         }
 
-        item->setGeometry(QRectF(QPointF(left + x, top + y), m_itemSize));
+        item->setGeometry(QRectF(geom.topLeft() + QPointF(left + x, top + y), m_itemSize));
         kDebug() << "set item number" << i << "to rect" << QRectF(QPointF(left + x, top + y), m_itemSize);
     }
 }
