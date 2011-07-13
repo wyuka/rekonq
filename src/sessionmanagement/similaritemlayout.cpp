@@ -44,8 +44,18 @@ SimilarItemLayout::SimilarItemLayout(QGraphicsLayoutItem* parent)
 
 SimilarItemLayout::~SimilarItemLayout()
 {
+    for (int i = count() - 1; i >= 0; --i) {
+        QGraphicsLayoutItem *item = itemAt(i);
+        // The following lines are added to prevent a crash, which seems to be
+        // a bug in Qt, which occurs with nested layouts.
+        removeAt(i);
+        if (item) {
+            item->setParentLayoutItem(0);
+            if (item->ownedByLayout())
+                delete item;
+        }
+    }
 }
-
 
 void SimilarItemLayout::insertItem(int index, QGraphicsLayoutItem *item)
 {
