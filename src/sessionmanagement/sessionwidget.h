@@ -31,6 +31,9 @@
 #include <QBrush>
 #include <QPen>
 
+//FIXME: remove this forward declaration, exists for testing only
+class QGraphicsLinearLayout;
+
 class QGraphicsGridLayout;
 class SessionTabData;
 class SimilarItemLayout;

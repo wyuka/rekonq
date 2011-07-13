@@ -40,6 +40,9 @@
 #include <QGraphicsProxyWidget>
 #include <QLineEdit>
 
+//FIXME: the following headers are for occasional testing, needs to be removed.
+#include <QGraphicsLinearLayout>
+
 
 SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
         : QGraphicsWidget(parent)
@@ -54,7 +57,8 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     m_dropShadow->setEnabled(false);
 
     m_gridLayout = new QGraphicsGridLayout;
-    m_gridLayout->setSpacing(20);
+    m_gridLayout->setSpacing(10);
+    m_gridLayout->setContentsMargins(10, 10, 10, 10);
     setLayout(m_gridLayout);
 
     setupTitleEdit();
@@ -78,17 +82,15 @@ void SessionWidget::setupTitleEdit()
     m_titleLineEdit = new QLineEdit;
     titleEdit->setWidget(m_titleLineEdit);
     m_titleEdit = titleEdit;
-    m_gridLayout->addItem(titleEdit, 1, 0);
+    m_gridLayout->addItem(titleEdit, 0, 0);
 }
 
 
 void SessionWidget::setupPreview()
 {
     m_layout = new SimilarItemLayout(m_gridLayout);
-    m_layout->setContentsMargins(10 , 10, 10, 10);
-    m_layout->setSpacing(Qt::Horizontal, 10);
-    m_layout->setSpacing(Qt::Vertical, 10);
-    m_gridLayout->addItem(m_layout, 0, 0);
+    m_layout->setSpacing(10);
+    m_gridLayout->addItem(m_layout, 1, 0);
 }
 
 
@@ -164,7 +166,7 @@ void SessionWidget::setSessionActive(bool active)
         m_titleLineEdit->setStyleSheet(
             "QLineEdit { border: 1px solid white;\
             border-radius: 3px;\
-            margin: 4px 8px;\
+            margin: 0px 0px;\
             color: white;\
             background: transparent;\
             selection-background-color: transparent;\
@@ -178,7 +180,7 @@ void SessionWidget::setSessionActive(bool active)
         m_titleLineEdit->setStyleSheet(
             "QLineEdit { border: 1px solid gray;\
             border-radius: 3px;\
-            margin: 4px 8px;\
+            margin: 0px 0px;\
             background: transparent;\
             selection-background-color: transparent;\
             selection-color: darkgray; }\
