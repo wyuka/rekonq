@@ -2,3 +2,4 @@
 2. make an updateThumbnail() call for every tab on resize of a sessionwidget.
 3. add buttons to add, remove, deactivate sessions from panorama. make the titleEdit work.
 4. allow drag-drop (most important)
+5. create a dedicated class for loading and storing sessions. Preferably have an abstract base class with subclasses for storing to XML, Nepomuk(?), etc.
