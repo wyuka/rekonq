@@ -49,12 +49,8 @@ void StretcherWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 void StretcherWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-    //setPos(mapToParent(event->pos()-event->lastPos()));
-    //m_parent->resize(event->pos() - event->lastPos());
     QSizeF size = m_parent->size();
-    //kDebug() << "ealier size was" << size;
     size.rwidth() += event->pos().x() - event->lastPos().x();
     size.rheight() += event->pos().y() - event->lastPos().y();
-    //kDebug() << "now size is" << size;
     m_parent->resize(size);
 }
