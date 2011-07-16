@@ -49,7 +49,8 @@ public:
 
 protected:
     QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
-    QSizeF findItemSize(const QRectF &geom, int &itemsPerRow);
+    QSizeF findItemSize(const QRectF &geom, int *itemsPerRow);
+    void updateMinimumSize();
 
 private:
 

@@ -27,6 +27,7 @@
 #include <QtGui/qwidget.h>
 #include <QtCore/qmath.h>
 #include <QGraphicsLayoutItem>
+#include <QSizePolicy>
 #include "kdebug.h"
 
 SimilarItemLayout::SimilarItemLayout(QGraphicsLayoutItem* parent)
@@ -35,9 +36,10 @@ SimilarItemLayout::SimilarItemLayout(QGraphicsLayoutItem* parent)
 {
     m_spacing[0] = 6;
     m_spacing[1] = 6;
-    QSizePolicy sp = sizePolicy();
-    sp.setHeightForWidth(true);
+    QSizePolicy sp = QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    sp.setHeightForWidth(false);
     setSizePolicy(sp);
+    sizePolicy().setHeightForWidth(false);
     m_itemSize = QSizeF(0,0);
 }
 
@@ -61,7 +63,7 @@ void SimilarItemLayout::insertItem(int index, QGraphicsLayoutItem *item)
 {
     if (m_firstUse)
     {
-        kDebug() << "firstUse";
+        //kDebug() << "firstUse";
         m_itemSize = item->effectiveSizeHint(Qt::MinimumSize);
         m_aspectRatio = m_itemSize.width() / m_itemSize.height();
         m_firstUse = false;
@@ -71,6 +73,7 @@ void SimilarItemLayout::insertItem(int index, QGraphicsLayoutItem *item)
     if (uint(index) > uint(m_items.count()))
         index = m_items.count();
     m_items.insert(index, item);
+    updateMinimumSize();
     invalidate();
 }
 
@@ -89,6 +92,7 @@ void SimilarItemLayout::removeAt(int index)
     QGraphicsLayoutItem* item = m_items.value(index);
     m_items.removeAt(index);
     item->setParentLayoutItem(0);
+    updateMinimumSize();
     invalidate();
 }
 
@@ -99,6 +103,7 @@ void SimilarItemLayout::removeItem(QGraphicsLayoutItem* item)
         
         m_items.removeOne(item);
         item->setParentLayoutItem(0);
+        updateMinimumSize();
         invalidate();
     }
 }
@@ -133,7 +138,7 @@ void SimilarItemLayout::setGeometry(const QRectF &geom)
     getContentsMargins(&left, &top, &right, &bottom);
 
     int itemsPerRow;
-    m_itemSize = findItemSize(geom, itemsPerRow);
+    m_itemSize = findItemSize(geom, &itemsPerRow);
     if (itemsPerRow < 1)
         return;
 
@@ -154,129 +159,125 @@ void SimilarItemLayout::setGeometry(const QRectF &geom)
         }
 
         item->setGeometry(QRectF(geom.topLeft() + QPointF(left + x, top + y), m_itemSize));
-        kDebug() << "set item number" << i << "to rect" << QRectF(QPointF(left + x, top + y), m_itemSize);
     }
 }
 
 
-QSizeF SimilarItemLayout::findItemSize(const QRectF &geom, int &itemsPerRow)
+QSizeF SimilarItemLayout::findItemSize(const QRectF &geom, int *itemsPerRow)
 {
     qreal left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
     QSizeF curSize = geom.size() - QSizeF(left + right, top + bottom);
-    QSizeF toReturn;
-    qreal width, height, maxWidth = 0;
+    QSizeF minSize = m_items.at(0)->effectiveSizeHint(Qt::MinimumSize);
+    kDebug() << "effective size is" << curSize;
+    qreal width, height, maxWidth = minSize.width();
 
     int i;
+    *itemsPerRow = 0;
     for (i = 1; i <= m_items.count(); ++i)
     {
         width = ((curSize.width() + spacing(Qt::Horizontal)) / i) - spacing(Qt::Horizontal);
         height = width / m_aspectRatio;
         int rows = qCeil(qreal(m_items.count()) / qreal (i));
         qreal totalHeight = height * rows + spacing(Qt::Vertical) * (rows - 1);
-        kDebug() << "trying" << i;
-        kDebug() << "width" << width;
-        kDebug() << "height" << height;
-        kDebug() << "rows" << rows;
-        kDebug() << "totalHeight" << totalHeight;
-        if (totalHeight <= curSize.height() && width > maxWidth)
+        if (totalHeight <= curSize.height() && width >= maxWidth)
         {
-            kDebug() << "tried" << i << "items";
-            kDebug() << "tried width" << width;
             maxWidth = width;
-            itemsPerRow = i;
+            *itemsPerRow = i;
         }
     }
-    toReturn = QSizeF(maxWidth, maxWidth / m_aspectRatio);
-    kDebug() << "curSize is " << curSize;
-    kDebug() << "items per row found to be" << itemsPerRow;
-    kDebug() << "itemSize found to be" << toReturn;
-    return toReturn;
+    if (*itemsPerRow)
+        return QSizeF(maxWidth, maxWidth / m_aspectRatio);
+    else
+    {
+        kDebug() << "too little height";
+        int i;
+        qreal maxHeight = minSize.height();
+        for (i = 1; i <= m_items.count(); ++i)
+        {
+            height = ((curSize.height() + spacing(Qt::Vertical)) / i) - spacing(Qt::Vertical);
+            width = height / m_aspectRatio;
+            int cols = qCeil(qreal(m_items.count()) / qreal (i));
+            qreal totalWidth = width * cols + spacing(Qt::Horizontal) * (cols - 1);
+            if (totalWidth <= curSize.width() && height >= maxHeight)
+            {
+                maxHeight = height;
+                *itemsPerRow = cols;
+            }
+        }
+        return QSizeF(maxHeight * m_aspectRatio, maxHeight);
+    }
+}
+
+
+void SimilarItemLayout::updateMinimumSize()
+{
+    if (m_items.size() == 0)
+    {
+        setMinimumSize(200, 200);
+        return;
+    }
+    QSizeF minSize = m_items.at(0)->effectiveSizeHint(Qt::MinimumSize);
+    qreal left, top, right, bottom;
+    getContentsMargins(&left, &top, &right, &bottom);
+
+    if (minSize.width() <= 0)
+    {
+        minSize = m_itemSize;
+    }
+        
+    //kDebug() << "minSize is" << minSize;
+    // try to be as square-ish in demension as possible ( means keep the aspect ratio as near to 1 as possible )
+    int horizItems, vertItems;
+    // when i prefer width over height
+    int horizItems1 = qCeil(qSqrt(qreal(m_items.count())/m_aspectRatio));
+    int vertItems1 = qCeil(qreal(m_items.count())/qreal(horizItems1));
+    // when i prefer height over width
+    int horizItems2 = qFloor(qSqrt(qreal(m_items.count())/m_aspectRatio));
+    int vertItems2 = qCeil(qreal(count())/qreal(horizItems2));
+        
+    qreal squareness1 = vertItems1 * minSize.height() < horizItems1 * minSize.width() ?
+    (vertItems1 * minSize.height()) / (horizItems1 * minSize.width()) : (horizItems1 * minSize.width()) / (vertItems1 * minSize.height());
+    qreal squareness2 = vertItems2 * minSize.height() < horizItems2 * minSize.width() ?
+    (vertItems2 * minSize.height()) / (horizItems2 * minSize.width()) : (horizItems2 * minSize.width()) / (vertItems2 * minSize.height());
+    if (squareness1 > squareness2)
+    {
+        horizItems = horizItems1;
+        vertItems = vertItems1;
+    }
+    else
+    {
+        horizItems = horizItems2;
+        vertItems = vertItems2;
+    }
+    qreal width = horizItems*minSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
+    qreal height = vertItems*minSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
+    kDebug() << "horizItems set to" << horizItems;
+    kDebug() << "vertItems set to" << vertItems;
+    kDebug() << "width set to" << width;
+    kDebug() << "height set to" << height;
+    setMinimumSize(QSizeF(width+0.1, height+0.1));
 }
 
 
 QSizeF SimilarItemLayout::sizeHint(Qt::SizeHint sizeHint,const QSizeF &constraint) const
 {
-    kDebug() << "number of items =" << m_items.count();
     qreal left, top, right, bottom;
     getContentsMargins(&left, &top, &right, &bottom);
     QSizeF curSize = geometry().size() - QSizeF(left + right, top + bottom);
-    kDebug() << "trimmed geom size previously was" << curSize;
     QSizeF toReturn;
 
-    if (m_items.count() < 1)
+    if (sizeHint == Qt::MinimumSize)
+        return QSizeF(60, 60);
+    else if (sizeHint == Qt::MaximumSize)
+        return QSizeF(-1, -1);
+    else
     {
-        kDebug() << "zero items";
-        if (curSize.width() <= 0 || curSize.height() <= 0)
-        {
-            parentLayoutItem()->updateGeometry();
-            return m_itemSize;
-        }
+        if (constraint.width() <= 0 && constraint.height() <= 0)
+            return QSizeF(60, 60);
+        else if (constraint.width() <= 0)
+            return QSizeF(constraint.height()*2., constraint.height());
         else
-        {
-            return geometry().size();
-        }
+            return QSizeF(constraint.width(), constraint.width() /2.);
     }
-
-    QSizeF minSize = m_items.at(0)->effectiveSizeHint(Qt::MinimumSize);
-    bool notEnoughSize = true;
-    QSizeF effectiveMinSize;
-
-    int maxItemsPerRow = qFloor((curSize.width() + spacing(Qt::Horizontal)) / (minSize.width() + spacing(Qt::Horizontal)));
-    if (maxItemsPerRow)
-    {
-        qreal effectiveMinWidth = (curSize.width() + spacing(Qt::Horizontal)) / qreal (maxItemsPerRow);
-        effectiveMinWidth -= spacing(Qt::Horizontal);
-        int rows = qCeil(qreal(m_items.count()) / qreal (maxItemsPerRow));
-        qreal totalHeight = (effectiveMinWidth / m_aspectRatio) * qreal(rows) + spacing(Qt::Vertical) * (rows -1);
-        effectiveMinSize = QSizeF(effectiveMinWidth, effectiveMinWidth / m_aspectRatio);
-        kDebug() << "maxItemsPerRow =" << maxItemsPerRow;
-        kDebug() << "effectiveMinSize =" << effectiveMinSize;
-        kDebug() << "totalHeight =" << totalHeight;
-        if (curSize.width() > 0 && curSize.height() > 0 && curSize.height() >= totalHeight)
-        {
-            kDebug() << "so keeping same for" << m_items.count() << "elements";
-            toReturn = geometry().size();
-            notEnoughSize = false;
-        }
-    }
-
-    if (notEnoughSize)
-    {
-        if (effectiveMinSize.width() <= 0)
-        {
-            effectiveMinSize = m_itemSize;
-        }
-
-        kDebug() << "effectiveMinSize is" << effectiveMinSize;
-        // try to be as square-ish in demension as possible ( means keep the aspect ratio as near to 1 as possible )
-        int horizItems, vertItems;
-        // when i prefer width over height
-        int horizItems1 = qCeil(qSqrt(qreal(m_items.count())*effectiveMinSize.height()/effectiveMinSize.width()));
-        int vertItems1 = qCeil(qreal(m_items.count())/qreal(horizItems1));
-        // when i prefer height over width
-        int horizItems2 = qFloor(qSqrt(qreal(m_items.count())*effectiveMinSize.height()/effectiveMinSize.width()));
-        int vertItems2 = qCeil(qreal(count())/qreal(horizItems2));
-
-        qreal squareness1 = vertItems1 * effectiveMinSize.height() < horizItems1 * effectiveMinSize.width() ?
-            (vertItems1 * effectiveMinSize.height()) / (horizItems1 * effectiveMinSize.width()) : (horizItems1 * effectiveMinSize.width()) / (vertItems1 * effectiveMinSize.height());
-        qreal squareness2 = vertItems2 * effectiveMinSize.height() < horizItems2 * effectiveMinSize.width() ?
-            (vertItems2 * effectiveMinSize.height()) / (horizItems2 * effectiveMinSize.width()) : (horizItems2 * effectiveMinSize.width()) / (vertItems2 * effectiveMinSize.height());
-        if ( squareness1 > squareness2 )
-        {
-            horizItems = horizItems1;
-            vertItems = vertItems1;
-        }
-        else
-        {
-            horizItems = horizItems2;
-            vertItems = vertItems2;
-        }
-        qreal width = horizItems*effectiveMinSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
-        qreal height = vertItems*effectiveMinSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
-        toReturn = QSizeF(width, height);
-        parentLayoutItem()->updateGeometry();
-    }
-    kDebug() << "returning sizeHint" << toReturn;
-    return toReturn;
 }

@@ -92,6 +92,7 @@ SET( rekonq_KDEINIT_SRCS
     sessionmanagement/sessiontabdata.cpp
     sessionmanagement/sessionwidget.cpp
     sessionmanagement/similaritemlayout.cpp
+    sessionmanagement/stretcherwidget.cpp
     #----------------------------------------
     useragent/useragentinfo.cpp
     useragent/useragentwidget.cpp

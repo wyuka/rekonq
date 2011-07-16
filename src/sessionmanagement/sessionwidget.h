@@ -75,7 +75,7 @@ protected slots:
     void removeTabPreview(SessionTabData *tabData);
 
     void setupPreview();
-    //void setupStretcher();
+    void setupStretcher();
     //void setupActivateButton();
     //void setupDeleteButton();
     void setupTitleEdit();
@@ -94,6 +94,7 @@ private:
     QMap<SessionTabData*, PreviewWidget*> m_tabMap;
     QGraphicsWidget* m_titleEdit;
     QLineEdit* m_titleLineEdit;
+    QGraphicsWidget* m_stretcher;
 
     QWeakPointer<PreviewWidget> m_currentPreviewWidget;
 };

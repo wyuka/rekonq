@@ -30,6 +30,7 @@
 #include "previewwidget.h"
 #include "session.h"
 #include "sessiontabdata.h"
+#include "stretcherwidget.h"
 
 
 #include <QGraphicsDropShadowEffect>
@@ -42,7 +43,6 @@
 
 //FIXME: the following headers are for occasional testing, needs to be removed.
 #include <QGraphicsLinearLayout>
-
 
 SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
         : QGraphicsWidget(parent)
@@ -62,9 +62,13 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     setLayout(m_gridLayout);
 
     setupTitleEdit();
+    setupStretcher();
     setupPreview();
 
     setSessionActive(session->isActive());
+    QSizePolicy sp = QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    sp.setHeightForWidth(false);
+    setSizePolicy(sp);
 
     connect(session, SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
     connect(session, SIGNAL(tabRemoved(SessionTabData*)), this, SLOT(removeTabPreview(SessionTabData*)));
@@ -83,6 +87,13 @@ void SessionWidget::setupTitleEdit()
     titleEdit->setWidget(m_titleLineEdit);
     m_titleEdit = titleEdit;
     m_gridLayout->addItem(titleEdit, 0, 0);
+}
+
+
+void SessionWidget::setupStretcher()
+{
+    m_stretcher = new StretcherWidget(this);
+    m_gridLayout->addItem(m_stretcher, 2, 1);
 }
 
 
@@ -221,9 +232,9 @@ void SessionWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void SessionWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    Q_UNUSED(event)
     //m_layout->removeItem(this);
     emit mousePressed();
+    event->accept();
 }
 
 void SessionWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
