@@ -3,7 +3,7 @@
 
 #include "sessionwidget.h"
 
-#include "rekonq_defines.h"
+#include "application.h"
 
 #include <QGraphicsWidget>
 #include <QPainter>
@@ -14,6 +14,7 @@ StretcherWidget::StretcherWidget(SessionWidget *parent)
         , m_parent(parent)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setAcceptHoverEvents(true);
 }
 
 
@@ -54,4 +55,18 @@ void StretcherWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
     size.rwidth() += event->pos().x() - event->lastPos().x();
     size.rheight() += event->pos().y() - event->lastPos().y();
     m_parent->resize(size);
+}
+
+
+void StretcherWidget::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    rApp->setOverrideCursor(QCursor(Qt::SizeFDiagCursor));
+    QGraphicsItem::hoverEnterEvent(event);
+}
+
+
+void StretcherWidget::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    rApp->restoreOverrideCursor();
+    QGraphicsWidget::hoverLeaveEvent(event);
 }
