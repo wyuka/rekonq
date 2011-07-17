@@ -54,7 +54,7 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     m_dropShadow->setColor(Qt::black);
     m_dropShadow->setBlurRadius(20);
     setGraphicsEffect(m_dropShadow);
-    m_dropShadow->setEnabled(true);
+    m_dropShadow->setEnabled(false);
 
     m_gridLayout = new QGraphicsGridLayout;
     m_gridLayout->setSpacing(10);
@@ -175,55 +175,36 @@ void SessionWidget::setSessionActive(bool active)
     if (active)
     {
         m_titleLineEdit->setStyleSheet(
-            "QLineEdit { border: 2px solid lightGray;\
+            "QLineEdit { border: 1px solid darkgray;\
             border-radius: 3px;\
             margin: 0px 0px;\
-            color: white;\
+            color: lightgray;\
             background: transparent;\
             selection-background-color: transparent;\
-            selection-color: darkgray; }\
+            selection-color: white; }\
             ");
         m_backBrush = QColor(0, 0, 0, 160);
-        m_borderPen = QPen(Qt::lightGray);//Qt::NoPen;
+        m_borderPen = QColor(220, 220, 220);
         m_borderPen.setWidth(3);
+        m_stretcher->setColor(Qt::gray);
     }
     else
     {
         m_titleLineEdit->setStyleSheet(
-            "QLineEdit { border: 2px solid lightGray;\
+            "QLineEdit { border: 1px solid #999999;\
             border-radius: 3px;\
             margin: 0px 0px;\
-            background: white;\
+            color: #777777;\
+            background: transparent;\
             selection-background-color: transparent;\
-            selection-color: darkgray; }\
+            selection-color: black; }\
             ");
-        m_backBrush = Qt::white;//QColor(224,224,224);
-        //m_borderPen = QPen(Qt::lightGray);//QColor(240,240,240);
-        //m_borderPen.setWidth(3);
-        m_borderPen = Qt::NoPen;
+        m_backBrush = QColor(224, 224, 224);
+        m_borderPen = QColor(240, 240, 240);
+        m_borderPen.setWidth(3);
+        m_stretcher->setColor(Qt::gray);
     }
 }
-
-
-/*void SessionWidget::setSession(Session* session)
-{
-    m_session = session;
-
-    TabDataList tabDataList = m_session->tabDataList();
-    SessionTabData* currentTabData = session->currentTabData();
-    foreach (SessionTabData* tabData, tabDataList)
-    {
-        PreviewWidget* pw = new PreviewWidget;
-        pw->setTabData(tabData);
-        connect(pw, SIGNAL(mousePressed()), this, SLOT(setCurrentPreviewWidget()));
-        layout->addItem(pw);
-        if (tabData == currentTabData)
-        {
-            m_currentPreviewWidget = pw;
-            m_currentPreviewWidget.data()->setCurrent(true);
-        }
-    }
-}*/
 
 
 void SessionWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
@@ -232,12 +213,13 @@ void SessionWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     m_inMotion = false;
 }
 
+
 void SessionWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    //m_layout->removeItem(this);
     emit mousePressed();
     event->accept();
 }
+
 
 void SessionWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {

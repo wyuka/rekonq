@@ -43,6 +43,7 @@ class PreviewWidget;
 class Session;
 class QGraphicsDropShadowEffect;
 class QLineEdit;
+class StretcherWidget;
 
 class SessionWidget : public QGraphicsWidget
 {
@@ -94,7 +95,7 @@ private:
     QMap<SessionTabData*, PreviewWidget*> m_tabMap;
     QGraphicsWidget* m_titleEdit;
     QLineEdit* m_titleLineEdit;
-    QGraphicsWidget* m_stretcher;
+    StretcherWidget* m_stretcher;
 
     QWeakPointer<PreviewWidget> m_currentPreviewWidget;
 };

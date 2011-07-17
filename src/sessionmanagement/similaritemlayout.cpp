@@ -63,7 +63,6 @@ void SimilarItemLayout::insertItem(int index, QGraphicsLayoutItem *item)
 {
     if (m_firstUse)
     {
-        //kDebug() << "firstUse";
         m_itemSize = item->effectiveSizeHint(Qt::MinimumSize);
         m_aspectRatio = m_itemSize.width() / m_itemSize.height();
         m_firstUse = false;
@@ -169,7 +168,6 @@ QSizeF SimilarItemLayout::findItemSize(const QRectF &geom, int *itemsPerRow)
     getContentsMargins(&left, &top, &right, &bottom);
     QSizeF curSize = geom.size() - QSizeF(left + right, top + bottom);
     QSizeF minSize = m_items.at(0)->effectiveSizeHint(Qt::MinimumSize);
-    //kDebug() << "effective size is" << curSize;
     qreal width, height, maxWidth = minSize.width();
 
     int i;
@@ -251,10 +249,6 @@ void SimilarItemLayout::updateMinimumSize()
     }
     qreal width = horizItems*minSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
     qreal height = vertItems*minSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
-    //kDebug() << "horizItems set to" << horizItems;
-    //kDebug() << "vertItems set to" << vertItems;
-    //kDebug() << "width set to" << width;
-    //kDebug() << "height set to" << height;
     setMinimumSize(QSizeF(width+0.1, height+0.1));
 }
 

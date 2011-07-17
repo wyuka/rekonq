@@ -52,7 +52,7 @@ PanoramaScene::PanoramaScene(SessionManager *sessionManager)
     connect(sessionManager, SIGNAL(sessionDeactivated(Session*)), this, SLOT(deactivateSession(Session*)));
     connect(sessionManager, SIGNAL(sessionDeleted(Session*)), this, SLOT(deleteSession(Session*)));
 
-    //setBackgroundBrush(Qt::lightGray);
+    setBackgroundBrush(Qt::lightGray);
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
     layout->setSpacing(20);
     layout->setSpacing(20);

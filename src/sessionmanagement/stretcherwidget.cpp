@@ -24,14 +24,15 @@ StretcherWidget::~StretcherWidget()
 
 void StretcherWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    painter->setBrush(QColor(Qt::gray));
-    painter->setPen(Qt::NoPen);
-    static const QPointF points[3] = {
-        boundingRect().topRight(),
-        boundingRect().bottomRight(),
-        boundingRect().bottomLeft()
-    };
-    painter->drawPolygon(points, 3);
+    painter->setPen(m_color);
+    painter->setBrush(m_color);
+    for (int i = 0; i <= 3; ++i)
+    {
+        for (int j = 3; j >= 3 - i; --j)
+        {
+            painter->drawEllipse(QRectF(j * 5, i * 5, 1.2, 1.2));
+        }
+    }
     QGraphicsWidget::paint(painter, option, widget);
 }
 
