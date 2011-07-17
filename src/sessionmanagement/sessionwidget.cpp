@@ -54,7 +54,7 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     m_dropShadow->setColor(Qt::black);
     m_dropShadow->setBlurRadius(20);
     setGraphicsEffect(m_dropShadow);
-    m_dropShadow->setEnabled(false);
+    m_dropShadow->setEnabled(true);
 
     m_gridLayout = new QGraphicsGridLayout;
     m_gridLayout->setSpacing(10);
@@ -175,7 +175,7 @@ void SessionWidget::setSessionActive(bool active)
     if (active)
     {
         m_titleLineEdit->setStyleSheet(
-            "QLineEdit { border: 1px solid white;\
+            "QLineEdit { border: 2px solid lightGray;\
             border-radius: 3px;\
             margin: 0px 0px;\
             color: white;\
@@ -184,21 +184,23 @@ void SessionWidget::setSessionActive(bool active)
             selection-color: darkgray; }\
             ");
         m_backBrush = QColor(0, 0, 0, 160);
-        m_borderPen = Qt::NoPen;
+        m_borderPen = QPen(Qt::lightGray);//Qt::NoPen;
+        m_borderPen.setWidth(3);
     }
     else
     {
         m_titleLineEdit->setStyleSheet(
-            "QLineEdit { border: 1px solid gray;\
+            "QLineEdit { border: 2px solid lightGray;\
             border-radius: 3px;\
             margin: 0px 0px;\
-            background: transparent;\
+            background: white;\
             selection-background-color: transparent;\
             selection-color: darkgray; }\
             ");
-        m_backBrush = QColor(224,224,224);
-        m_borderPen = QColor(240,240,240);
-        m_borderPen.setWidth(3);
+        m_backBrush = Qt::white;//QColor(224,224,224);
+        //m_borderPen = QPen(Qt::lightGray);//QColor(240,240,240);
+        //m_borderPen.setWidth(3);
+        m_borderPen = Qt::NoPen;
     }
 }
 

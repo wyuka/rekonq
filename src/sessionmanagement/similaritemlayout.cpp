@@ -169,7 +169,7 @@ QSizeF SimilarItemLayout::findItemSize(const QRectF &geom, int *itemsPerRow)
     getContentsMargins(&left, &top, &right, &bottom);
     QSizeF curSize = geom.size() - QSizeF(left + right, top + bottom);
     QSizeF minSize = m_items.at(0)->effectiveSizeHint(Qt::MinimumSize);
-    kDebug() << "effective size is" << curSize;
+    //kDebug() << "effective size is" << curSize;
     qreal width, height, maxWidth = minSize.width();
 
     int i;
@@ -190,7 +190,7 @@ QSizeF SimilarItemLayout::findItemSize(const QRectF &geom, int *itemsPerRow)
         return QSizeF(maxWidth, maxWidth / m_aspectRatio);
     else
     {
-        kDebug() << "too little height";
+        //too little height;
         int i;
         qreal maxHeight = minSize.height();
         for (i = 1; i <= m_items.count(); ++i)
@@ -225,8 +225,7 @@ void SimilarItemLayout::updateMinimumSize()
     {
         minSize = m_itemSize;
     }
-        
-    //kDebug() << "minSize is" << minSize;
+  
     // try to be as square-ish in demension as possible ( means keep the aspect ratio as near to 1 as possible )
     int horizItems, vertItems;
     // when i prefer width over height
@@ -252,10 +251,10 @@ void SimilarItemLayout::updateMinimumSize()
     }
     qreal width = horizItems*minSize.width() + (horizItems - 1) * spacing(Qt::Horizontal) + left + right;
     qreal height = vertItems*minSize.height() + (vertItems - 1) * spacing(Qt::Vertical) + top + bottom;
-    kDebug() << "horizItems set to" << horizItems;
-    kDebug() << "vertItems set to" << vertItems;
-    kDebug() << "width set to" << width;
-    kDebug() << "height set to" << height;
+    //kDebug() << "horizItems set to" << horizItems;
+    //kDebug() << "vertItems set to" << vertItems;
+    //kDebug() << "width set to" << width;
+    //kDebug() << "height set to" << height;
     setMinimumSize(QSizeF(width+0.1, height+0.1));
 }
 

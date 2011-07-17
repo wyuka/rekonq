@@ -90,7 +90,10 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     qreal thumbwidth = thumbheight * (1 / thumbAspectRatio);
 
     painter->setBrush(Qt::white);
-    painter->setPen(Qt::NoPen);
+    QPen borderPen = QPen(Qt::lightGray);
+    borderPen.setWidth(2);
+    painter->setPen(borderPen);
+
     painter->drawRoundedRect(rect(), 3, 3);
     painter->drawPixmap(QRectF(3, 3, thumbwidth, thumbheight), thumbnail, thumbnail.rect());
     painter->setPen(Qt::black);
