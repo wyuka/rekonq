@@ -80,6 +80,7 @@ signals:
     void tabRemoved(SessionTabData* tabData);
     void tabChanged(SessionTabData* tabData);
 
+    void titleChanged(QString title);
 public slots:
     bool load();
     void deactivate();

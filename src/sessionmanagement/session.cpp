@@ -67,7 +67,11 @@ TabDataList Session::tabDataList()
 
 void Session::setTitle(QString title)
 {
+    if (m_title == title)
+        return;
     m_title = title;
+    emit titleChanged(title);
+    emit changesMade();
 }
 
 

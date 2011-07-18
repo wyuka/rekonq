@@ -87,6 +87,8 @@ void SessionWidget::setupTitleEdit()
     titleEdit->setWidget(m_titleLineEdit);
     m_titleEdit = titleEdit;
     m_gridLayout->addItem(titleEdit, 0, 0);
+    connect(m_titleLineEdit, SIGNAL(textChanged(QString)), this, SLOT(setTitleForSession(QString)));
+    connect(session(), SIGNAL(titleChanged(QString)), this, SLOT(setTitleFromSession(QString)));
 }
 
 
@@ -121,6 +123,18 @@ void SessionWidget::setCurrent(bool current)
             m_currentPreviewWidget.data()->setCurrent(true);
     }
     update();
+}
+
+
+void SessionWidget::setTitleForSession(QString title)
+{
+    session()->setTitle(title);
+}
+
+
+void SessionWidget::setTitleFromSession(QString title)
+{
+    m_titleLineEdit->setText(title);
 }
 
 

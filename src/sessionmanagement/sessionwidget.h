@@ -81,6 +81,8 @@ protected slots:
     //void setupDeleteButton();
     void setupTitleEdit();
 
+    void setTitleForSession(QString title);
+    void setTitleFromSession(QString title);
 private:
 
     QWeakPointer<Session> m_session;
