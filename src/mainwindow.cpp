@@ -46,6 +46,7 @@
 #include "iconmanager.h"
 #include "mainview.h"
 #include "panoramascene.h"
+#include "panoramaview.h"
 #include "sessionmanager.h"
 #include "settingsdialog.h"
 #include "stackedurlbar.h"
@@ -104,7 +105,7 @@
 MainWindow::MainWindow()
         : KXmlGuiWindow()
         , m_view(new MainView(this))
-        , m_panoramaView(new QGraphicsView(this))
+        , m_panoramaView(new PanoramaView(this))
         , m_findBar(new FindBar(this))
         , m_zoomBar(new ZoomBar(this))
         , m_historyPanel(0)
@@ -120,7 +121,6 @@ MainWindow::MainWindow()
         , m_toolsMenu(0)
         , m_developerMenu(0)
 {
-    m_panoramaView->hide();
     // creating a centralWidget containing panel, m_view, m_panoramaView and the hidden findbar
     QWidget *centralWidget = new QWidget;
     centralWidget->setContentsMargins(0, 0, 0, 0);

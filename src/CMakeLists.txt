@@ -86,6 +86,7 @@ SET( rekonq_KDEINIT_SRCS
     opensearch/suggestionparser.cpp
     #----------------------------------------
     sessionmanagement/panoramascene.cpp
+    sessionmanagement/panoramaview.cpp
     sessionmanagement/previewwidget.cpp
     sessionmanagement/sessionmanager.cpp
     sessionmanagement/session.cpp

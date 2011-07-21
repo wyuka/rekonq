@@ -38,6 +38,7 @@
 #include <KActionCollection>
 #include <KXmlGuiWindow>
 
+class PanoramaView;
 // Forward Declarations
 class BookmarksPanel;
 class BookmarkToolBar;
@@ -52,7 +53,6 @@ class ZoomBar;
 class KActionMenu;
 class KPassivePopup;
 
-class QGraphicsView;
 class QWebFrame;
 
 
@@ -202,7 +202,7 @@ private Q_SLOTS:
 
 private:
     MainView *m_view;
-    QGraphicsView *m_panoramaView;
+    PanoramaView *m_panoramaView;
     FindBar *m_findBar;
     ZoomBar *m_zoomBar;
     HistoryPanel *m_historyPanel;
