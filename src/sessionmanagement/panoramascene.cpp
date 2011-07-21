@@ -94,7 +94,7 @@ void PanoramaScene::deactivateSession(Session* session)
     SessionWidget *sw;
     if ((sw = m_sessionMap[session]) != 0)
     {
-        sw->setSessionActive(true);
+        sw->setSessionActive(false);
     }
 }
 
