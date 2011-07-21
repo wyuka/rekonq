@@ -201,6 +201,7 @@ void SessionWidget::setSessionActive(bool active)
         m_borderPen = QColor(220, 220, 220);
         m_borderPen.setWidth(3);
         m_stretcher->setColor(Qt::gray);
+        setZValue(100);
     }
     else
     {
@@ -217,6 +218,7 @@ void SessionWidget::setSessionActive(bool active)
         m_borderPen = QColor(240, 240, 240);
         m_borderPen.setWidth(3);
         m_stretcher->setColor(Qt::gray);
+        setZValue(1);
     }
 }
 
