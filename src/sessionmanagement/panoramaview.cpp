@@ -26,10 +26,14 @@
 #include "panoramaview.h"
 #include "panoramaview.moc"
 
+#include "application.h"
+
 #include <QGraphicsView>
 #include <QToolButton>
 
 #include <KIcon>
+#include <QMouseEvent>
+#include <qscrollbar.h>
 
 PanoramaView::PanoramaView(QWidget* parent)
         : QGraphicsView(parent)
@@ -37,6 +41,7 @@ PanoramaView::PanoramaView(QWidget* parent)
     m_toolButton = new QToolButton(this); 
     KIcon addIcon("list-add");
     m_toolButton->setIcon(addIcon);
+    connect(m_toolButton, SIGNAL(clicked(bool)), this, SLOT(addSession()));
     hide();
 }
 
@@ -48,6 +53,21 @@ PanoramaView::~PanoramaView()
 
 void PanoramaView::resizeEvent(QResizeEvent* event)
 {
-    m_toolButton->move(width() - m_toolButton->width() - 5, 5);
+    //FIXME: not really a nice way to position items, but doing it to avoid overlaying on top of the verticalScrollBar
+    if (verticalScrollBar()->isVisible())
+    {
+        m_toolButton->move(width() - verticalScrollBar()->width() - m_toolButton->width() - 5, 5);
+        kDebug() << verticalScrollBar()->width();
+    }
+    else
+    {
+        m_toolButton->move(width() - m_toolButton->width() - 5, 5);
+    }
     QGraphicsView::resizeEvent(event);
+}
+
+
+void PanoramaView::addSession()
+{
+    rApp->newMainWindow();
 }

@@ -51,6 +51,9 @@ public:
 protected:
     virtual void resizeEvent(QResizeEvent* event);
 
+protected slots:
+    void addSession();
+
 private:
     QToolButton *m_toolButton;
 };
