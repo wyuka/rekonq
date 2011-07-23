@@ -27,6 +27,8 @@
 #include "panoramaview.moc"
 
 #include "application.h"
+#include "sessionmanager.h"
+#include "session.h"
 
 #include <QGraphicsView>
 #include <QToolButton>
@@ -69,5 +71,5 @@ void PanoramaView::resizeEvent(QResizeEvent* event)
 
 void PanoramaView::addSession()
 {
-    rApp->newMainWindow();
+    rApp->sessionManager()->newSession(false);
 }

@@ -36,6 +36,7 @@
 
 // Forward Declarations
 class QGraphicsWidget;
+class PreviewWidget;
 class Session;
 class SessionManager;
 class SessionWidget;
@@ -52,6 +53,16 @@ public:
     PanoramaScene(SessionManager *sessionManager);
     virtual ~PanoramaScene();
 
+    inline PreviewWidget* currentlyDragged()
+    {
+        return m_currentlyDragged;
+    }
+
+    inline void setCurrentlyDragged(PreviewWidget *draggedWidget)
+    {
+        m_currentlyDragged = draggedWidget;
+    }
+
 protected slots:
     void addSession(Session* session);
     void activateSession(Session* session);
@@ -62,6 +73,8 @@ private:
     QGraphicsWidget *m_form;
     SessionManager *m_sessionManager;
     QMap<Session*, SessionWidget*> m_sessionMap;
+
+    PreviewWidget *m_currentlyDragged;
 };
 
 

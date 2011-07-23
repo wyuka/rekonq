@@ -26,14 +26,21 @@
 #include "previewwidget.h"
 #include "previewwidget.moc"
 
+#include "application.h"
 #include "sessiontabdata.h"
+#include "sessionwidget.h"
 
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
+#include <QGraphicsSceneMouseEvent>
+#include "session.h"
+#include "sessionmanager.h"
+#include "panoramascene.h"
 
-PreviewWidget::PreviewWidget(SessionTabData *tabData, QGraphicsItem* parent)
+PreviewWidget::PreviewWidget(SessionTabData *tabData, SessionWidget* parent)
         : QGraphicsWidget(parent)
         , m_current(false)
+        , m_parent(parent)
 {
     m_tabData = tabData;
 
@@ -100,11 +107,11 @@ void PreviewWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 
     if (painter->fontMetrics().width(title) > sh.width() - 6)
     {
-        painter->drawText(QRectF(3, thumbheight, sh.width() - 3, sh.height() - thumbheight), Qt::AlignLeft | Qt::AlignVCenter, title);
+        painter->drawText(QRectF(3, 3 + thumbheight, sh.width() - 3, sh.height() - thumbheight - 3), Qt::AlignLeft | Qt::AlignVCenter, title);
     }
     else
     {
-        painter->drawText(QRectF(3, thumbheight, sh.width() - 3, sh.height() - thumbheight), Qt::AlignCenter | Qt::AlignVCenter, title);
+        painter->drawText(QRectF(3, 3 + thumbheight, sh.width() - 3, sh.height() - thumbheight - 3), Qt::AlignCenter | Qt::AlignVCenter, title);
     }
 }
 
@@ -155,7 +162,39 @@ qreal PreviewWidget::heightForWidth(qreal width) const
 
 void PreviewWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    if (event->button() != Qt::LeftButton)
+    {
+        event->ignore();
+        return;
+    }
     emit mousePressed();
-    QGraphicsItem::mousePressEvent(event);
+    event->accept();
 }
 
+
+void PreviewWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{
+    if (QLineF(event->screenPos(), event->buttonDownScreenPos(Qt::LeftButton)).length()
+        < rApp->startDragDistance())
+    {
+        return;
+    }
+
+    if (!m_parent->session() || !m_parent->session()->isActive())
+    {
+        kDebug() << "cannot drag tab from deactivated session";
+        return;
+    }
+
+    QDrag *drag = new QDrag(event->widget());
+    QMimeData *mime = new QMimeData;
+    drag->setMimeData(mime);
+    mime->setText("previewwidget");
+
+    drag->setPixmap(m_tabData.data()->thumbnail().scaled(boundingRect().width(), boundingRect().height()));
+    drag->setHotSpot(event->pos().toPoint());
+
+    rApp->sessionManager()->panoramaScene()->setCurrentlyDragged(this);
+
+    drag->exec();
+}

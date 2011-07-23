@@ -70,6 +70,8 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     sp.setHeightForWidth(false);
     setSizePolicy(sp);
 
+    setAcceptDrops(true);
+
     connect(session, SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
     connect(session, SIGNAL(tabRemoved(SessionTabData*)), this, SLOT(removeTabPreview(SessionTabData*)));
 }
@@ -232,6 +234,11 @@ void SessionWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 
 void SessionWidget::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    if (event->button() != Qt::LeftButton)
+    {
+        event->ignore();
+        return;
+    }
     emit mousePressed();
     event->accept();
 }
@@ -256,4 +263,17 @@ void SessionWidget::setCurrentPreviewWidget()
     }
     m_currentPreviewWidget = toBeCurrent;
     m_currentPreviewWidget.data()->setCurrent(true);
+}
+
+
+void SessionWidget::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
+{
+    if (event->mimeData()->text() == "previewwidget")
+    {
+        event->setAccepted(true);
+    }
+    else
+    {
+        event->setAccepted(false);
+    }
 }

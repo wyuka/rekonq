@@ -29,26 +29,33 @@
 #include <QGraphicsWidget>
 #include <QWeakPointer>
 
+class SessionWidget;
 class SessionTabData;
 class QGraphicsDropShadowEffect;
 
 static const qreal thumbAspectRatio = 0.75;
-static const qreal thumbToTextRatio = 0.9;
+static const qreal thumbToTextRatio = 0.85;
 
 class PreviewWidget : public QGraphicsWidget
 {
     Q_OBJECT
 
 public:
-    PreviewWidget(SessionTabData *tabData, QGraphicsItem* parent = 0);
+    PreviewWidget(SessionTabData *tabData, SessionWidget* parent = 0);
     virtual ~PreviewWidget();
 
     SessionTabData* tabData();
+
+    inline SessionWidget *parentSessionWidget()
+    {
+        return m_parent;
+    }
 
 protected:
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
 
     qreal widthForHeight(qreal height) const;
     qreal heightForWidth(qreal width) const;
@@ -63,7 +70,8 @@ private:
     QWeakPointer<SessionTabData> m_tabData;
 
     bool m_current;
-    QGraphicsDropShadowEffect* m_dropShadow;
+    QGraphicsDropShadowEffect *m_dropShadow;
+    SessionWidget *m_parent;
 };
 
 #endif // PREVIEWWIDGET_H

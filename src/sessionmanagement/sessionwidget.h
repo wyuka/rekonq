@@ -83,6 +83,9 @@ protected slots:
 
     void setTitleForSession(QString title);
     void setTitleFromSession(QString title);
+
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+    //virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
 private:
 
     QWeakPointer<Session> m_session;
