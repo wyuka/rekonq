@@ -52,12 +52,12 @@ public:
     void setUrl(KUrl url);
     void setTitle(QString title);
     void updateThumbnail(int width = 0, int height = 0);
-
     void setWebTab(WebTab *webTab);
 
     KUrl url();
     QString title();
     QPixmap& thumbnail();
+    WebTab* webTab();
 
 private:
     KUrl m_url;

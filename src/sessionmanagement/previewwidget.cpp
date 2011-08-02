@@ -27,6 +27,8 @@
 #include "previewwidget.moc"
 
 #include "application.h"
+#include "panoramascene.h"
+#include "sessionmanager.h"
 #include "sessiontabdata.h"
 #include "sessionwidget.h"
 

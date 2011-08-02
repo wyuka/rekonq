@@ -67,7 +67,7 @@ protected slots:
     void addSession(Session* session);
     void activateSession(Session* session);
     void deactivateSession(Session* session);
-    void deleteSession(Session* session);
+    void removeSession(Session* session);
 
 private:
     QGraphicsWidget *m_form;

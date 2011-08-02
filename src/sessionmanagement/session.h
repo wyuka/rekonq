@@ -73,6 +73,9 @@ public:
         return m_currentTabData.data();
     }
 
+    void addTab(SessionTabData* tabData);
+    void removeTab(SessionTabData* tabData);
+
 signals:
     void changesMade();
 

@@ -81,6 +81,31 @@ QString Session::title()
 }
 
 
+void Session::addTab(SessionTabData* tabData)
+{
+    m_tabDataList << tabData;
+    if (tabData->webTab())
+    {
+        m_webTabMap[tabData->webTab()] = tabData;
+    }
+    emit tabAdded(tabData);
+    emit changesMade();
+}
+
+
+void Session::removeTab(SessionTabData* tabData)
+{
+    m_tabDataList.removeOne(tabData);
+    if (tabData->webTab())
+    {
+        m_webTabMap.remove(tabData->webTab());
+    }
+    emit tabRemoved(tabData);
+    tabData->deleteLater();
+    emit changesMade();
+}
+
+
 void Session::addTabData(WebTab* webTab)
 {
     if (m_webTabMap.find(webTab) != m_webTabMap.end())
@@ -92,10 +117,7 @@ void Session::addTabData(WebTab* webTab)
     tabData->setWebTab(webTab);
     tabData->setTitle(webTab->view()->title());
     tabData->setUrl(webTab->url());
-    m_tabDataList << tabData;
-    m_webTabMap[webTab] = tabData;
-    emit tabAdded(tabData);
-    emit changesMade();
+    addTab(tabData);
 }
 
 
@@ -122,11 +144,7 @@ void Session::removeTabData(WebTab* webTab)
         return;
     }
     SessionTabData* tabData = m_webTabMap[webTab];
-    m_tabDataList.removeOne(tabData);
-    m_webTabMap.remove(webTab);
-    emit tabRemoved(tabData);
-    tabData->deleteLater();
-    emit changesMade();
+    removeTab(tabData);
 }
 
 
@@ -253,7 +271,7 @@ void Session::deactivate()
         m_window->disconnect(this);
         m_window = 0;
         m_active = false;
-        
+
         emit changesMade();
     }
 }

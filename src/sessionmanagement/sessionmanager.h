@@ -82,13 +82,13 @@ signals:
     void sessionAdded(Session *session);
     void sessionActivated(Session *session);
     void sessionDeactivated(Session *session);
-    void sessionDeleted(Session *session);
+    void sessionRemoved(Session *session);
 
 public slots:
     bool restoreSessions();
     void activateSession(Session* session);
     void deactivateSession();
-    void deleteSession(Session* session);
+    void removeSession(Session* session);
 
 protected slots:
     void saveSessions();

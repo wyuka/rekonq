@@ -118,6 +118,12 @@ QPixmap& SessionTabData::thumbnail()
 }
 
 
+WebTab* SessionTabData::webTab()
+{
+    return m_webTab.data();
+}
+
+
 void SessionTabData::updateThumbnail(int width, int height)
 {
     static int prevWidth = 200;

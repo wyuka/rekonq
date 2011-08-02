@@ -235,9 +235,7 @@ void SessionManager::activateSession(Session* session)
     }
     MainWindow* window = rApp->newMainWindow(true);
     Session* s = m_sessionList.last();
-    m_sessionList.removeLast();
-    s->deactivate();
-    s->deleteLater();
+    removeSession(s);
     session->setWindow(window);
     session->load();
 
@@ -245,12 +243,12 @@ void SessionManager::activateSession(Session* session)
 }
 
 
-void SessionManager::deleteSession(Session* session)
+void SessionManager::removeSession(Session* session)
 {
     session->deactivate();
     m_sessionList.removeOne(session);
 
-    emit sessionDeleted(session);
+    emit sessionRemoved(session);
     emit readyForSave();
 
     session->deleteLater();

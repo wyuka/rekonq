@@ -50,7 +50,7 @@ PanoramaScene::PanoramaScene(SessionManager *sessionManager)
     connect(sessionManager, SIGNAL(sessionActivated(Session*)), this, SLOT(activateSession(Session*)));
     connect(sessionManager, SIGNAL(sessionAdded(Session*)), this, SLOT(addSession(Session*)));
     connect(sessionManager, SIGNAL(sessionDeactivated(Session*)), this, SLOT(deactivateSession(Session*)));
-    connect(sessionManager, SIGNAL(sessionDeleted(Session*)), this, SLOT(deleteSession(Session*)));
+    connect(sessionManager, SIGNAL(sessionRemoved(Session*)), this, SLOT(removeSession(Session*)));
 
     setBackgroundBrush(Qt::lightGray);
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
@@ -99,7 +99,14 @@ void PanoramaScene::deactivateSession(Session* session)
 }
 
 
-void PanoramaScene::deleteSession(Session* session)
+void PanoramaScene::removeSession(Session* session)
 {
     kDebug() << "session deleted";
+    SessionWidget *sw;
+    if ((sw = m_sessionMap[session]) != 0)
+    {
+        QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(m_form->layout());
+        layout->removeItem(sw);
+        sw->deleteLater();
+    }
 }

@@ -26,11 +26,16 @@
 #include "sessionwidget.h"
 #include "sessionwidget.moc"
 
+#include "application.h"
+#include "activatebutton.h"
 #include "similaritemlayout.h"
 #include "previewwidget.h"
+#include "panoramascene.h"
+#include "removebutton.h"
 #include "session.h"
 #include "sessiontabdata.h"
 #include "stretcherwidget.h"
+#include "sessionmanager.h"
 
 
 #include <QGraphicsDropShadowEffect>
@@ -43,6 +48,7 @@
 
 //FIXME: the following headers are for occasional testing, needs to be removed.
 #include <QGraphicsLinearLayout>
+#include <mainwindow.h>
 
 SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
         : QGraphicsWidget(parent)
@@ -63,6 +69,8 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
 
     setupTitleEdit();
     setupStretcher();
+    setupActivateButton();
+    setupRemoveButton();
     setupPreview();
 
     setSessionActive(session->isActive());
@@ -88,7 +96,7 @@ void SessionWidget::setupTitleEdit()
     m_titleLineEdit = new QLineEdit;
     titleEdit->setWidget(m_titleLineEdit);
     m_titleEdit = titleEdit;
-    m_gridLayout->addItem(titleEdit, 0, 0);
+    m_gridLayout->addItem(titleEdit, 0, 1);
     connect(m_titleLineEdit, SIGNAL(textChanged(QString)), this, SLOT(setTitleForSession(QString)));
     connect(session(), SIGNAL(titleChanged(QString)), this, SLOT(setTitleFromSession(QString)));
 }
@@ -97,7 +105,50 @@ void SessionWidget::setupTitleEdit()
 void SessionWidget::setupStretcher()
 {
     m_stretcher = new StretcherWidget(this);
-    m_gridLayout->addItem(m_stretcher, 2, 1);
+    m_gridLayout->addItem(m_stretcher, 2, 2);
+}
+
+
+void SessionWidget::setupActivateButton()
+{
+    m_activateButton = new ActivateButton(this);
+    m_gridLayout->addItem(m_activateButton, 0, 0);
+    connect(m_activateButton, SIGNAL(toggled()), this, SLOT(toggleActivate()));
+}
+
+
+void SessionWidget::toggleActivate()
+{
+    if (session() == 0)
+        return;
+    if (session()->isActive())
+    {
+        session()->window()->close();
+    }
+    else
+    {
+        rApp->sessionManager()->activateSession(session());
+    }
+}
+
+
+void SessionWidget::setupRemoveButton()
+{
+    m_removeButton = new RemoveButton(this);
+    m_gridLayout->addItem(m_removeButton, 0, 2);
+    connect(m_removeButton, SIGNAL(clicked()), this, SLOT(removeSession()));
+}
+
+
+void SessionWidget::removeSession()
+{
+    if (session() == 0)
+        return;
+    if (session()->isActive() && session()->window())
+    {
+        session()->window()->close();
+    }
+    rApp->sessionManager()->removeSession(session());
 }
 
 
@@ -105,7 +156,7 @@ void SessionWidget::setupPreview()
 {
     m_layout = new SimilarItemLayout(m_gridLayout);
     m_layout->setSpacing(10);
-    m_gridLayout->addItem(m_layout, 1, 0);
+    m_gridLayout->addItem(m_layout, 1, 0, 1, 3);
 }
 
 
@@ -203,6 +254,7 @@ void SessionWidget::setSessionActive(bool active)
         m_borderPen = QColor(220, 220, 220);
         m_borderPen.setWidth(3);
         m_stretcher->setColor(Qt::gray);
+        m_activateButton->setActive(true);
         setZValue(100);
     }
     else
@@ -220,6 +272,7 @@ void SessionWidget::setSessionActive(bool active)
         m_borderPen = QColor(240, 240, 240);
         m_borderPen.setWidth(3);
         m_stretcher->setColor(Qt::gray);
+        m_activateButton->setActive(false);
         setZValue(1);
     }
 }
@@ -276,4 +329,9 @@ void SessionWidget::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
     {
         event->setAccepted(false);
     }
+}
+
+
+void SessionWidget::dropEvent(QGraphicsSceneDragDropEvent* event)
+{
 }

@@ -44,6 +44,8 @@ class Session;
 class QGraphicsDropShadowEffect;
 class QLineEdit;
 class StretcherWidget;
+class ActivateButton;
+class RemoveButton;
 
 class SessionWidget : public QGraphicsWidget
 {
@@ -71,21 +73,24 @@ protected:
 
 protected slots:
     void setCurrentPreviewWidget();
+    
+    void toggleActivate();
+    void removeSession();
 
     void addTabPreview(SessionTabData *tabData);
     void removeTabPreview(SessionTabData *tabData);
 
     void setupPreview();
     void setupStretcher();
-    //void setupActivateButton();
-    //void setupDeleteButton();
+    void setupActivateButton();
+    void setupRemoveButton();
     void setupTitleEdit();
 
     void setTitleForSession(QString title);
     void setTitleFromSession(QString title);
 
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
-    //virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
+    virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
 private:
 
     QWeakPointer<Session> m_session;
@@ -101,6 +106,8 @@ private:
     QGraphicsWidget* m_titleEdit;
     QLineEdit* m_titleLineEdit;
     StretcherWidget* m_stretcher;
+    ActivateButton* m_activateButton;
+    RemoveButton* m_removeButton;
 
     QWeakPointer<PreviewWidget> m_currentPreviewWidget;
 };
