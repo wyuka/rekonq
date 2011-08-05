@@ -60,7 +60,7 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
     m_dropShadow->setColor(Qt::black);
     m_dropShadow->setBlurRadius(20);
     setGraphicsEffect(m_dropShadow);
-    m_dropShadow->setEnabled(false);
+    m_dropShadow->setEnabled(true);
 
     m_gridLayout = new QGraphicsGridLayout;
     m_gridLayout->setSpacing(10);
@@ -123,6 +123,7 @@ void SessionWidget::toggleActivate()
         return;
     if (session()->isActive())
     {
+        session()->window()->setClosedForPanorama();
         session()->window()->close();
     }
     else
@@ -146,6 +147,7 @@ void SessionWidget::removeSession()
         return;
     if (session()->isActive() && session()->window())
     {
+        session()->window()->setClosedForPanorama();
         session()->window()->close();
     }
     rApp->sessionManager()->removeSession(session());

@@ -84,6 +84,11 @@ public:
 
     QString selectedText() const;
 
+    inline void setClosedForPanorama()
+    {
+        m_closedFromPanorama = true;
+    }
+
 private:
     void setupBookmarksAndToolsShortcuts();
     void setupActions();
@@ -228,6 +233,8 @@ private:
 
     KMenu *m_toolsMenu;
     KActionMenu *m_developerMenu;
+
+    bool m_closedFromPanorama;
 };
 
 #endif // MAINWINDOW_H

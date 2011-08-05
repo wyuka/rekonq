@@ -120,6 +120,7 @@ MainWindow::MainWindow()
         , m_hidePopupTimer(new QTimer(this))
         , m_toolsMenu(0)
         , m_developerMenu(0)
+        , m_closedFromPanorama(false)
 {
     // creating a centralWidget containing panel, m_view, m_panoramaView and the hidden findbar
     QWidget *centralWidget = new QWidget;
@@ -1546,6 +1547,12 @@ bool MainWindow::queryClose()
     // smooth private browsing mode
     if (QWebSettings::globalSettings()->testAttribute(QWebSettings::PrivateBrowsingEnabled))
         return true;
+
+    if (m_closedFromPanorama)
+    {
+        emit windowClosed();
+        return true;
+    }
 
     if (rApp->mainWindowList().count() > 1)
     {
