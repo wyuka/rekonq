@@ -71,5 +71,8 @@ void PanoramaView::resizeEvent(QResizeEvent* event)
 
 void PanoramaView::addSession()
 {
-    rApp->sessionManager()->newSession(false);
+    Session* s = rApp->sessionManager()->newSession(false);
+    SessionTabData * tabData = new SessionTabData(s);
+    tabData->setUrl(KUrl("about:blank"));
+    s->addTab(tabData);
 }
