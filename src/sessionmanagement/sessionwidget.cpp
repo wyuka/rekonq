@@ -225,6 +225,7 @@ void SessionWidget::addTabPreview(SessionTabData *tabData)
     PreviewWidget *pw = new PreviewWidget(tabData, this);
     m_layout->addItem(pw);
     m_tabMap[tabData] = pw;
+    update();
     kDebug() << "tab preview added" << tabData->url();
 }
 
@@ -235,8 +236,15 @@ void SessionWidget::removeTabPreview(SessionTabData* tabData)
     if ((pw = m_tabMap[tabData]) != 0)
     {
         m_layout->removeItem(pw);
+        m_tabMap.remove(tabData);
         kDebug() << "deleted tab preview" << tabData->url();
         pw->deleteLater();
+        update();
+        if (m_tabMap.isEmpty() && session()->isActive() == false)
+        {
+            kDebug() << "blank";
+            removeSession();
+        }
     }
 }
 
@@ -359,11 +367,26 @@ void SessionWidget::dropEvent(QGraphicsSceneDragDropEvent* event)
 
             int index = draggedWidget->parentSessionWidget()->session()->window()->mainView()->indexOf(wt);
             SessionTabData *tabData = new SessionTabData(session());
-            session()->addTab(tabData);
             tabData->setTitle(draggedWidget->tabData()->title());
             tabData->setUrl(draggedWidget->tabData()->url());
-            tabData->setWebTab(0);
+            session()->addTab(tabData);
+
             draggedWidget->parentSessionWidget()->session()->window()->mainView()->closeTab(index);
+        }
+    }
+    else
+    {
+        if (session()->isActive())
+        {
+        }
+        else
+        {
+            SessionTabData *tabData = new SessionTabData(session());
+            tabData->setTitle(draggedWidget->tabData()->title());
+            tabData->setUrl(draggedWidget->tabData()->url());
+            session()->addTab(tabData);
+
+            draggedWidget->parentSessionWidget()->session()->removeTab(draggedWidget->tabData());
         }
     }
     draggedWidget = 0;

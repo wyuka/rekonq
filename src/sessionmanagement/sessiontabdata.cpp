@@ -64,6 +64,7 @@ SessionTabData::SessionTabData(const SessionTabData& tabData)
 {
     m_title = tabData.m_title;
     m_url = tabData.m_url;
+    m_webTab = tabData.m_webTab;
 }
 
 
@@ -71,6 +72,7 @@ void SessionTabData::operator=(const SessionTabData& tabData)
 {
     m_title = tabData.m_title;
     m_url = tabData.m_url;
+    m_webTab = tabData.m_webTab;
 }
 
 

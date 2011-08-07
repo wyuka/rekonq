@@ -182,12 +182,6 @@ void PreviewWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         return;
     }
 
-    if (!m_parent->session() || !m_parent->session()->isActive())
-    {
-        kDebug() << "cannot drag tab from deactivated session";
-        return;
-    }
-
     QDrag *drag = new QDrag(event->widget());
     QMimeData *mime = new QMimeData;
     drag->setMimeData(mime);
