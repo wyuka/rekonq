@@ -28,6 +28,7 @@
 
 #include "application.h"
 #include "activatebutton.h"
+#include "mainview.h"
 #include "similaritemlayout.h"
 #include "previewwidget.h"
 #include "panoramascene.h"
@@ -36,6 +37,7 @@
 #include "sessiontabdata.h"
 #include "stretcherwidget.h"
 #include "sessionmanager.h"
+#include "webtab.h"
 
 
 #include <QGraphicsDropShadowEffect>
@@ -336,4 +338,33 @@ void SessionWidget::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 
 void SessionWidget::dropEvent(QGraphicsSceneDragDropEvent* event)
 {
+    PreviewWidget* draggedWidget = rApp->sessionManager()->panoramaScene()->currentlyDragged();
+    if (draggedWidget->parentSessionWidget() == this)
+    {
+        draggedWidget = 0;
+        return;
+    }
+    if (draggedWidget->parentSessionWidget()->session()->isActive())
+    {
+        if (session()->isActive())
+        {
+            WebTab *wt = draggedWidget->tabData()->webTab();
+
+            int index = draggedWidget->parentSessionWidget()->session()->window()->mainView()->indexOf(wt);
+            draggedWidget->parentSessionWidget()->session()->window()->mainView()->detachTab(index, session()->window());
+        }
+        else
+        {
+            WebTab *wt = draggedWidget->tabData()->webTab();
+
+            int index = draggedWidget->parentSessionWidget()->session()->window()->mainView()->indexOf(wt);
+            SessionTabData *tabData = new SessionTabData(session());
+            session()->addTab(tabData);
+            tabData->setTitle(draggedWidget->tabData()->title());
+            tabData->setUrl(draggedWidget->tabData()->url());
+            tabData->setWebTab(0);
+            draggedWidget->parentSessionWidget()->session()->window()->mainView()->closeTab(index);
+        }
+    }
+    draggedWidget = 0;
 }

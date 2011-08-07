@@ -73,6 +73,6 @@ void PanoramaView::addSession()
 {
     Session* s = rApp->sessionManager()->newSession(false);
     SessionTabData * tabData = new SessionTabData(s);
-    tabData->setUrl(KUrl("about:blank"));
+    tabData->setUrl(KUrl("about:home"));
     s->addTab(tabData);
 }
