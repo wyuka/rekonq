@@ -242,8 +242,10 @@ void SessionWidget::removeTabPreview(SessionTabData* tabData)
         update();
         if (m_tabMap.isEmpty() && session()->isActive() == false)
         {
-            kDebug() << "blank";
-            removeSession();
+            SessionTabData * tabData = new SessionTabData(session());
+            tabData->setUrl(KUrl("about:blank"));
+            tabData->setTitle("Blank Page");
+            session()->addTab(tabData);
         }
     }
 }
