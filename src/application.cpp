@@ -375,7 +375,7 @@ DownloadManager *Application::downloadManager()
 }
 
 
-void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type)
+void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type, MainWindow *toWindow)
 {
     if (url.isEmpty())
         return;
@@ -388,19 +388,16 @@ void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type)
 
     // first, create the webview(s) to not let hangs UI..
     WebTab *tab = 0;
-    MainWindow *w = 0;
-    
-    if (type == Rekonq::CurrentTabLastWindow || type == Rekonq::NewFocusedTabLastWindow || type == Rekonq::NewBackTabLastWindow)
+    MainWindow *w = toWindow;
+    if (toWindow == 0)
     {
-        w = m_mainWindows.at(0).data();
-    }
-    else if (type == Rekonq::NewWindow)
-    {
-        w = newMainWindow();
+        w = (type == Rekonq::NewWindow)
+            ? newMainWindow()
+            : mainWindow();
     }
     else
     {
-        w = mainWindow();
+        w = toWindow;
     }
 
     switch (type)
@@ -414,16 +411,13 @@ void Application::loadUrl(const KUrl& url, const Rekonq::OpenType& type)
             tab = w->mainView()->currentWebTab();
         }
         break;
-    case Rekonq::NewFocusedTabLastWindow:
     case Rekonq::NewFocusedTab:
         tab = w->mainView()->newWebTab(true);
         break;
-    case Rekonq::NewBackTabLastWindow:
     case Rekonq::NewBackTab:
         tab = w->mainView()->newWebTab(false);
         break;
     case Rekonq::NewWindow:
-    case Rekonq::CurrentTabLastWindow:
     case Rekonq::CurrentTab:
         tab = w->mainView()->currentWebTab();
         break;

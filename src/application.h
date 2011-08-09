@@ -110,11 +110,12 @@ public slots:
     void saveConfiguration() const;
 
     void loadUrl(const KUrl& url,
-                 const Rekonq::OpenType& type = Rekonq::CurrentTab
+                 const Rekonq::OpenType& type = Rekonq::CurrentTab,
+                 MainWindow *window = 0
                 );
 
     void newWindow();
-    void removeMainWindow(MainWindow *window);
+    void removeMainWindow(MainWindow *toWindow);
 
 protected:
     // This is used to track which window was activated most recently

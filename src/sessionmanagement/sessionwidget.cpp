@@ -84,6 +84,7 @@ SessionWidget::SessionWidget(Session *session, QGraphicsItem* parent)
 
     connect(session, SIGNAL(tabAdded(SessionTabData*)), this, SLOT(addTabPreview(SessionTabData*)));
     connect(session, SIGNAL(tabRemoved(SessionTabData*)), this, SLOT(removeTabPreview(SessionTabData*)));
+    connect(session, SIGNAL(tabChanged(SessionTabData*)), this, SLOT(updateTabPreview(SessionTabData*)));
 }
 
 
@@ -251,6 +252,16 @@ void SessionWidget::removeTabPreview(SessionTabData* tabData)
 }
 
 
+void SessionWidget::updateTabPreview(SessionTabData* tabData)
+{
+    PreviewWidget *pw;
+    if ((pw = m_tabMap[tabData]) != 0)
+    {
+        pw->update();
+    }
+}
+
+
 void SessionWidget::setSessionActive(bool active)
 {
     if (active)
@@ -380,6 +391,9 @@ void SessionWidget::dropEvent(QGraphicsSceneDragDropEvent* event)
     {
         if (session()->isActive())
         {
+            KUrl url = draggedWidget->tabData()->url();
+            draggedWidget->parentSessionWidget()->session()->removeTab(draggedWidget->tabData());
+            rApp->loadUrl(url, Rekonq::NewBackTab, session()->window());
         }
         else
         {

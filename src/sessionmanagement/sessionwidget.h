@@ -79,6 +79,7 @@ protected slots:
 
     void addTabPreview(SessionTabData *tabData);
     void removeTabPreview(SessionTabData *tabData);
+    void updateTabPreview(SessionTabData *tabData);
 
     void setupPreview();
     void setupStretcher();

@@ -83,9 +83,6 @@ enum OpenType
     NewFocusedTab,  ///< open url in new tab and focus it
     NewBackTab,     ///< open url in new tab in background
     NewWindow,      ///< open url in new window
-    CurrentTabLastWindow,       /// open url in current tab of last created window
-    NewBackTabLastWindow,       /// open url in a new tab in last created window in the background
-    NewFocusedTabLastWindow     /// open url in new tab in last created window and focus it
 };
 }
 

@@ -731,10 +731,17 @@ void MainView::detachTab(int index, MainWindow *toWindow)
     WebTab *tab = webTab(index);
     KUrl u = tab->url();
     kDebug() << "detaching tab with url: " << u;
+
+    MainWindow *w;
+    if (toWindow == NULL)
+        w = rApp->newMainWindow(false);
+    else
+        w = toWindow;
+
     if (u.scheme() == QL1S("about"))
     {
         closeTab(index);
-        rApp->loadUrl(u, Rekonq::NewWindow);
+        rApp->loadUrl(u, Rekonq::NewBackTab, w);
     }
     else
     {
@@ -742,11 +749,6 @@ void MainView::detachTab(int index, MainWindow *toWindow)
         UrlBar *bar = tab->urlBar();
         closeTab(index, false);
 
-        MainWindow *w;
-        if (toWindow == NULL)
-            w = rApp->newMainWindow(false);
-        else
-            w = toWindow;
         w->mainView()->addTab(tab, rApp->iconManager()->iconForUrl(u), label);
         w->mainView()->widgetBar()->insertWidget(0, bar);
         w->mainView()->updateTabBar();

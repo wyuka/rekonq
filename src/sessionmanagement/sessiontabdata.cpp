@@ -142,8 +142,12 @@ void SessionTabData::updateThumbnail(int width, int height)
         m_thumbnail = WebSnap::renderTabPreview(*m_webTab.data()->page(), width , height);
     }
     else
-    { 
+    {
         m_thumbnail = WebSnap::renderTabPreview(*m_webTab.data()->page(), prevWidth , prevHeight);
+    }
+    if (m_thumbnail.isNull())
+    {
+        return;
     }
     QString path = WebSnap::imagePathFromUrl(m_url);
     QFile::remove(path);
