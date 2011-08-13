@@ -63,6 +63,10 @@ public:
         m_currentlyDragged = draggedWidget;
     }
 
+    SessionWidget* widgetForSession(Session* session);
+
+    void setCurrentSessionWidget(SessionWidget* sessionWidget);
+    SessionWidget* currentSessionWidget();
 protected slots:
     void addSession(Session* session);
     void activateSession(Session* session);
@@ -75,6 +79,7 @@ private:
     QMap<Session*, SessionWidget*> m_sessionMap;
 
     PreviewWidget *m_currentlyDragged;
+    QWeakPointer<SessionWidget> m_currentSessionWidget;
 };
 
 

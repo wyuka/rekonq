@@ -47,6 +47,8 @@
 #include "mainview.h"
 #include "panoramascene.h"
 #include "panoramaview.h"
+#include "session.h"
+#include "sessionwidget.h"
 #include "sessionmanager.h"
 #include "settingsdialog.h"
 #include "stackedurlbar.h"
@@ -1666,6 +1668,20 @@ void MainWindow::togglePanoramaView(bool show)
         m_view->hide();
 
         m_panoramaView->setScene(rApp->sessionManager()->panoramaScene());
+        SessionList l = rApp->sessionManager()->sessionList();
+        foreach (Session *s, l)
+        {
+            if (s->isActive() && s->window() == this)
+            {
+                SessionWidget *sw = rApp->sessionManager()->panoramaScene()->widgetForSession(s);
+                if (sw)
+                {
+                    m_panoramaView->centerOn(sw);
+                    rApp->sessionManager()->panoramaScene()->setCurrentSessionWidget(sw);
+                    break;
+                }
+            }
+        }
         m_panoramaView->show();
     }
     else

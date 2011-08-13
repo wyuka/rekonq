@@ -67,6 +67,29 @@ PanoramaScene::~PanoramaScene()
 }
 
 
+SessionWidget* PanoramaScene::widgetForSession(Session* session)
+{
+    return m_sessionMap[session];
+}
+
+
+SessionWidget* PanoramaScene::currentSessionWidget()
+{
+    return m_currentSessionWidget.data();
+}
+
+
+void PanoramaScene::setCurrentSessionWidget(SessionWidget* sessionWidget)
+{
+    if (m_currentSessionWidget.data())
+    {
+        m_currentSessionWidget.data()->setCurrent(false);
+    }
+    m_currentSessionWidget = sessionWidget;
+    sessionWidget->setCurrent(true);
+}
+
+
 void PanoramaScene::activateSession(Session* session)
 {
     kDebug() << "session activated";
