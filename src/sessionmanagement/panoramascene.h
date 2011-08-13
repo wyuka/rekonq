@@ -73,6 +73,11 @@ protected slots:
     void deactivateSession(Session* session);
     void removeSession(Session* session);
 
+protected:
+    void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+    void dropEvent(QGraphicsSceneDragDropEvent* event);
+
+    QPointF findBestPosition();
 private:
     QGraphicsWidget *m_form;
     SessionManager *m_sessionManager;

@@ -32,6 +32,7 @@
 #include "application.h"
 #include "mainview.h"
 #include "mainwindow.h"
+#include "previewwidget.h"
 #include "sessionmanager.h"
 #include "sessionwidget.h"
 #include "session.h"
@@ -42,6 +43,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsWidget>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsSceneDragDropEvent>
 
 PanoramaScene::PanoramaScene(SessionManager *sessionManager)
         : QGraphicsScene(sessionManager)
@@ -56,9 +58,6 @@ PanoramaScene::PanoramaScene(SessionManager *sessionManager)
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
     layout->setSpacing(20);
     layout->setSpacing(20);
-    m_form = new QGraphicsWidget;
-    m_form->setLayout(layout);
-    addItem(m_form);
 }
 
 
@@ -104,9 +103,9 @@ void PanoramaScene::activateSession(Session* session)
 void PanoramaScene::addSession(Session* session)
 {
     kDebug() << "session added";
-    SessionWidget *sessionWidget = new SessionWidget(session, m_form);
-    QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(m_form->layout());
-    layout->addItem(sessionWidget);
+    SessionWidget *sessionWidget = new SessionWidget(session);
+    addItem(sessionWidget);
+    sessionWidget->setPos(findBestPosition());
     m_sessionMap[session] = sessionWidget;
 }
 
@@ -128,8 +127,53 @@ void PanoramaScene::removeSession(Session* session)
     SessionWidget *sw;
     if ((sw = m_sessionMap[session]) != 0)
     {
-        QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout*>(m_form->layout());
-        layout->removeItem(sw);
+        m_sessionMap.remove(session);
         sw->deleteLater();
     }
+}
+
+
+void PanoramaScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
+{
+    if (event->mimeData()->text() == "previewwidget")
+    {
+        event->setAccepted(true);
+    }
+    else
+    {
+        event->setAccepted(false);
+    }
+}
+
+
+void PanoramaScene::dropEvent(QGraphicsSceneDragDropEvent* event)
+{
+    PreviewWidget *draggedWidget = currentlyDragged();
+    if (draggedWidget->parentSessionWidget()->session()->isActive())
+    {
+        WebTab *wt = draggedWidget->tabData()->webTab();
+        int index = draggedWidget->parentSessionWidget()->session()->window()->mainView()->indexOf(wt);
+        draggedWidget->parentSessionWidget()->session()->window()->mainView()->closeTab(index);
+    }
+    else
+    {
+        draggedWidget->parentSessionWidget()->session()->removeTab(draggedWidget->tabData());
+    }
+}
+
+
+QPointF PanoramaScene::findBestPosition()
+{
+    QList<SessionWidget*> swList = m_sessionMap.values();
+    qreal maxY = 0, maxX = 0;
+    kDebug() << "count is" << swList.count();
+    foreach (SessionWidget* sw, swList)
+    {
+        maxY = qMax (maxY, sw->y() + sw->boundingRect().height() + 10);
+        maxX = qMax (maxX, sw->x() + sw->boundingRect().width() + 10);
+        //FIXME: not sure if what i'm doing here is the correct way
+        // also, I'll surely need a better arrangement algorithm in place
+        kDebug() << "corner is at" << sw->boundingRect().bottomRight() + QPointF(10, 10);
+    }
+    return QPointF(maxX, maxY);
 }
