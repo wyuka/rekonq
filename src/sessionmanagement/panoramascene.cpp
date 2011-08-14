@@ -133,35 +133,6 @@ void PanoramaScene::removeSession(Session* session)
 }
 
 
-void PanoramaScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
-{
-    if (event->mimeData()->text() == "previewwidget")
-    {
-        event->setAccepted(true);
-    }
-    else
-    {
-        event->setAccepted(false);
-    }
-}
-
-
-void PanoramaScene::dropEvent(QGraphicsSceneDragDropEvent* event)
-{
-    PreviewWidget *draggedWidget = currentlyDragged();
-    if (draggedWidget->parentSessionWidget()->session()->isActive())
-    {
-        WebTab *wt = draggedWidget->tabData()->webTab();
-        int index = draggedWidget->parentSessionWidget()->session()->window()->mainView()->indexOf(wt);
-        draggedWidget->parentSessionWidget()->session()->window()->mainView()->closeTab(index);
-    }
-    else
-    {
-        draggedWidget->parentSessionWidget()->session()->removeTab(draggedWidget->tabData());
-    }
-}
-
-
 QPointF PanoramaScene::findBestPosition()
 {
     QList<SessionWidget*> swList = m_sessionMap.values();

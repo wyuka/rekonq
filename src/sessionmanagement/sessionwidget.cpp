@@ -240,7 +240,6 @@ void SessionWidget::removeTabPreview(SessionTabData* tabData)
         m_tabMap.remove(tabData);
         kDebug() << "deleted tab preview" << tabData->url();
         pw->deleteLater();
-        update();
         if (m_tabMap.isEmpty() && session()->isActive() == false)
         {
             SessionTabData * tabData = new SessionTabData(session());
