@@ -140,11 +140,11 @@ QPointF PanoramaScene::findBestPosition()
     kDebug() << "count is" << swList.count();
     foreach (SessionWidget* sw, swList)
     {
-        maxY = qMax (maxY, sw->y() + sw->boundingRect().height() + 10);
-        maxX = qMax (maxX, sw->x() + sw->boundingRect().width() + 10);
-        //FIXME: not sure if what i'm doing here is the correct way
-        // also, I'll surely need a better arrangement algorithm in place
-        kDebug() << "corner is at" << sw->boundingRect().bottomRight() + QPointF(10, 10);
+        maxY = qMax (maxY, sw->y() + 30);
+        maxX = qMax (maxX, sw->x() + 30);
+        //TODO: find a better algo for placing stuff.
+        //going with this for now.
+        kDebug() << "new sessionWidget placed at" << maxX << "," << maxY;
     }
     return QPointF(maxX, maxY);
 }
