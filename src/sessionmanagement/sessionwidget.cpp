@@ -279,7 +279,6 @@ void SessionWidget::setSessionActive(bool active)
         m_borderPen.setWidth(3);
         m_stretcher->setColor(Qt::gray);
         m_activateButton->setActive(true);
-        setZValue(100);
     }
     else
     {
@@ -297,7 +296,6 @@ void SessionWidget::setSessionActive(bool active)
         m_borderPen.setWidth(3);
         m_stretcher->setColor(Qt::gray);
         m_activateButton->setActive(false);
-        setZValue(1);
     }
 }
 
