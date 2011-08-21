@@ -207,9 +207,9 @@ Session* SessionManager::newSession(bool active, MainWindow *w)
     if (active == true && w != 0)
     {
         s->setWindow(w);
+        if (ReKonfig::startupBehaviour() != 2)
+            s->setTitle("temp");
     }
-    if (ReKonfig::startupBehaviour() != 2)
-        s->setTitle("temp");
     emit sessionAdded(s);
     connect(s,SIGNAL(changesMade()),this,SIGNAL(readyForSave()));
     m_sessionList << s;
