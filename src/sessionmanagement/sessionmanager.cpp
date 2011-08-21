@@ -32,6 +32,8 @@
 #include "sessionmanager.moc"
 
 // Local Includes
+#include "rekonq.h"
+
 #include "application.h"
 #include "mainview.h"
 #include "mainwindow.h"
@@ -91,6 +93,8 @@ void SessionManager::saveSessions()
     Session* s;
     foreach (s, m_sessionList)
     {
+        if (s->title() == "temp")
+            continue;
         QDomElement e = s->getXml(domDocument);
         sessionFileDom.appendChild(e);
     }
@@ -143,7 +147,7 @@ bool SessionManager::restoreSessions()
     Session* s;
     for (int i = 0; i < l.count(); ++i)
     {
-        if (l.at(i).toElement().hasAttribute("active"))
+        if (l.at(i).toElement().hasAttribute("active") && ReKonfig::startupBehaviour() == 2)
         {
             if (alreadyOpenSession)
             {
@@ -204,6 +208,8 @@ Session* SessionManager::newSession(bool active, MainWindow *w)
     {
         s->setWindow(w);
     }
+    if (ReKonfig::startupBehaviour() != 2)
+        s->setTitle("temp");
     emit sessionAdded(s);
     connect(s,SIGNAL(changesMade()),this,SIGNAL(readyForSave()));
     m_sessionList << s;

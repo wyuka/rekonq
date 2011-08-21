@@ -214,6 +214,8 @@ int Application::newInstance()
 
         if (isFirstLoad && !isRekonqCrashed)  // we are starting rekonq, for the first time with no args: use startup behaviour
         {
+            bool restoreSuccessful = sessionManager()->restoreSessions();
+            kDebug() << "session restored following settings";
             switch (ReKonfig::startupBehaviour())
             {
             case 0: // open home page
@@ -223,9 +225,8 @@ int Application::newInstance()
                 loadUrl(KUrl("about:home"), Rekonq::NewWindow);
                 break;
             case 2: // restore session
-                if (!sessionManager()->restoreSessions())
+                if (!restoreSuccessful)
                     loadUrl(KUrl("about:home"), Rekonq::NewWindow);
-                kDebug() << "session restored following settings";
                 break;
             default:
                 newMainWindow()->homePage();

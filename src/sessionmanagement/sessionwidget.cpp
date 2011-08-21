@@ -100,6 +100,7 @@ void SessionWidget::setupTitleEdit()
     titleEdit->setWidget(m_titleLineEdit);
     m_titleEdit = titleEdit;
     m_gridLayout->addItem(titleEdit, 0, 1);
+    m_titleLineEdit->setText(session()->title());
     connect(m_titleLineEdit, SIGNAL(textChanged(QString)), this, SLOT(setTitleForSession(QString)));
     connect(session(), SIGNAL(titleChanged(QString)), this, SLOT(setTitleFromSession(QString)));
 }
